@@ -16,6 +16,7 @@ timeString          0x20              Module_Alarm.o
 menuNavigationInput
                     0x1               Module_Alarm.o
 time                0x4               Module_Alarm.o
+SYSTEMSTATE         0x1               Module_Alarm.o
 
 Discarded input sections
 
@@ -26,8 +27,6 @@ Discarded input sections
  .bss           0x00000000        0x0 Module_Alarm.o
  .text.TimerOff
                 0x00000000        0x6 Module_Alarm.o
- .text.SysdemDriverSMTick
-                0x00000000        0x2 Module_Alarm.o
  .text          0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_udivmodsi4.o)
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_udivmodsi4.o)
  .text.libgcc.mul
@@ -194,7 +193,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x6ec
+.text           0x00000000      0x7ae
  *(.vectors)
  .vectors       0x00000000       0x8c c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr51/crtm1284.o
                 0x00000000                __vector_default
@@ -310,41 +309,44 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
  .text.TimeCrunchSMTick
                 0x0000016a       0x74 Module_Alarm.o
                 0x0000016a                TimeCrunchSMTick
- .text.findGCD  0x000001de       0x5e Module_Alarm.o
-                0x000001de                findGCD
+ .text.SystemDriverSMTick
+                0x000001de       0x66 Module_Alarm.o
+                0x000001de                SystemDriverSMTick
+ .text.findGCD  0x00000244       0x5e Module_Alarm.o
+                0x00000244                findGCD
  .text.TimerSet
-                0x0000023c       0x22 Module_Alarm.o
-                0x0000023c                TimerSet
- .text.TimerOn  0x0000025e       0x48 Module_Alarm.o
-                0x0000025e                TimerOn
+                0x000002a2       0x22 Module_Alarm.o
+                0x000002a2                TimerSet
+ .text.TimerOn  0x000002c4       0x48 Module_Alarm.o
+                0x000002c4                TimerOn
  .text.TimerISR
-                0x000002a6        0x8 Module_Alarm.o
-                0x000002a6                TimerISR
+                0x0000030c        0x8 Module_Alarm.o
+                0x0000030c                TimerISR
  .text.__vector_13
-                0x000002ae       0x9c Module_Alarm.o
-                0x000002ae                __vector_13
+                0x00000314       0x9c Module_Alarm.o
+                0x00000314                __vector_13
  .text.updateTimeString
-                0x0000034a       0xee Module_Alarm.o
-                0x0000034a                updateTimeString
+                0x000003b0       0xee Module_Alarm.o
+                0x000003b0                updateTimeString
  .text.LCDDisplaySMTick
-                0x00000438       0x24 Module_Alarm.o
-                0x00000438                LCDDisplaySMTick
+                0x0000049e       0x48 Module_Alarm.o
+                0x0000049e                LCDDisplaySMTick
  .text.GetKeypadKey
-                0x0000045c       0x9c Module_Alarm.o
-                0x0000045c                GetKeypadKey
+                0x000004e6       0x9c Module_Alarm.o
+                0x000004e6                GetKeypadKey
  .text.UpdateInputSMTick
-                0x000004f8       0x20 Module_Alarm.o
-                0x000004f8                UpdateInputSMTick
- .text.main     0x00000518      0x18c Module_Alarm.o
-                0x00000518                main
+                0x00000582       0x20 Module_Alarm.o
+                0x00000582                UpdateInputSMTick
+ .text.main     0x000005a2      0x1c4 Module_Alarm.o
+                0x000005a2                main
  .text.libgcc.div
-                0x000006a4       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_udivmodsi4.o)
-                0x000006a4                __udivmodsi4
-                0x000006e8                . = ALIGN (0x2)
+                0x00000766       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_udivmodsi4.o)
+                0x00000766                __udivmodsi4
+                0x000007aa                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000006e8        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
-                0x000006e8                _exit
-                0x000006e8                exit
+ .fini9         0x000007aa        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
+                0x000007aa                _exit
+                0x000007aa                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -363,11 +365,11 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000006e8        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
+ .fini0         0x000007aa        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x000006ec                _etext = .
+                0x000007ae                _etext = .
 
-.data           0x00800100        0xa load address 0x000006ec
+.data           0x00800100       0x12 load address 0x000007ae
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr51/crtm1284.o
@@ -382,44 +384,51 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
                 0x00800100        0x4 Module_Alarm.o
                 0x00800100                _avr_timer_M
  *(.rodata)
- .rodata        0x00800104        0x6 Module_Alarm.o
+ .rodata        0x00800104        0x8 Module_Alarm.o
  *(.rodata*)
+ .rodata.str1.1
+                0x0080010c        0x6 Module_Alarm.o
  *(.gnu.linkonce.d*)
-                0x0080010a                . = ALIGN (0x2)
-                0x0080010a                _edata = .
-                0x0080010a                PROVIDE (__data_end, .)
+                0x00800112                . = ALIGN (0x2)
+                0x00800112                _edata = .
+                0x00800112                PROVIDE (__data_end, .)
 
-.bss            0x0080010a       0x4b
-                0x0080010a                PROVIDE (__bss_start, .)
+.bss            0x00800112       0x58
+                0x00800112                PROVIDE (__bss_start, .)
  *(.bss)
  *(.bss*)
  .bss._avr_timer_cntcurr
-                0x0080010a        0x4 Module_Alarm.o
-                0x0080010a                _avr_timer_cntcurr
+                0x00800112        0x4 Module_Alarm.o
+                0x00800112                _avr_timer_cntcurr
  .bss.TimerFlag
-                0x0080010e        0x1 Module_Alarm.o
-                0x0080010e                TimerFlag
- .bss.UpdateInputSMTask.1593
-                0x0080010f        0xb Module_Alarm.o
- .bss.TimeCrunchSMTask.1591
-                0x0080011a        0xb Module_Alarm.o
- .bss.LCDDisplaySMTask.1592
-                0x00800125        0xb Module_Alarm.o
+                0x00800116        0x1 Module_Alarm.o
+                0x00800116                TimerFlag
+ .bss.stateTimer.1564
+                0x00800117        0x1 Module_Alarm.o
+ .bss.UpdateInputSMTask.1627
+                0x00800118        0xb Module_Alarm.o
+ .bss.SystemDriverSMTask.1628
+                0x00800123        0xb Module_Alarm.o
+ .bss.TimeCrunchSMTask.1625
+                0x0080012e        0xb Module_Alarm.o
+ .bss.LCDDisplaySMTask.1626
+                0x00800139        0xb Module_Alarm.o
  *(COMMON)
- COMMON         0x00800130       0x25 Module_Alarm.o
-                0x00800130                timeString
-                0x00800150                menuNavigationInput
-                0x00800151                time
-                0x00800155                PROVIDE (__bss_end, .)
-                0x000006ec                __data_load_start = LOADADDR (.data)
-                0x000006f6                __data_load_end = (__data_load_start + SIZEOF (.data))
+ COMMON         0x00800144       0x26 Module_Alarm.o
+                0x00800144                timeString
+                0x00800164                menuNavigationInput
+                0x00800165                time
+                0x00800169                SYSTEMSTATE
+                0x0080016a                PROVIDE (__bss_end, .)
+                0x000007ae                __data_load_start = LOADADDR (.data)
+                0x000007c0                __data_load_end = (__data_load_start + SIZEOF (.data))
 
-.noinit         0x00800155        0x0
-                0x00800155                PROVIDE (__noinit_start, .)
+.noinit         0x0080016a        0x0
+                0x0080016a                PROVIDE (__noinit_start, .)
  *(.noinit*)
-                0x00800155                PROVIDE (__noinit_end, .)
-                0x00800155                _end = .
-                0x00800155                PROVIDE (__heap_start, .)
+                0x0080016a                PROVIDE (__noinit_end, .)
+                0x0080016a                _end = .
+                0x0080016a                PROVIDE (__heap_start, .)
 
 .eeprom         0x00810000        0x0
  *(.eeprom*)
@@ -488,38 +497,38 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x86d
+.debug_info     0x00000000      0x943
  *(.debug_info)
  .debug_info    0x00000000      0x2be io.o
- .debug_info    0x000002be      0x5af Module_Alarm.o
+ .debug_info    0x000002be      0x685 Module_Alarm.o
  *(.gnu.linkonce.wi.*)
 
-.debug_abbrev   0x00000000      0x371
+.debug_abbrev   0x00000000      0x362
  *(.debug_abbrev)
  .debug_abbrev  0x00000000       0xf1 io.o
- .debug_abbrev  0x000000f1      0x280 Module_Alarm.o
+ .debug_abbrev  0x000000f1      0x271 Module_Alarm.o
 
-.debug_line     0x00000000      0x789
+.debug_line     0x00000000      0x802
  *(.debug_line)
  .debug_line    0x00000000      0x215 io.o
- .debug_line    0x00000215      0x574 Module_Alarm.o
+ .debug_line    0x00000215      0x5ed Module_Alarm.o
 
 .debug_frame    0x00000000      0x1e4
  *(.debug_frame)
  .debug_frame   0x00000000       0x94 io.o
  .debug_frame   0x00000094      0x150 Module_Alarm.o
 
-.debug_str      0x00000000      0x3d7
+.debug_str      0x00000000      0x555
  *(.debug_str)
  .debug_str     0x00000000      0x12e io.o
                                 0x174 (size before relaxing)
- .debug_str     0x0000012e      0x2a9 Module_Alarm.o
-                                0x3b9 (size before relaxing)
+ .debug_str     0x0000012e      0x427 Module_Alarm.o
+                                0x537 (size before relaxing)
 
-.debug_loc      0x00000000      0x5a5
+.debug_loc      0x00000000      0x62f
  *(.debug_loc)
  .debug_loc     0x00000000      0x1ca io.o
- .debug_loc     0x000001ca      0x3db Module_Alarm.o
+ .debug_loc     0x000001ca      0x465 Module_Alarm.o
 
 .debug_macinfo
  *(.debug_macinfo)
