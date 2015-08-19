@@ -47,10 +47,8 @@ void updateTimeString(){
 	
 	if(time.IsAM != 0){
 		timeString[AMPMINDEX] = 'A';
-		PORTB = 0x18;
-		}else{
+	}else{
 		timeString[AMPMINDEX] = 'P';
-		PORTB = 0x55;
 	}
 }
 // State Machine

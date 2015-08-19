@@ -71,8 +71,10 @@ signed char TimeCrunchSMTick (signed char state){
 		case TimeCrunch_updatetime:
 			if(time.Second == 59){	// overflow -> minute
 				if(time.Minute == 59){	// overflow -> hours
-					if(time.Hour == 12){ // overflow -> Day/Night
+					if(time.Hour == 11){ // before incrementing Hour to 12, change flip the day!
 						time.IsAM = ( (time.IsAM != 0) ? 0x00 : 0xFF);	//change AMPM
+					}
+					if(time.Hour == 12){ // overflow -> Day/Night
 						time.Hour = 0;
 					}else {	// update Hour
 						time.Hour++;
@@ -90,7 +92,7 @@ signed char TimeCrunchSMTick (signed char state){
 			time.Hour = 11;
 			time.Minute = 59;
 			time.Second = 40;
-			time.IsAM = 0xFF;
+			time.IsAM = 0x00;
 			state =  TimeCrunch_updatetime;
 			break;
 	}

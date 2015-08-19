@@ -20,15 +20,86 @@
 // eetime_t struct
 // time : eetime_t
 // TimeCrunchSMTick() Function
-
+#include "keypad.h"
+// getKeypadKey() Function
 
 // Shared Variables ========
 extern eetime_t time;
 // unsigned char timeString[32] declared in module_timecrunchsm
 
+enum SystemDriverSMStates { SystemDriver_init,
+	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall,
+	SystemDriver_alarmaddtitle, SystemDriver_alarmaddscroll, SystemDriver_alarmaddtitle_fall, SystemDriver_alarmaddscroll_fall,
+																// Add Alarm Title Screen,					Alarm scroller
+																//	Press C for Select and go to scroller	Left (A) or Right (B) to scroll through
+	SystemDriver_error };
 
+enum KeypadButtons { Keypad_left, Keypad_right, Keypad_select, Keypad_delete }; // 
+unsigned char menuNavigationInput;
 // End Shared Variables ====
 // State Machine drivers
+// MenuNavigationInput State Machine ===================================================================================================================================
+
+// SystemDriver State Machine ===================================================================================================================================							
+/*  
+	State Machine: SystemDriverSM
+	Inputs: ABCD on Keypad
+	Outputs: time.Hours, time.Minutes, time.Seconds */
+signed char SysdemDriverSMTick (signed char state){
+	// Transitions
+	switch(state){
+		case SystemDriver_init:
+			break;
+		case SystemDriver_timedisplaytitle:
+			break;
+		case SystemDriver_timedisplay:
+			break;
+		case SystemDriver_alarmaddtitle:
+			break;
+		case SystemDriver_alarmaddscroll:
+			break;
+		default:
+			break;
+	}
+	// Actions
+	switch(state){
+		case SystemDriver_init:
+		break;
+		case SystemDriver_timedisplaytitle:
+		break;
+		case SystemDriver_timedisplay:
+		break;
+		case SystemDriver_alarmaddtitle:
+		break;
+		case SystemDriver_alarmaddscroll:
+		break;
+		default:
+		break;
+	}
+	return state;
+}
+
+enum UpdateInputSMStates { UpdateInput_update };
+/*  
+	State Machine: UpdateInputSM
+	NOTE: KEEP THIS SM IN MAIN FILE FOR TIME BEING.
+	Inputs: PORTA -> Keypad
+	Outputs: keyPadInput */
+signed char UpdateInputSMTick (signed char state){
+	state = UpdateInput_update;
+	// Keypad Keys ============================================================================================================
+	unsigned char tmpKeypadInput = GetKeypadKey();
+	// Process Menu Input keys : A B C D * #
+	if(tmpKeypadInput == 'A' || tmpKeypadInput == 'B' || tmpKeypadInput == 'C' || tmpKeypadInput == 'D'
+		|| tmpKeypadInput == '#' || tmpKeypadInput == '*'  ){
+		menuNavigationInput = tmpKeypadInput;
+	} else {
+		menuNavigationInput = 0;	
+	}
+	return state;
+}
+
+// LCDDisplaySM	
 enum LCDDisplaySMStates { LCDDisplay_updatelcd };
 /*
 	State Machine LCDDisplaySM
@@ -67,18 +138,21 @@ signed char LCDDisplaySMTick( signed char state ){
 int main(void)
 {
 	// Set DDR and initialise PORTs
-	/*//Keypad on A
-	DDRA = 0xF0; PORTA = 0x0F;*/
-	DDRB = 0xFF; PORTB = 0x01;
+	//Keypad on A
+	DDRA = 0xF0; PORTA = 0x0F;
+	DDRB = 0xFF; PORTB = 0x00;
 	DDRC = 0xFF; PORTC = 0x00;
 	DDRD = 0xFF; PORTD = 0x00;
 	// Period Calculations
 	unsigned long int TimeCrunchSM_calc = 1000; // 1 s period
-	unsigned long int LCDDisplaySM_calc = 1000;	// 50ms period
-	
+	unsigned long int LCDDisplaySM_calc = 1000;	// 100ms period
+	unsigned long int UpdateInputSM_calc = 100; // 100ms period
+	//unsigned long int SystemDriverSM_calc = 100; // 100ms period
 	// Calculate GCD	
 	unsigned long int tmpGCD = 1;
 	tmpGCD = findGCD(TimeCrunchSM_calc, LCDDisplaySM_calc );
+	tmpGCD = findGCD(tmpGCD, UpdateInputSM_calc);
+	//tmpGCD = findGCD(tmpGCD, SystemDriverSM_calc);
 	//tmpGCD = findGCD(tmpGCD, ... );
 	//tmpGCD = findGCD(tmpGCD, ... );
 	//tmpGCD = findGCD(tmpGCD, ... );
@@ -88,12 +162,25 @@ int main(void)
 	// Recalculate GCD periods for scheduler
 	unsigned long int TimeCrunchSM_period = TimeCrunchSM_calc/GCD;
 	unsigned long int LCDDisplaySM_period = LCDDisplaySM_calc/GCD;
-
+	unsigned long int UpdateInputSM_period = UpdateInputSM_calc/GCD;
+	//unsigned long int SystemDriverSM_calc = SystemDriverSM_calc/GCD;
+	
 	// Set up task scheduler
 	static task TimeCrunchSMTask,
-				LCDDisplaySMTask;
-	task *tasks[] = {&TimeCrunchSMTask, &LCDDisplaySMTask}; // keep tasks that display at the end.
+				LCDDisplaySMTask,
+				UpdateInputSMTask;
+	task *tasks[] = {&UpdateInputSMTask, &TimeCrunchSMTask, &LCDDisplaySMTask}; // keep display at the end. keep UpdateInput in the beginning and SystemDriverSM second
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
+	
+	//UpdateInputSM declaration
+	UpdateInputSMTask.state = -1;
+	UpdateInputSMTask.period = UpdateInputSMTask.elapsedTime = UpdateInputSM_period;
+	UpdateInputSMTask.TickFct = &UpdateInputSMTick;
+	
+	//SystemDriverSM declaration
+	/*SystemDriverSMTask.state = -1;
+	SystemDriverSMTask.period = SystemDriverSMTask.elapsedtime = SystemDriverSMTask_period;
+	SystemDriverSMTask.TickFct = &SystemDriverSMTick;*/
 	
 	// TimeCrunchSM declaration
 	TimeCrunchSMTask.state = -1;
