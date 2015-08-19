@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "mting005_lab7_ex02", "mting005_lab7_ex02\mting005_lab7_ex02.cproj", "{933AA080-3B5B-49D0-9946-0D837F716002}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{933AA080-3B5B-49D0-9946-0D837F716002}.Debug|AVR.ActiveCfg = Debug|AVR
+		{933AA080-3B5B-49D0-9946-0D837F716002}.Debug|AVR.Build.0 = Debug|AVR
+		{933AA080-3B5B-49D0-9946-0D837F716002}.Release|AVR.ActiveCfg = Release|AVR
+		{933AA080-3B5B-49D0-9946-0D837F716002}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
