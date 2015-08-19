@@ -3,31 +3,31 @@ Test_CustomDisplay.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000000  00800100  000000a4  00000118  2**0
+  0 .data         00000000  00800100  00000108  0000017c  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         000000a4  00000000  00000000  00000074  2**1
+  1 .text         00000108  00000000  00000000  00000074  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .stab         000006cc  00000000  00000000  00000118  2**2
+  2 .stab         000006cc  00000000  00000000  0000017c  2**2
                   CONTENTS, READONLY, DEBUGGING
-  3 .stabstr      00000097  00000000  00000000  000007e4  2**0
+  3 .stabstr      00000097  00000000  00000000  00000848  2**0
                   CONTENTS, READONLY, DEBUGGING
-  4 .comment      0000002f  00000000  00000000  0000087b  2**0
+  4 .comment      0000002f  00000000  00000000  000008df  2**0
                   CONTENTS, READONLY
-  5 .debug_aranges 00000078  00000000  00000000  000008aa  2**0
+  5 .debug_aranges 00000070  00000000  00000000  0000090e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  6 .debug_info   00000378  00000000  00000000  00000922  2**0
+  6 .debug_info   0000035e  00000000  00000000  0000097e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_abbrev 00000137  00000000  00000000  00000c9a  2**0
+  7 .debug_abbrev 00000165  00000000  00000000  00000cdc  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_line   00000273  00000000  00000000  00000dd1  2**0
+  8 .debug_line   0000030e  00000000  00000000  00000e41  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_frame  000000c8  00000000  00000000  00001044  2**2
+  9 .debug_frame  000000b8  00000000  00000000  00001150  2**2
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_str    00000163  00000000  00000000  0000110c  2**0
+ 10 .debug_str    00000151  00000000  00000000  00001208  2**0
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_loc    000001f0  00000000  00000000  0000126f  2**0
+ 11 .debug_loc    000001ca  00000000  00000000  00001359  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_ranges 00000058  00000000  00000000  0000145f  2**0
+ 12 .debug_ranges 00000050  00000000  00000000  00001523  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -111,23 +111,98 @@ Disassembly of section .text:
   92:	d0 e4       	ldi	r29, 0x40	; 64
   94:	de bf       	out	0x3e, r29	; 62
   96:	cd bf       	out	0x3d, r28	; 61
-  98:	02 d0       	rcall	.+4      	; 0x9e <main>
-  9a:	02 c0       	rjmp	.+4      	; 0xa0 <_exit>
+  98:	2c d0       	rcall	.+88     	; 0xf2 <main>
+  9a:	34 c0       	rjmp	.+104    	; 0x104 <_exit>
 
 0000009c <__bad_interrupt>:
   9c:	b1 cf       	rjmp	.-158    	; 0x0 <__vectors>
 
-0000009e <main>:
+0000009e <delay_ms>:
+   unsigned char c = column;
+   while(*string) {
+      LCD_Cursor(c++);
+      LCD_WriteData(*string++);
+   }
+}
+  9e:	18 16       	cp	r1, r24
+  a0:	19 06       	cpc	r1, r25
+  a2:	5c f0       	brlt	.+22     	; 0xba <delay_ms+0x1c>
+  a4:	08 95       	ret
+  a6:	00 00       	nop
+  a8:	21 50       	subi	r18, 0x01	; 1
+  aa:	31 09       	sbc	r19, r1
+  ac:	e1 f7       	brne	.-8      	; 0xa6 <delay_ms+0x8>
+  ae:	4f 5f       	subi	r20, 0xFF	; 255
+  b0:	5f 4f       	sbci	r21, 0xFF	; 255
+  b2:	48 17       	cp	r20, r24
+  b4:	59 07       	cpc	r21, r25
+  b6:	29 f4       	brne	.+10     	; 0xc2 <delay_ms+0x24>
+  b8:	08 95       	ret
+  ba:	40 e0       	ldi	r20, 0x00	; 0
+  bc:	50 e0       	ldi	r21, 0x00	; 0
+  be:	67 e0       	ldi	r22, 0x07	; 7
+  c0:	73 e0       	ldi	r23, 0x03	; 3
+  c2:	9b 01       	movw	r18, r22
+  c4:	f0 cf       	rjmp	.-32     	; 0xa6 <delay_ms+0x8>
 
+000000c6 <LCD_WriteCommand>:
+  c6:	5e 98       	cbi	0x0b, 6	; 11
+  c8:	88 b9       	out	0x08, r24	; 8
+  ca:	5f 9a       	sbi	0x0b, 7	; 11
+  cc:	00 00       	nop
+  ce:	5f 98       	cbi	0x0b, 7	; 11
+  d0:	82 e0       	ldi	r24, 0x02	; 2
+  d2:	90 e0       	ldi	r25, 0x00	; 0
+  d4:	e4 cf       	rjmp	.-56     	; 0x9e <delay_ms>
+
+000000d6 <LCD_init>:
+}
+
+void LCD_init(void) {
+
+    //wait for 100 ms.
+	delay_ms(100);
+  d6:	84 e6       	ldi	r24, 0x64	; 100
+  d8:	90 e0       	ldi	r25, 0x00	; 0
+  da:	e1 df       	rcall	.-62     	; 0x9e <delay_ms>
+	LCD_WriteCommand(0x38);
+  dc:	88 e3       	ldi	r24, 0x38	; 56
+  de:	f3 df       	rcall	.-26     	; 0xc6 <LCD_WriteCommand>
+	LCD_WriteCommand(0x06);
+  e0:	86 e0       	ldi	r24, 0x06	; 6
+  e2:	f1 df       	rcall	.-30     	; 0xc6 <LCD_WriteCommand>
+	LCD_WriteCommand(0x0f);
+  e4:	8f e0       	ldi	r24, 0x0F	; 15
+  e6:	ef df       	rcall	.-34     	; 0xc6 <LCD_WriteCommand>
+	LCD_WriteCommand(0x01);
+  e8:	81 e0       	ldi	r24, 0x01	; 1
+  ea:	ed df       	rcall	.-38     	; 0xc6 <LCD_WriteCommand>
+	delay_ms(10);						 
+  ec:	8a e0       	ldi	r24, 0x0A	; 10
+  ee:	90 e0       	ldi	r25, 0x00	; 0
+  f0:	d6 cf       	rjmp	.-84     	; 0x9e <delay_ms>
+
+000000f2 <main>:
 #include <avr/io.h>
 #include "io.h"
 
 int main(void)
 {
-  9e:	ff cf       	rjmp	.-2      	; 0x9e <main>
+	DDRA = 0xF0; PORTA = 0x0F;
+  f2:	80 ef       	ldi	r24, 0xF0	; 240
+  f4:	81 b9       	out	0x01, r24	; 1
+  f6:	8f e0       	ldi	r24, 0x0F	; 15
+  f8:	82 b9       	out	0x02, r24	; 2
+	DDRB = 0xFF; PORTB = 0x00;
+  fa:	8f ef       	ldi	r24, 0xFF	; 255
+  fc:	84 b9       	out	0x04, r24	; 4
+  fe:	15 b8       	out	0x05, r1	; 5
+	LCD_init();
+ 100:	ea df       	rcall	.-44     	; 0xd6 <LCD_init>
+ 102:	ff cf       	rjmp	.-2      	; 0x102 <main+0x10>
 
-000000a0 <_exit>:
-  a0:	f8 94       	cli
+00000104 <_exit>:
+ 104:	f8 94       	cli
 
-000000a2 <__stop_program>:
-  a2:	ff cf       	rjmp	.-2      	; 0xa2 <__stop_program>
+00000106 <__stop_program>:
+ 106:	ff cf       	rjmp	.-2      	; 0x106 <__stop_program>

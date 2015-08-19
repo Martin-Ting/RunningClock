@@ -16,6 +16,8 @@ Discarded input sections
  .bss           0x00000000        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr51/crtm1284.o
  .text          0x00000000        0x0 io.o
  .bss           0x00000000        0x0 io.o
+ .text.LCD_DisplayStringLong
+                0x00000000        0x6 io.o
  .text          0x00000000        0x0 mting005_lab7_ex002.o
  .bss           0x00000000        0x0 mting005_lab7_ex002.o
  .text.TimerOff
@@ -480,20 +482,20 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
 .debug_sfnames
  *(.debug_sfnames)
 
-.debug_aranges  0x00000000       0xb8
+.debug_aranges  0x00000000       0xc0
  *(.debug_aranges)
  .debug_aranges
-                0x00000000       0x50 io.o
+                0x00000000       0x58 io.o
  .debug_aranges
-                0x00000050       0x68 mting005_lab7_ex002.o
+                0x00000058       0x68 mting005_lab7_ex002.o
 
 .debug_pubnames
  *(.debug_pubnames)
 
-.debug_info     0x00000000      0x6ed
+.debug_info     0x00000000      0x72b
  *(.debug_info)
- .debug_info    0x00000000      0x2be io.o
- .debug_info    0x000002be      0x42f mting005_lab7_ex002.o
+ .debug_info    0x00000000      0x2fc io.o
+ .debug_info    0x000002fc      0x42f mting005_lab7_ex002.o
  *(.gnu.linkonce.wi.*)
 
 .debug_abbrev   0x00000000      0x321
@@ -501,27 +503,27 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
  .debug_abbrev  0x00000000       0xf1 io.o
  .debug_abbrev  0x000000f1      0x230 mting005_lab7_ex002.o
 
-.debug_line     0x00000000      0x669
+.debug_line     0x00000000      0x680
  *(.debug_line)
- .debug_line    0x00000000      0x215 io.o
- .debug_line    0x00000215      0x454 mting005_lab7_ex002.o
+ .debug_line    0x00000000      0x22c io.o
+ .debug_line    0x0000022c      0x454 mting005_lab7_ex002.o
 
-.debug_frame    0x00000000      0x1b4
+.debug_frame    0x00000000      0x1c4
  *(.debug_frame)
- .debug_frame   0x00000000       0x94 io.o
- .debug_frame   0x00000094      0x120 mting005_lab7_ex002.o
+ .debug_frame   0x00000000       0xa4 io.o
+ .debug_frame   0x000000a4      0x120 mting005_lab7_ex002.o
 
-.debug_str      0x00000000      0x2e6
+.debug_str      0x00000000      0x331
  *(.debug_str)
- .debug_str     0x00000000      0x123 io.o
-                                0x169 (size before relaxing)
- .debug_str     0x00000123      0x1c3 mting005_lab7_ex002.o
-                                0x2c8 (size before relaxing)
+ .debug_str     0x00000000      0x16e io.o
+                                0x1b4 (size before relaxing)
+ .debug_str     0x0000016e      0x1c3 mting005_lab7_ex002.o
+                                0x2ef (size before relaxing)
 
-.debug_loc      0x00000000      0x6f6
+.debug_loc      0x00000000      0x71c
  *(.debug_loc)
- .debug_loc     0x00000000      0x1ca io.o
- .debug_loc     0x000001ca      0x52c mting005_lab7_ex002.o
+ .debug_loc     0x00000000      0x1f0 io.o
+ .debug_loc     0x000001f0      0x52c mting005_lab7_ex002.o
 
 .debug_macinfo
  *(.debug_macinfo)
@@ -529,10 +531,10 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
 .debug_pubtypes
  *(.debug_pubtypes)
 
-.debug_ranges   0x00000000       0x98
+.debug_ranges   0x00000000       0xa0
  *(.debug_ranges)
- .debug_ranges  0x00000000       0x40 io.o
- .debug_ranges  0x00000040       0x58 mting005_lab7_ex002.o
+ .debug_ranges  0x00000000       0x48 io.o
+ .debug_ranges  0x00000048       0x58 mting005_lab7_ex002.o
 
 .debug_macro
  *(.debug_macro)

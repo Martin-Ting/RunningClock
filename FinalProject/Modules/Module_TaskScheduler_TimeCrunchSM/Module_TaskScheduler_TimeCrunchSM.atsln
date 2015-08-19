@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Module_TaskScheduler_TimeCrunchSM", "Module_TaskScheduler_TimeCrunchSM\Module_TaskScheduler_TimeCrunchSM.cproj", "{1285CAE2-3637-4AE8-B0BD-78BBA2332C91}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{1285CAE2-3637-4AE8-B0BD-78BBA2332C91}.Debug|AVR.ActiveCfg = Debug|AVR
+		{1285CAE2-3637-4AE8-B0BD-78BBA2332C91}.Debug|AVR.Build.0 = Debug|AVR
+		{1285CAE2-3637-4AE8-B0BD-78BBA2332C91}.Release|AVR.ActiveCfg = Release|AVR
+		{1285CAE2-3637-4AE8-B0BD-78BBA2332C91}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

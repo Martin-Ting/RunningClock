@@ -15,21 +15,21 @@ Idx Name          Size      VMA       LMA       File off  Algn
                   CONTENTS, READONLY, DEBUGGING
   5 .comment      0000002f  00000000  00000000  00000e53  2**0
                   CONTENTS, READONLY
-  6 .debug_aranges 000000b8  00000000  00000000  00000e82  2**0
+  6 .debug_aranges 000000c0  00000000  00000000  00000e82  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   000006ed  00000000  00000000  00000f3a  2**0
+  7 .debug_info   0000072b  00000000  00000000  00000f42  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00000321  00000000  00000000  00001627  2**0
+  8 .debug_abbrev 00000321  00000000  00000000  0000166d  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   00000669  00000000  00000000  00001948  2**0
+  9 .debug_line   00000680  00000000  00000000  0000198e  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  000001b4  00000000  00000000  00001fb4  2**2
+ 10 .debug_frame  000001c4  00000000  00000000  00002010  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    000002e6  00000000  00000000  00002168  2**0
+ 11 .debug_str    00000331  00000000  00000000  000021d4  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    000006f6  00000000  00000000  0000244e  2**0
+ 12 .debug_loc    0000071c  00000000  00000000  00002505  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 00000098  00000000  00000000  00002b44  2**0
+ 13 .debug_ranges 000000a0  00000000  00000000  00002c21  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -218,35 +218,20 @@ Disassembly of section .text:
  150:	57 cf       	rjmp	.-338    	; 0x0 <__vectors>
 
 00000152 <delay_ms>:
-
-void delay_ms(int miliSec) //for 8 Mhz crystal
-
-{
-    int i,j;
-    for(i=0;i<miliSec;i++)
+   asm("nop");
+   CLR_BIT(CONTROL_BUS,E);
+   delay_ms(1);
+}
+void LCD_DisplayStringLong(/*unsigned char column,*/ const unsigned const* displayString){
+	LCD_ClearScreen();
  152:	18 16       	cp	r1, r24
  154:	19 06       	cpc	r1, r25
  156:	5c f0       	brlt	.+22     	; 0x16e <delay_ms+0x1c>
  158:	08 95       	ret
-    for(j=0;j<775;j++)
-  {
-   asm("nop");
  15a:	00 00       	nop
  15c:	21 50       	subi	r18, 0x01	; 1
  15e:	31 09       	sbc	r19, r1
-void delay_ms(int miliSec) //for 8 Mhz crystal
-
-{
-    int i,j;
-    for(i=0;i<miliSec;i++)
-    for(j=0;j<775;j++)
  160:	e1 f7       	brne	.-8      	; 0x15a <delay_ms+0x8>
-
-void delay_ms(int miliSec) //for 8 Mhz crystal
-
-{
-    int i,j;
-    for(i=0;i<miliSec;i++)
  162:	4f 5f       	subi	r20, 0xFF	; 255
  164:	5f 4f       	sbci	r21, 0xFF	; 255
  166:	48 17       	cp	r20, r24
@@ -255,141 +240,63 @@ void delay_ms(int miliSec) //for 8 Mhz crystal
  16c:	08 95       	ret
  16e:	40 e0       	ldi	r20, 0x00	; 0
  170:	50 e0       	ldi	r21, 0x00	; 0
-   }
-}
-
-void delay_ms(int miliSec) //for 8 Mhz crystal
-
-{
  172:	67 e0       	ldi	r22, 0x07	; 7
  174:	73 e0       	ldi	r23, 0x03	; 3
  176:	9b 01       	movw	r18, r22
  178:	f0 cf       	rjmp	.-32     	; 0x15a <delay_ms+0x8>
 
 0000017a <LCD_WriteData>:
-   CLR_BIT(CONTROL_BUS,E);
-   delay_ms(2); // ClearScreen requires 1.52ms to execute
-}
-
-void LCD_WriteData(unsigned char Data) {
-   SET_BIT(CONTROL_BUS,RS);
  17a:	5e 9a       	sbi	0x0b, 6	; 11
-   DATA_BUS = Data;
  17c:	88 b9       	out	0x08, r24	; 8
-   SET_BIT(CONTROL_BUS,E);
  17e:	5f 9a       	sbi	0x0b, 7	; 11
-   asm("nop");
  180:	00 00       	nop
-   CLR_BIT(CONTROL_BUS,E);
  182:	5f 98       	cbi	0x0b, 7	; 11
-   delay_ms(1);
  184:	81 e0       	ldi	r24, 0x01	; 1
  186:	90 e0       	ldi	r25, 0x00	; 0
  188:	e4 cf       	rjmp	.-56     	; 0x152 <delay_ms>
 
 0000018a <LCD_WriteCommand>:
-	LCD_WriteCommand(0x01);
-	delay_ms(10);						 
-}
-
-void LCD_WriteCommand (unsigned char Command) {
-   CLR_BIT(CONTROL_BUS,RS);
  18a:	5e 98       	cbi	0x0b, 6	; 11
-   DATA_BUS = Command;
  18c:	88 b9       	out	0x08, r24	; 8
-   SET_BIT(CONTROL_BUS,E);
  18e:	5f 9a       	sbi	0x0b, 7	; 11
-   asm("nop");
  190:	00 00       	nop
-   CLR_BIT(CONTROL_BUS,E);
  192:	5f 98       	cbi	0x0b, 7	; 11
-   delay_ms(2); // ClearScreen requires 1.52ms to execute
  194:	82 e0       	ldi	r24, 0x02	; 2
  196:	90 e0       	ldi	r25, 0x00	; 0
  198:	dc cf       	rjmp	.-72     	; 0x152 <delay_ms>
 
 0000019a <LCD_Cursor>:
-      LCD_WriteData(*string++);
-   }
-}
-
-void LCD_Cursor(unsigned char column) {
-   if ( column < 17 ) { // 16x1 LCD: column < 9
  19a:	81 31       	cpi	r24, 0x11	; 17
  19c:	10 f4       	brcc	.+4      	; 0x1a2 <LCD_Cursor+0x8>
-						// 16x2 LCD: column < 17
-      LCD_WriteCommand(0x80 + column - 1);
  19e:	81 58       	subi	r24, 0x81	; 129
  1a0:	f4 cf       	rjmp	.-24     	; 0x18a <LCD_WriteCommand>
-   } else {
-      LCD_WriteCommand(0xB8 + column - 9);	// 16x1 LCD: column - 1
  1a2:	81 55       	subi	r24, 0x51	; 81
  1a4:	f2 cf       	rjmp	.-28     	; 0x18a <LCD_WriteCommand>
 
 000001a6 <LCD_ClearScreen>:
-#define E 7			// pin number of uC connected to pin 6 of LCD disp.
-
-/*-------------------------------------------------------------------------*/
-
-void LCD_ClearScreen(void) {
-   LCD_WriteCommand(0x01);
  1a6:	81 e0       	ldi	r24, 0x01	; 1
  1a8:	f0 cf       	rjmp	.-32     	; 0x18a <LCD_WriteCommand>
 
 000001aa <LCD_DisplayString>:
-   asm("nop");
-   CLR_BIT(CONTROL_BUS,E);
-   delay_ms(1);
-}
-
-void LCD_DisplayString( unsigned char column, const unsigned char* string) {
  1aa:	1f 93       	push	r17
  1ac:	cf 93       	push	r28
  1ae:	df 93       	push	r29
  1b0:	18 2f       	mov	r17, r24
  1b2:	eb 01       	movw	r28, r22
-   LCD_ClearScreen();
  1b4:	f8 df       	rcall	.-16     	; 0x1a6 <LCD_ClearScreen>
-   unsigned char c = column;
-   while(*string) {
  1b6:	98 81       	ld	r25, Y
  1b8:	99 23       	and	r25, r25
  1ba:	51 f0       	breq	.+20     	; 0x1d0 <LCD_DisplayString+0x26>
-   delay_ms(1);
-}
-
-void LCD_DisplayString( unsigned char column, const unsigned char* string) {
-   LCD_ClearScreen();
-   unsigned char c = column;
  1bc:	81 2f       	mov	r24, r17
-   while(*string) {
-      LCD_Cursor(c++);
  1be:	18 2f       	mov	r17, r24
  1c0:	1f 5f       	subi	r17, 0xFF	; 255
  1c2:	eb df       	rcall	.-42     	; 0x19a <LCD_Cursor>
-      LCD_WriteData(*string++);
  1c4:	89 91       	ld	r24, Y+
  1c6:	d9 df       	rcall	.-78     	; 0x17a <LCD_WriteData>
-
-void LCD_DisplayString( unsigned char column, const unsigned char* string) {
-   LCD_ClearScreen();
-   unsigned char c = column;
-   while(*string) {
-      LCD_Cursor(c++);
  1c8:	81 2f       	mov	r24, r17
-}
-
-void LCD_DisplayString( unsigned char column, const unsigned char* string) {
-   LCD_ClearScreen();
-   unsigned char c = column;
-   while(*string) {
  1ca:	98 81       	ld	r25, Y
  1cc:	91 11       	cpse	r25, r1
  1ce:	f7 cf       	rjmp	.-18     	; 0x1be <LCD_DisplayString+0x14>
-      LCD_Cursor(c++);
-      LCD_WriteData(*string++);
-   }
-}
  1d0:	df 91       	pop	r29
  1d2:	cf 91       	pop	r28
  1d4:	1f 91       	pop	r17
@@ -860,10 +767,10 @@ unsigned long int findGCD(unsigned long int a,		//		==== find GDC function.
  486:	08 95       	ret
 
 00000488 <main>:
-			break;
 	}
 	return state;
 }
+
 int main(void)
 {
  488:	cf 93       	push	r28
