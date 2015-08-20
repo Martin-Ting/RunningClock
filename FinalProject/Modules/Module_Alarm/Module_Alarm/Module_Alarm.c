@@ -26,15 +26,14 @@
 // Shared Variables ========
 extern eetime_t time;
 // unsigned char timeString[32] declared in module_timecrunchsm
-
 enum SystemDriverSMStates { SystemDriver_init,
-	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall,
-	SystemDriver_alarmaddtitle, SystemDriver_alarmaddscroll, SystemDriver_alarmaddtitle_fall, SystemDriver_alarmaddscroll_fall,
+	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall, SystemDriver_timedisplaytitle_nextmenuitem,
+	SystemDriver_alarmaddtitle, SystemDriver_alarmaddscroll, SystemDriver_alarmaddtitle_fall, SystemDriver_alarmaddscroll_fall, SystemDriver_alarmaddtitle_nextmenuitem,
 																// Add Alarm Title Screen,					Alarm scroller
 																//	Press C for Select and go to scroller	Left (A) or Right (B) to scroll through
 	SystemDriver_error } SYSTEMSTATE;
 
-enum KeypadButtons { Keypad_left, Keypad_right, Keypad_select, Keypad_delete }; // 
+enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#' }; // 
 unsigned char menuNavigationInput;
 // End Shared Variables ====
 // State Machine drivers
@@ -45,7 +44,7 @@ unsigned char menuNavigationInput;
 	State Machine: SystemDriverSM
 	Inputs: ABCD on Keypad
 	Outputs: time.Hours, time.Minutes, time.Seconds */
-#define MAXMENUTITLETIME 40 //100period ms * 40 = 4000 s seconds
+#define MAXMENUTITLETIME 50 //100period ms * 50 = 5000 s seconds
 signed char SystemDriverSMTick (signed char state){
 	static unsigned char stateTimer = 0;
 	// Transitions
@@ -54,35 +53,69 @@ signed char SystemDriverSMTick (signed char state){
 		case SystemDriver_timedisplaytitle:
 			// count the Timer for 4 seconds until forced transition or else "Select button"
 			stateTimer++;
-			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput == 'C'){ // c is select
+			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput == Keypad_select){ // c is select
 				state = SystemDriver_timedisplaytitle_fall;
+			}
+			if(menuNavigationInput == Keypad_next){
+				state = SystemDriver_timedisplaytitle_nextmenuitem;
 			}
 			break;
 		case SystemDriver_timedisplaytitle_fall:
 			// consume input or else transition due to state timer
-			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput != 'C'){
+			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput != Keypad_select){
 				state = SystemDriver_timedisplay;
-				stateTimer = 0;
+			} else if (menuNavigationInput ==  Keypad_next){
+				state = SystemDriver_alarmaddtitle;
 			}
+			stateTimer = 0;
 			break;
 		case SystemDriver_timedisplay:
-			if(menuNavigationInput == '#'){
+			if(menuNavigationInput == Keypad_menu){
 				state = SystemDriver_timedisplay_fall;
 			}
 			break;
 		case SystemDriver_timedisplay_fall:
-			if(menuNavigationInput != '#'){
+			if(menuNavigationInput != Keypad_menu){
 				state = SystemDriver_timedisplaytitle;
 			}
 			break;
+		case SystemDriver_timedisplaytitle_nextmenuitem:
+			if(menuNavigationInput !=  Keypad_next){
+				state = SystemDriver_alarmaddtitle;
+			}
+			stateTimer = 0;
+			break;
 		//=================================================================
 		case SystemDriver_alarmaddtitle:
-			break;
-		case SystemDriver_alarmaddscroll:
+			stateTimer++;
+			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput == Keypad_select){ // c is select
+				state = SystemDriver_alarmaddtitle_fall;
+			}else if (menuNavigationInput == Keypad_next){
+				state = SystemDriver_alarmaddtitle_nextmenuitem;
+			}
 			break;
 		case SystemDriver_alarmaddtitle_fall:
+			// consume input or else transition due to state timer
+			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput != Keypad_select){
+				state = SystemDriver_alarmaddscroll;
+			} 
+			stateTimer = 0;
+			break;
+		case SystemDriver_alarmaddscroll:
+			if(menuNavigationInput == Keypad_menu){
+				state = SystemDriver_alarmaddscroll_fall;
+			}
 			break;
 		case SystemDriver_alarmaddscroll_fall:
+			if(menuNavigationInput != Keypad_menu){
+				state = SystemDriver_alarmaddtitle;
+			}
+			break;
+		case SystemDriver_alarmaddtitle_nextmenuitem:
+			if(menuNavigationInput !=  Keypad_next){
+				state = SystemDriver_timedisplaytitle;
+			}
+			stateTimer = 0;
 			break;
 		//=================================================================
 		default:
@@ -154,18 +187,23 @@ signed char LCDDisplaySMTick( signed char state ){
 					break;
 				case SystemDriver_timedisplaytitle:
 				case SystemDriver_timedisplaytitle_fall:
+					PORTB = 0x01;
 					LCD_DisplayString(1, "Clock");
 					break;
 				case SystemDriver_timedisplay:
 				case SystemDriver_timedisplay_fall:
+				PORTB = 0x08;
 					updateTimeString();
 					LCD_DisplayString(1, timeString);
 					break;
 				case SystemDriver_alarmaddtitle:
+					LCD_DisplayString(1, "Add Alarm");
 					break;
 				case SystemDriver_alarmaddscroll:
+					LCD_DisplayString(1, "alarmaddscroll");
 					break;
 				default:
+				LCD_DisplayString(1, "Initializing");
 					break;
 			}
 

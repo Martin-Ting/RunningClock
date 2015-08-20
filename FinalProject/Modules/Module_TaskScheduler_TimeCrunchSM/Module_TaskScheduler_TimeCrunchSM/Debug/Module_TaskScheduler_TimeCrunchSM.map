@@ -190,7 +190,7 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
 .rela.plt
  *(.rela.plt)
 
-.text           0x00000000      0x5de
+.text           0x00000000      0x5e2
  *(.vectors)
  .vectors       0x00000000       0x8c c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr51/crtm1284.o
                 0x00000000                __vector_default
@@ -304,37 +304,37 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
                 0x0000014e       0x1c io.o
                 0x0000014e                LCD_init
  .text.TimeCrunchSMTick
-                0x0000016a       0x70 Module_TaskScheduler_TimeCrunchSM.o
+                0x0000016a       0x74 Module_TaskScheduler_TimeCrunchSM.o
                 0x0000016a                TimeCrunchSMTick
- .text.findGCD  0x000001da       0x5e Module_TaskScheduler_TimeCrunchSM.o
-                0x000001da                findGCD
+ .text.findGCD  0x000001de       0x5e Module_TaskScheduler_TimeCrunchSM.o
+                0x000001de                findGCD
  .text.TimerSet
-                0x00000238       0x22 Module_TaskScheduler_TimeCrunchSM.o
-                0x00000238                TimerSet
- .text.TimerOn  0x0000025a       0x48 Module_TaskScheduler_TimeCrunchSM.o
-                0x0000025a                TimerOn
+                0x0000023c       0x22 Module_TaskScheduler_TimeCrunchSM.o
+                0x0000023c                TimerSet
+ .text.TimerOn  0x0000025e       0x48 Module_TaskScheduler_TimeCrunchSM.o
+                0x0000025e                TimerOn
  .text.TimerISR
-                0x000002a2        0x8 Module_TaskScheduler_TimeCrunchSM.o
-                0x000002a2                TimerISR
+                0x000002a6        0x8 Module_TaskScheduler_TimeCrunchSM.o
+                0x000002a6                TimerISR
  .text.__vector_13
-                0x000002aa       0x9c Module_TaskScheduler_TimeCrunchSM.o
-                0x000002aa                __vector_13
+                0x000002ae       0x9c Module_TaskScheduler_TimeCrunchSM.o
+                0x000002ae                __vector_13
  .text.updateTimeString
-                0x00000346       0xf6 Module_TaskScheduler_TimeCrunchSM.o
-                0x00000346                updateTimeString
+                0x0000034a       0xf6 Module_TaskScheduler_TimeCrunchSM.o
+                0x0000034a                updateTimeString
  .text.LCDDisplaySMTick
-                0x0000043c       0x24 Module_TaskScheduler_TimeCrunchSM.o
-                0x0000043c                LCDDisplaySMTick
- .text.main     0x00000460      0x136 Module_TaskScheduler_TimeCrunchSM.o
-                0x00000460                main
+                0x00000440       0x24 Module_TaskScheduler_TimeCrunchSM.o
+                0x00000440                LCDDisplaySMTick
+ .text.main     0x00000464      0x136 Module_TaskScheduler_TimeCrunchSM.o
+                0x00000464                main
  .text.libgcc.div
-                0x00000596       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_udivmodsi4.o)
-                0x00000596                __udivmodsi4
-                0x000005da                . = ALIGN (0x2)
+                0x0000059a       0x44 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_udivmodsi4.o)
+                0x0000059a                __udivmodsi4
+                0x000005de                . = ALIGN (0x2)
  *(.fini9)
- .fini9         0x000005da        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
-                0x000005da                _exit
-                0x000005da                exit
+ .fini9         0x000005de        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
+                0x000005de                _exit
+                0x000005de                exit
  *(.fini9)
  *(.fini8)
  *(.fini8)
@@ -353,11 +353,11 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
  *(.fini1)
  *(.fini1)
  *(.fini0)
- .fini0         0x000005da        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
+ .fini0         0x000005de        0x4 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/avr51\libgcc.a(_exit.o)
  *(.fini0)
-                0x000005de                _etext = .
+                0x000005e2                _etext = .
 
-.data           0x00800100        0x4 load address 0x000005de
+.data           0x00800100        0x4 load address 0x000005e2
                 0x00800100                PROVIDE (__data_start, .)
  *(.data)
  .data          0x00800100        0x0 c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr8-gnu-toolchain/bin/../lib/gcc/avr/4.7.2/../../../../avr/lib/avr51/crtm1284.o
@@ -397,8 +397,8 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
                 0x0080011f                timeString
                 0x0080013f                time
                 0x00800143                PROVIDE (__bss_end, .)
-                0x000005de                __data_load_start = LOADADDR (.data)
-                0x000005e2                __data_load_end = (__data_load_start + SIZEOF (.data))
+                0x000005e2                __data_load_start = LOADADDR (.data)
+                0x000005e6                __data_load_end = (__data_load_start + SIZEOF (.data))
 
 .noinit         0x00800143        0x0
                 0x00800143                PROVIDE (__noinit_start, .)
@@ -485,10 +485,10 @@ LOAD c:/program files (x86)/atmel/atmel toolchain/avr8 gcc/native/3.4.2.1002/avr
  .debug_abbrev  0x00000000       0xf1 io.o
  .debug_abbrev  0x000000f1      0x259 Module_TaskScheduler_TimeCrunchSM.o
 
-.debug_line     0x00000000      0x617
+.debug_line     0x00000000      0x619
  *(.debug_line)
  .debug_line    0x00000000      0x215 io.o
- .debug_line    0x00000215      0x402 Module_TaskScheduler_TimeCrunchSM.o
+ .debug_line    0x00000215      0x404 Module_TaskScheduler_TimeCrunchSM.o
 
 .debug_frame    0x00000000      0x1b4
  *(.debug_frame)
