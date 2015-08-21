@@ -8,6 +8,8 @@
 #include <string.h>
 #include <avr/io.h>
 #include <avr/interrupt.h>
+#include <avr/eeprom.h>
+
 #include "io.h"
 // LCD header file
 #include "scheduler.h"
@@ -23,28 +25,93 @@
 #include "keypad.h"
 // getKeypadKey() Function
 
+// EEPROMAdddresses 
+#define NUMALARMS EEPROM_ALARM_TOPADDRESS/3
+#define NUMALARMELEMENTS 4
+enum EEPROMAddresses { _addrAlarm1Hour, _addrAlarm1Minute, _addr1IsAM, _addr1IsActive,
+				  	   _addrAlarm2Hour, _addrAlarm2Minute, _addr2IsAM, _addr2IsActive,
+					   _addrAlarm3Hour, _addrAlarm3Minute, _addr3IsAM, _addr3IsActive,
+					   _addrAlarm4Hour, _addrAlarm4Minute, _addr4IsAM, _addr4IsActive,
+					   _addrAlarm5Hour, _addrAlarm5Minute, _addr5IsAM, _addr5IsActive,
+					   EEPROM_ALARM_TOPADDRESS,
+					   EEPROM_TOPADDRESS };
+
+//=====================================================================================================================================================================
+//Alarm functionality.
+// Alarm struct
+typedef struct _alarm{
+	unsigned char Hour;
+	unsigned char Minute;
+	unsigned char IsAM;
+	unsigned char IsActive;
+} Alarm;
+
+Alarm savedAlarms[NUMALARMS];
+// zero savedAlarms should only be called on startup
+void initializeSavedAlarms(){
+	for(unsigned char i = 0; i < NUMALARMS; ++i){
+		savedAlarms[i].Hour = 0;
+		savedAlarms[i].Minute = 0;
+		savedAlarms[i].IsAM = 0;
+		savedAlarms[i].IsActive = 0; // 0x00 for inactive 0xFF for active. ~
+	}
+}
+
+// fill savedAlarms with EEPROM data. Should really only be called on startup. any updates to savedalarms will be immediately represented in EEPROM
+void loadAlarmsFromEEPROM(){
+	if(eeprom_read_byte((uint8_t)(EEPROM_ALARM_TOPADDRESS)) == EEPROM_ALARM_TOPADDRESS){
+		// when this is false, it means that there is trash in the memory!
+		for(unsigned char i = 0; i < NUMALARMS; ++i){	// These addresses must be read in this order in correspondance with EEPROMAddresses enum.
+			savedAlarms[i].Hour = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i));
+			savedAlarms[i].Minute = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i+1));
+			savedAlarms[i].IsAM = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i+2));
+			savedAlarms[i].IsActive = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i+3));
+		}
+	}
+}
+// save savedAlarms contents to EEPROM. This will be called everytime an Alarm is updated.
+void saveAlarmsToEEPROM(){
+	if (eeprom_read_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS)) != EEPROM_ALARM_TOPADDRESS){
+		// store EEPROM_ALARM_TOPADDRESS at memory address EEPROM_ALARM_TOPADDRESS as a flag that the memory has been saved to already. 
+		// This will persist through resets 
+		eeprom_save_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS), EEPROM_ALARM_TOPADDRESS);
+	}
+	for(unsigned char i = 0; i < NUMALARMS; ++i){
+		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i), savedAlarms[i].Hour);
+		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i+1), savedAlarms[i].Minute);
+		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i+2), savedAlarms[i].IsAM);
+		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i+3), savedAlarms[i].IsActive);
+	}
+}
+
+//=====================================================================================================================================================================
 // Shared Variables ========
-extern eetime_t time;
-// unsigned char timeString[32] declared in module_timecrunchsm
+enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#' };
 enum SystemDriverSMStates { SystemDriver_init,
 	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall, SystemDriver_timedisplaytitle_nextmenuitem,
 	SystemDriver_alarmaddtitle, SystemDriver_alarmaddscroll, SystemDriver_alarmaddtitle_fall, SystemDriver_alarmaddscroll_fall, SystemDriver_alarmaddtitle_nextmenuitem,
-																// Add Alarm Title Screen,					Alarm scroller
-																//	Press C for Select and go to scroller	Left (A) or Right (B) to scroll through
-	SystemDriver_error } SYSTEMSTATE;
+	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_alarmview_fall, 
+		SystemDriver_alarmview_next, SystemDriver_alarmview_select, SystemDriver_alarmview_back, 
+		SystemDriver_alarmview_next_fall, SystemDriver_alarmview_select_fall, SystemDriver_alarmview_back_fall, 
+	// Add Alarm Title Screen,					Alarm scroller
+	//	Press C for Select and go to scroller	Left (A) or Right (B) to scroll through
+SystemDriver_error } SYSTEMSTATE;
+extern eetime_t time;
+// unsigned char timeString[32] declared in module_timecrunchsm
 
-enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#' }; // 
+// -----------------------------------------------------------------------------------------------------------]
 unsigned char menuNavigationInput;
-// End Shared Variables ====
-// State Machine drivers
-// MenuNavigationInput State Machine ===================================================================================================================================
 
+// End Shared Variables ====
+
+// State Machine drivers
 // SystemDriver State Machine ===================================================================================================================================							
 /*  
 	State Machine: SystemDriverSM
-	Inputs: ABCD on Keypad
-	Outputs: time.Hours, time.Minutes, time.Seconds */
+	Inputs: I/O variables //TODO fill this out
+	Outputs: SYSTEMSTATE to drive certain actions. Particularly display.  */
 #define MAXMENUTITLETIME 50 //100period ms * 50 = 5000 s seconds
+
 signed char SystemDriverSMTick (signed char state){
 	static unsigned char stateTimer = 0;
 	// Transitions
@@ -118,29 +185,39 @@ signed char SystemDriverSMTick (signed char state){
 			stateTimer = 0;
 			break;
 		//=================================================================
+		case SystemDriver_alarmviewtitle :
+			break;
+		case SystemDriver_alarmviewtitle_fall:
+			break;
+		case SystemDriver_alarmview:
+			break;
+		case SystemDriver_alarmview_alarmview_fall:
+			break;
+		// Input NEXT
+		case SystemDriver_alarmview_next:
+			break;
+		case SystemDriver_alarmview_next_fall:
+			break;
+		// Input SELECT
+		case SystemDriver_alarmview_select:
+			break;
+		case SystemDriver_alarmview_select_fall:
+			break;
+		// Input BACK
+		case SystemDriver_alarmview_back:
+			break;
+		case SystemDriver_alarmview_back_fall:
+			break;
+		
+		//=================================================================
 		default:
 			state = SystemDriver_timedisplaytitle;
 			break;
 	}
-	// Actions
-	switch(state){
-		case SystemDriver_init:
-		break;
-		case SystemDriver_timedisplaytitle:
-		break;
-		case SystemDriver_timedisplay:
-		break;
-		case SystemDriver_alarmaddtitle:
-		break;
-		case SystemDriver_alarmaddscroll:
-		break;
-		default:
-		break;
-	}
-	
 	SYSTEMSTATE = state;
 	return state;
 }
+
 
 enum UpdateInputSMStates { UpdateInput_update };
 /*  
@@ -196,12 +273,36 @@ signed char LCDDisplaySMTick( signed char state ){
 					updateTimeString();
 					LCD_DisplayString(1, timeString);
 					break;
-				case SystemDriver_alarmaddtitle:
+					case SystemDriver_alarmaddtitle:
 					LCD_DisplayString(1, "Add Alarm");
 					break;
 				case SystemDriver_alarmaddscroll:
 					LCD_DisplayString(1, "alarmaddscroll");
 					break;
+/*
+	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_alarmview_fall,
+	SystemDriver_alarmview_next, SystemDriver_alarmview_select, SystemDriver_alarmview_back,
+	SystemDriver_alarmview_next_fall, SystemDriver_alarmview_select_fall, SystemDriver_alarmview_back_fall,
+*/
+				case SystemDriver_alarmviewtitle:
+				case SystemDriver_alarmviewtitle_fall:
+					break;
+				case SystemDriver_alarmview:
+				case SystemDriver_alarmview_alarmview_fall:
+					
+					break;
+				/*// Input NEXT
+				case SystemDriver_alarmview_next:
+				case SystemDriver_alarmview_next_fall:
+					break;
+				// Input SELECT
+				case SystemDriver_alarmview_select:
+				case SystemDriver_alarmview_select_fall:
+					break;
+				// Input BACK
+				case SystemDriver_alarmview_back:
+				case SystemDriver_alarmview_back_fall:
+					break;*/
 				default:
 				LCD_DisplayString(1, "Initializing");
 					break;
@@ -279,12 +380,16 @@ int main(void)
 	LCDDisplaySMTask.period = LCDDisplaySMTask.elapsedTime = LCDDisplaySM_period;
 	LCDDisplaySMTask.TickFct = &LCDDisplaySMTick;
 	
-	//======================================================
+	// HW initializations ======================================================
 	// Set timer and turn it on
 	TimerSet(GCD);
 	TimerOn();
 	// Start LCD
 	LCD_init();
+	// MEM initializations ======================================================
+	initializeSavedAlarms(); // zero saved Alarms 
+	loadAlarmsFromEEPROM();  // load Alarms if previously saved.
+	
 	unsigned short i; // for loop iterator
     while(1)
     {

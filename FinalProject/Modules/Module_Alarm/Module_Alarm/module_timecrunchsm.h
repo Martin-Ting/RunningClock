@@ -18,7 +18,7 @@ typedef struct {
 	unsigned char Minute;
 	unsigned char Second;
 	unsigned char IsAM;
-} eetime_t;
+} eetime_t; // should only be used for system time. <time> variable
 
 //Shared Variables
 eetime_t time;
