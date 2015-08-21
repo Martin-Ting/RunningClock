@@ -3,33 +3,33 @@ Module_Alarm.elf:     file format elf32-avr
 
 Sections:
 Idx Name          Size      VMA       LMA       File off  Algn
-  0 .data         00000038  00800100  00000950  000009e4  2**0
+  0 .data         00000052  00800100  000009ca  00000a5e  2**0
                   CONTENTS, ALLOC, LOAD, DATA
-  1 .text         00000950  00000000  00000000  00000094  2**1
+  1 .text         000009ca  00000000  00000000  00000094  2**1
                   CONTENTS, ALLOC, LOAD, READONLY, CODE
-  2 .bss          00000070  00800138  00800138  00000a1c  2**0
+  2 .bss          00000070  00800152  00800152  00000ab0  2**0
                   ALLOC
-  3 .stab         00000840  00000000  00000000  00000a1c  2**2
+  3 .stab         00000840  00000000  00000000  00000ab0  2**2
                   CONTENTS, READONLY, DEBUGGING
-  4 .stabstr      00000181  00000000  00000000  0000125c  2**0
+  4 .stabstr      00000181  00000000  00000000  000012f0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  5 .comment      0000002f  00000000  00000000  000013dd  2**0
+  5 .comment      0000002f  00000000  00000000  00001471  2**0
                   CONTENTS, READONLY
-  6 .debug_aranges 000000e8  00000000  00000000  0000140c  2**0
+  6 .debug_aranges 000000e8  00000000  00000000  000014a0  2**0
                   CONTENTS, READONLY, DEBUGGING
-  7 .debug_info   00000d6f  00000000  00000000  000014f4  2**0
+  7 .debug_info   00000d86  00000000  00000000  00001588  2**0
                   CONTENTS, READONLY, DEBUGGING
-  8 .debug_abbrev 00000426  00000000  00000000  00002263  2**0
+  8 .debug_abbrev 0000045a  00000000  00000000  0000230e  2**0
                   CONTENTS, READONLY, DEBUGGING
-  9 .debug_line   00000b0d  00000000  00000000  00002689  2**0
+  9 .debug_line   00000b61  00000000  00000000  00002768  2**0
                   CONTENTS, READONLY, DEBUGGING
- 10 .debug_frame  0000023c  00000000  00000000  00003198  2**2
+ 10 .debug_frame  0000023c  00000000  00000000  000032cc  2**2
                   CONTENTS, READONLY, DEBUGGING
- 11 .debug_str    0000090c  00000000  00000000  000033d4  2**0
+ 11 .debug_str    00000915  00000000  00000000  00003508  2**0
                   CONTENTS, READONLY, DEBUGGING
- 12 .debug_loc    00000781  00000000  00000000  00003ce0  2**0
+ 12 .debug_loc    000007fe  00000000  00000000  00003e1d  2**0
                   CONTENTS, READONLY, DEBUGGING
- 13 .debug_ranges 000000c8  00000000  00000000  00004461  2**0
+ 13 .debug_ranges 000000c8  00000000  00000000  0000461b  2**0
                   CONTENTS, READONLY, DEBUGGING
 
 Disassembly of section .text:
@@ -61,7 +61,7 @@ Disassembly of section .text:
   2e:	00 00       	nop
   30:	4a c0       	rjmp	.+148    	; 0xc6 <__bad_interrupt>
   32:	00 00       	nop
-  34:	da c1       	rjmp	.+948    	; 0x3ea <__vector_13>
+  34:	04 c2       	rjmp	.+1032   	; 0x43e <__vector_13>
   36:	00 00       	nop
   38:	46 c0       	rjmp	.+140    	; 0xc6 <__bad_interrupt>
   3a:	00 00       	nop
@@ -118,20 +118,20 @@ Disassembly of section .text:
   98:	11 e0       	ldi	r17, 0x01	; 1
   9a:	a0 e0       	ldi	r26, 0x00	; 0
   9c:	b1 e0       	ldi	r27, 0x01	; 1
-  9e:	e0 e5       	ldi	r30, 0x50	; 80
+  9e:	ea ec       	ldi	r30, 0xCA	; 202
   a0:	f9 e0       	ldi	r31, 0x09	; 9
   a2:	00 e0       	ldi	r16, 0x00	; 0
   a4:	0b bf       	out	0x3b, r16	; 59
   a6:	02 c0       	rjmp	.+4      	; 0xac <__do_copy_data+0x14>
   a8:	07 90       	elpm	r0, Z+
   aa:	0d 92       	st	X+, r0
-  ac:	a8 33       	cpi	r26, 0x38	; 56
+  ac:	a2 35       	cpi	r26, 0x52	; 82
   ae:	b1 07       	cpc	r27, r17
   b0:	d9 f7       	brne	.-10     	; 0xa8 <__do_copy_data+0x10>
 
 000000b2 <__do_clear_bss>:
   b2:	21 e0       	ldi	r18, 0x01	; 1
-  b4:	a8 e3       	ldi	r26, 0x38	; 56
+  b4:	a2 e5       	ldi	r26, 0x52	; 82
   b6:	b1 e0       	ldi	r27, 0x01	; 1
   b8:	01 c0       	rjmp	.+2      	; 0xbc <.do_clear_bss_start>
 
@@ -139,11 +139,11 @@ Disassembly of section .text:
   ba:	1d 92       	st	X+, r1
 
 000000bc <.do_clear_bss_start>:
-  bc:	a8 3a       	cpi	r26, 0xA8	; 168
+  bc:	a2 3c       	cpi	r26, 0xC2	; 194
   be:	b2 07       	cpc	r27, r18
   c0:	e1 f7       	brne	.-8      	; 0xba <.do_clear_bss_loop>
-  c2:	36 d3       	rcall	.+1644   	; 0x730 <main>
-  c4:	43 c4       	rjmp	.+2182   	; 0x94c <_exit>
+  c2:	73 d3       	rcall	.+1766   	; 0x7aa <main>
+  c4:	80 c4       	rjmp	.+2304   	; 0x9c6 <_exit>
 
 000000c6 <__bad_interrupt>:
   c6:	9c cf       	rjmp	.-200    	; 0x0 <__vectors>
@@ -348,1042 +348,1099 @@ void LCD_init(void) {
 }
  168:	81 11       	cpse	r24, r1
  16a:	2b c0       	rjmp	.+86     	; 0x1c2 <TimeCrunchSMTick+0x5a>
- 16c:	80 91 8d 01 	lds	r24, 0x018D
+ 16c:	80 91 a7 01 	lds	r24, 0x01A7
  170:	8b 33       	cpi	r24, 0x3B	; 59
  172:	19 f5       	brne	.+70     	; 0x1ba <TimeCrunchSMTick+0x52>
- 174:	80 91 8c 01 	lds	r24, 0x018C
+ 174:	80 91 a6 01 	lds	r24, 0x01A6
  178:	8b 33       	cpi	r24, 0x3B	; 59
  17a:	c9 f4       	brne	.+50     	; 0x1ae <TimeCrunchSMTick+0x46>
- 17c:	80 91 8b 01 	lds	r24, 0x018B
+ 17c:	80 91 a5 01 	lds	r24, 0x01A5
  180:	8b 30       	cpi	r24, 0x0B	; 11
  182:	51 f4       	brne	.+20     	; 0x198 <TimeCrunchSMTick+0x30>
- 184:	90 91 8e 01 	lds	r25, 0x018E
+ 184:	90 91 a8 01 	lds	r25, 0x01A8
  188:	99 23       	and	r25, r25
  18a:	11 f0       	breq	.+4      	; 0x190 <TimeCrunchSMTick+0x28>
  18c:	90 e0       	ldi	r25, 0x00	; 0
  18e:	01 c0       	rjmp	.+2      	; 0x192 <TimeCrunchSMTick+0x2a>
  190:	9f ef       	ldi	r25, 0xFF	; 255
- 192:	90 93 8e 01 	sts	0x018E, r25
+ 192:	90 93 a8 01 	sts	0x01A8, r25
  196:	05 c0       	rjmp	.+10     	; 0x1a2 <TimeCrunchSMTick+0x3a>
  198:	8c 30       	cpi	r24, 0x0C	; 12
  19a:	19 f4       	brne	.+6      	; 0x1a2 <TimeCrunchSMTick+0x3a>
- 19c:	10 92 8b 01 	sts	0x018B, r1
+ 19c:	10 92 a5 01 	sts	0x01A5, r1
  1a0:	03 c0       	rjmp	.+6      	; 0x1a8 <TimeCrunchSMTick+0x40>
  1a2:	8f 5f       	subi	r24, 0xFF	; 255
- 1a4:	80 93 8b 01 	sts	0x018B, r24
- 1a8:	10 92 8c 01 	sts	0x018C, r1
+ 1a4:	80 93 a5 01 	sts	0x01A5, r24
+ 1a8:	10 92 a6 01 	sts	0x01A6, r1
  1ac:	03 c0       	rjmp	.+6      	; 0x1b4 <TimeCrunchSMTick+0x4c>
  1ae:	8f 5f       	subi	r24, 0xFF	; 255
- 1b0:	80 93 8c 01 	sts	0x018C, r24
- 1b4:	10 92 8d 01 	sts	0x018D, r1
+ 1b0:	80 93 a6 01 	sts	0x01A6, r24
+ 1b4:	10 92 a7 01 	sts	0x01A7, r1
  1b8:	0f c0       	rjmp	.+30     	; 0x1d8 <TimeCrunchSMTick+0x70>
  1ba:	8f 5f       	subi	r24, 0xFF	; 255
- 1bc:	80 93 8d 01 	sts	0x018D, r24
+ 1bc:	80 93 a7 01 	sts	0x01A7, r24
  1c0:	0b c0       	rjmp	.+22     	; 0x1d8 <TimeCrunchSMTick+0x70>
  1c2:	8b e0       	ldi	r24, 0x0B	; 11
- 1c4:	80 93 8b 01 	sts	0x018B, r24
+ 1c4:	80 93 a5 01 	sts	0x01A5, r24
  1c8:	8b e3       	ldi	r24, 0x3B	; 59
- 1ca:	80 93 8c 01 	sts	0x018C, r24
+ 1ca:	80 93 a6 01 	sts	0x01A6, r24
  1ce:	88 e2       	ldi	r24, 0x28	; 40
- 1d0:	80 93 8d 01 	sts	0x018D, r24
- 1d4:	10 92 8e 01 	sts	0x018E, r1
+ 1d0:	80 93 a7 01 	sts	0x01A7, r24
+ 1d4:	10 92 a8 01 	sts	0x01A8, r1
  1d8:	80 e0       	ldi	r24, 0x00	; 0
  1da:	08 95       	ret
 
 000001dc <SystemDriverSMTick>:
- 1dc:	86 30       	cpi	r24, 0x06	; 6
+ 1dc:	88 30       	cpi	r24, 0x08	; 8
  1de:	09 f4       	brne	.+2      	; 0x1e2 <SystemDriverSMTick+0x6>
- 1e0:	59 c0       	rjmp	.+178    	; 0x294 <SystemDriverSMTick+0xb8>
- 1e2:	84 f4       	brge	.+32     	; 0x204 <SystemDriverSMTick+0x28>
- 1e4:	83 30       	cpi	r24, 0x03	; 3
- 1e6:	a9 f1       	breq	.+106    	; 0x252 <SystemDriverSMTick+0x76>
- 1e8:	34 f4       	brge	.+12     	; 0x1f6 <SystemDriverSMTick+0x1a>
- 1ea:	81 30       	cpi	r24, 0x01	; 1
- 1ec:	e9 f0       	breq	.+58     	; 0x228 <SystemDriverSMTick+0x4c>
- 1ee:	82 30       	cpi	r24, 0x02	; 2
- 1f0:	09 f0       	breq	.+2      	; 0x1f4 <SystemDriverSMTick+0x18>
- 1f2:	7f c0       	rjmp	.+254    	; 0x2f2 <SystemDriverSMTick+0x116>
- 1f4:	3c c0       	rjmp	.+120    	; 0x26e <SystemDriverSMTick+0x92>
- 1f6:	84 30       	cpi	r24, 0x04	; 4
- 1f8:	09 f4       	brne	.+2      	; 0x1fc <SystemDriverSMTick+0x20>
- 1fa:	3f c0       	rjmp	.+126    	; 0x27a <SystemDriverSMTick+0x9e>
- 1fc:	85 30       	cpi	r24, 0x05	; 5
- 1fe:	09 f0       	breq	.+2      	; 0x202 <SystemDriverSMTick+0x26>
- 200:	78 c0       	rjmp	.+240    	; 0x2f2 <SystemDriverSMTick+0x116>
- 202:	40 c0       	rjmp	.+128    	; 0x284 <SystemDriverSMTick+0xa8>
- 204:	89 30       	cpi	r24, 0x09	; 9
- 206:	09 f4       	brne	.+2      	; 0x20a <SystemDriverSMTick+0x2e>
- 208:	67 c0       	rjmp	.+206    	; 0x2d8 <SystemDriverSMTick+0xfc>
- 20a:	3c f4       	brge	.+14     	; 0x21a <SystemDriverSMTick+0x3e>
- 20c:	87 30       	cpi	r24, 0x07	; 7
- 20e:	09 f4       	brne	.+2      	; 0x212 <SystemDriverSMTick+0x36>
- 210:	5e c0       	rjmp	.+188    	; 0x2ce <SystemDriverSMTick+0xf2>
- 212:	88 30       	cpi	r24, 0x08	; 8
- 214:	09 f0       	breq	.+2      	; 0x218 <SystemDriverSMTick+0x3c>
- 216:	6d c0       	rjmp	.+218    	; 0x2f2 <SystemDriverSMTick+0x116>
- 218:	4b c0       	rjmp	.+150    	; 0x2b0 <SystemDriverSMTick+0xd4>
- 21a:	8a 30       	cpi	r24, 0x0A	; 10
- 21c:	09 f4       	brne	.+2      	; 0x220 <SystemDriverSMTick+0x44>
- 21e:	61 c0       	rjmp	.+194    	; 0x2e2 <SystemDriverSMTick+0x106>
- 220:	85 31       	cpi	r24, 0x15	; 21
- 222:	0c f0       	brlt	.+2      	; 0x226 <SystemDriverSMTick+0x4a>
- 224:	66 c0       	rjmp	.+204    	; 0x2f2 <SystemDriverSMTick+0x116>
- 226:	76 c0       	rjmp	.+236    	; 0x314 <SystemDriverSMTick+0x138>
- 228:	90 91 3d 01 	lds	r25, 0x013D
- 22c:	9f 5f       	subi	r25, 0xFF	; 255
- 22e:	90 93 3d 01 	sts	0x013D, r25
- 232:	92 33       	cpi	r25, 0x32	; 50
- 234:	28 f4       	brcc	.+10     	; 0x240 <SystemDriverSMTick+0x64>
- 236:	90 91 8a 01 	lds	r25, 0x018A
- 23a:	93 34       	cpi	r25, 0x43	; 67
- 23c:	11 f4       	brne	.+4      	; 0x242 <SystemDriverSMTick+0x66>
- 23e:	07 c0       	rjmp	.+14     	; 0x24e <SystemDriverSMTick+0x72>
- 240:	83 e0       	ldi	r24, 0x03	; 3
- 242:	90 91 8a 01 	lds	r25, 0x018A
- 246:	91 34       	cpi	r25, 0x41	; 65
- 248:	09 f4       	brne	.+2      	; 0x24c <SystemDriverSMTick+0x70>
- 24a:	55 c0       	rjmp	.+170    	; 0x2f6 <SystemDriverSMTick+0x11a>
- 24c:	63 c0       	rjmp	.+198    	; 0x314 <SystemDriverSMTick+0x138>
- 24e:	83 e0       	ldi	r24, 0x03	; 3
- 250:	61 c0       	rjmp	.+194    	; 0x314 <SystemDriverSMTick+0x138>
- 252:	90 91 3d 01 	lds	r25, 0x013D
- 256:	92 33       	cpi	r25, 0x32	; 50
- 258:	30 f4       	brcc	.+12     	; 0x266 <SystemDriverSMTick+0x8a>
- 25a:	90 91 8a 01 	lds	r25, 0x018A
- 25e:	93 34       	cpi	r25, 0x43	; 67
- 260:	19 f0       	breq	.+6      	; 0x268 <SystemDriverSMTick+0x8c>
- 262:	82 e0       	ldi	r24, 0x02	; 2
- 264:	01 c0       	rjmp	.+2      	; 0x268 <SystemDriverSMTick+0x8c>
- 266:	82 e0       	ldi	r24, 0x02	; 2
- 268:	10 92 3d 01 	sts	0x013D, r1
- 26c:	53 c0       	rjmp	.+166    	; 0x314 <SystemDriverSMTick+0x138>
- 26e:	90 91 8a 01 	lds	r25, 0x018A
- 272:	93 32       	cpi	r25, 0x23	; 35
- 274:	09 f0       	breq	.+2      	; 0x278 <SystemDriverSMTick+0x9c>
- 276:	4e c0       	rjmp	.+156    	; 0x314 <SystemDriverSMTick+0x138>
- 278:	40 c0       	rjmp	.+128    	; 0x2fa <SystemDriverSMTick+0x11e>
- 27a:	90 91 8a 01 	lds	r25, 0x018A
- 27e:	93 32       	cpi	r25, 0x23	; 35
- 280:	f1 f5       	brne	.+124    	; 0x2fe <SystemDriverSMTick+0x122>
- 282:	48 c0       	rjmp	.+144    	; 0x314 <SystemDriverSMTick+0x138>
- 284:	90 91 8a 01 	lds	r25, 0x018A
- 288:	91 34       	cpi	r25, 0x41	; 65
+ 1e0:	70 c0       	rjmp	.+224    	; 0x2c2 <SystemDriverSMTick+0xe6>
+ 1e2:	94 f4       	brge	.+36     	; 0x208 <SystemDriverSMTick+0x2c>
+ 1e4:	84 30       	cpi	r24, 0x04	; 4
+ 1e6:	09 f4       	brne	.+2      	; 0x1ea <SystemDriverSMTick+0xe>
+ 1e8:	4d c0       	rjmp	.+154    	; 0x284 <SystemDriverSMTick+0xa8>
+ 1ea:	44 f4       	brge	.+16     	; 0x1fc <SystemDriverSMTick+0x20>
+ 1ec:	82 30       	cpi	r24, 0x02	; 2
+ 1ee:	09 f4       	brne	.+2      	; 0x1f2 <SystemDriverSMTick+0x16>
+ 1f0:	43 c0       	rjmp	.+134    	; 0x278 <SystemDriverSMTick+0x9c>
+ 1f2:	a4 f5       	brge	.+104    	; 0x25c <SystemDriverSMTick+0x80>
+ 1f4:	81 30       	cpi	r24, 0x01	; 1
+ 1f6:	09 f0       	breq	.+2      	; 0x1fa <SystemDriverSMTick+0x1e>
+ 1f8:	9c c0       	rjmp	.+312    	; 0x332 <SystemDriverSMTick+0x156>
+ 1fa:	1b c0       	rjmp	.+54     	; 0x232 <SystemDriverSMTick+0x56>
+ 1fc:	86 30       	cpi	r24, 0x06	; 6
+ 1fe:	09 f4       	brne	.+2      	; 0x202 <SystemDriverSMTick+0x26>
+ 200:	4f c0       	rjmp	.+158    	; 0x2a0 <SystemDriverSMTick+0xc4>
+ 202:	0c f0       	brlt	.+2      	; 0x206 <SystemDriverSMTick+0x2a>
+ 204:	6d c0       	rjmp	.+218    	; 0x2e0 <SystemDriverSMTick+0x104>
+ 206:	44 c0       	rjmp	.+136    	; 0x290 <SystemDriverSMTick+0xb4>
+ 208:	8c 30       	cpi	r24, 0x0C	; 12
+ 20a:	09 f4       	brne	.+2      	; 0x20e <SystemDriverSMTick+0x32>
+ 20c:	88 c0       	rjmp	.+272    	; 0x31e <SystemDriverSMTick+0x142>
+ 20e:	34 f4       	brge	.+12     	; 0x21c <SystemDriverSMTick+0x40>
+ 210:	8a 30       	cpi	r24, 0x0A	; 10
+ 212:	09 f4       	brne	.+2      	; 0x216 <SystemDriverSMTick+0x3a>
+ 214:	70 c0       	rjmp	.+224    	; 0x2f6 <SystemDriverSMTick+0x11a>
+ 216:	0c f0       	brlt	.+2      	; 0x21a <SystemDriverSMTick+0x3e>
+ 218:	76 c0       	rjmp	.+236    	; 0x306 <SystemDriverSMTick+0x12a>
+ 21a:	68 c0       	rjmp	.+208    	; 0x2ec <SystemDriverSMTick+0x110>
+ 21c:	8e 30       	cpi	r24, 0x0E	; 14
+ 21e:	09 f4       	brne	.+2      	; 0x222 <SystemDriverSMTick+0x46>
+ 220:	83 c0       	rjmp	.+262    	; 0x328 <SystemDriverSMTick+0x14c>
+ 222:	0c f4       	brge	.+2      	; 0x226 <SystemDriverSMTick+0x4a>
+ 224:	77 c0       	rjmp	.+238    	; 0x314 <SystemDriverSMTick+0x138>
+ 226:	98 2f       	mov	r25, r24
+ 228:	90 51       	subi	r25, 0x10	; 16
+ 22a:	96 30       	cpi	r25, 0x06	; 6
+ 22c:	08 f0       	brcs	.+2      	; 0x230 <SystemDriverSMTick+0x54>
+ 22e:	81 c0       	rjmp	.+258    	; 0x332 <SystemDriverSMTick+0x156>
+ 230:	9b c0       	rjmp	.+310    	; 0x368 <SystemDriverSMTick+0x18c>
+ 232:	90 91 57 01 	lds	r25, 0x0157
+ 236:	9f 5f       	subi	r25, 0xFF	; 255
+ 238:	90 93 57 01 	sts	0x0157, r25
+ 23c:	92 33       	cpi	r25, 0x32	; 50
+ 23e:	28 f4       	brcc	.+10     	; 0x24a <SystemDriverSMTick+0x6e>
+ 240:	90 91 a4 01 	lds	r25, 0x01A4
+ 244:	93 34       	cpi	r25, 0x43	; 67
+ 246:	11 f4       	brne	.+4      	; 0x24c <SystemDriverSMTick+0x70>
+ 248:	07 c0       	rjmp	.+14     	; 0x258 <SystemDriverSMTick+0x7c>
+ 24a:	83 e0       	ldi	r24, 0x03	; 3
+ 24c:	90 91 a4 01 	lds	r25, 0x01A4
+ 250:	91 34       	cpi	r25, 0x41	; 65
+ 252:	09 f4       	brne	.+2      	; 0x256 <SystemDriverSMTick+0x7a>
+ 254:	70 c0       	rjmp	.+224    	; 0x336 <SystemDriverSMTick+0x15a>
+ 256:	88 c0       	rjmp	.+272    	; 0x368 <SystemDriverSMTick+0x18c>
+ 258:	83 e0       	ldi	r24, 0x03	; 3
+ 25a:	86 c0       	rjmp	.+268    	; 0x368 <SystemDriverSMTick+0x18c>
+ 25c:	90 91 57 01 	lds	r25, 0x0157
+ 260:	92 33       	cpi	r25, 0x32	; 50
+ 262:	30 f4       	brcc	.+12     	; 0x270 <SystemDriverSMTick+0x94>
+ 264:	90 91 a4 01 	lds	r25, 0x01A4
+ 268:	93 34       	cpi	r25, 0x43	; 67
+ 26a:	19 f0       	breq	.+6      	; 0x272 <SystemDriverSMTick+0x96>
+ 26c:	82 e0       	ldi	r24, 0x02	; 2
+ 26e:	01 c0       	rjmp	.+2      	; 0x272 <SystemDriverSMTick+0x96>
+ 270:	82 e0       	ldi	r24, 0x02	; 2
+ 272:	10 92 57 01 	sts	0x0157, r1
+ 276:	78 c0       	rjmp	.+240    	; 0x368 <SystemDriverSMTick+0x18c>
+ 278:	90 91 a4 01 	lds	r25, 0x01A4
+ 27c:	93 32       	cpi	r25, 0x23	; 35
+ 27e:	09 f0       	breq	.+2      	; 0x282 <SystemDriverSMTick+0xa6>
+ 280:	73 c0       	rjmp	.+230    	; 0x368 <SystemDriverSMTick+0x18c>
+ 282:	5b c0       	rjmp	.+182    	; 0x33a <SystemDriverSMTick+0x15e>
+ 284:	90 91 a4 01 	lds	r25, 0x01A4
+ 288:	93 32       	cpi	r25, 0x23	; 35
  28a:	09 f0       	breq	.+2      	; 0x28e <SystemDriverSMTick+0xb2>
- 28c:	86 e0       	ldi	r24, 0x06	; 6
- 28e:	10 92 3d 01 	sts	0x013D, r1
- 292:	40 c0       	rjmp	.+128    	; 0x314 <SystemDriverSMTick+0x138>
- 294:	90 91 3d 01 	lds	r25, 0x013D
- 298:	9f 5f       	subi	r25, 0xFF	; 255
- 29a:	90 93 3d 01 	sts	0x013D, r25
- 29e:	92 33       	cpi	r25, 0x32	; 50
- 2a0:	80 f5       	brcc	.+96     	; 0x302 <SystemDriverSMTick+0x126>
- 2a2:	90 91 8a 01 	lds	r25, 0x018A
- 2a6:	93 34       	cpi	r25, 0x43	; 67
- 2a8:	71 f1       	breq	.+92     	; 0x306 <SystemDriverSMTick+0x12a>
- 2aa:	91 34       	cpi	r25, 0x41	; 65
- 2ac:	99 f5       	brne	.+102    	; 0x314 <SystemDriverSMTick+0x138>
- 2ae:	2d c0       	rjmp	.+90     	; 0x30a <SystemDriverSMTick+0x12e>
- 2b0:	90 91 3d 01 	lds	r25, 0x013D
- 2b4:	92 33       	cpi	r25, 0x32	; 50
- 2b6:	28 f4       	brcc	.+10     	; 0x2c2 <SystemDriverSMTick+0xe6>
- 2b8:	90 91 8a 01 	lds	r25, 0x018A
- 2bc:	93 34       	cpi	r25, 0x43	; 67
- 2be:	19 f4       	brne	.+6      	; 0x2c6 <SystemDriverSMTick+0xea>
- 2c0:	03 c0       	rjmp	.+6      	; 0x2c8 <SystemDriverSMTick+0xec>
- 2c2:	87 e0       	ldi	r24, 0x07	; 7
- 2c4:	01 c0       	rjmp	.+2      	; 0x2c8 <SystemDriverSMTick+0xec>
- 2c6:	87 e0       	ldi	r24, 0x07	; 7
- 2c8:	10 92 3d 01 	sts	0x013D, r1
- 2cc:	23 c0       	rjmp	.+70     	; 0x314 <SystemDriverSMTick+0x138>
- 2ce:	90 91 8a 01 	lds	r25, 0x018A
- 2d2:	93 32       	cpi	r25, 0x23	; 35
- 2d4:	f9 f4       	brne	.+62     	; 0x314 <SystemDriverSMTick+0x138>
- 2d6:	1b c0       	rjmp	.+54     	; 0x30e <SystemDriverSMTick+0x132>
- 2d8:	90 91 8a 01 	lds	r25, 0x018A
- 2dc:	93 32       	cpi	r25, 0x23	; 35
- 2de:	c9 f4       	brne	.+50     	; 0x312 <SystemDriverSMTick+0x136>
- 2e0:	19 c0       	rjmp	.+50     	; 0x314 <SystemDriverSMTick+0x138>
- 2e2:	90 91 8a 01 	lds	r25, 0x018A
- 2e6:	91 34       	cpi	r25, 0x41	; 65
- 2e8:	09 f0       	breq	.+2      	; 0x2ec <SystemDriverSMTick+0x110>
- 2ea:	81 e0       	ldi	r24, 0x01	; 1
- 2ec:	10 92 3d 01 	sts	0x013D, r1
- 2f0:	11 c0       	rjmp	.+34     	; 0x314 <SystemDriverSMTick+0x138>
- 2f2:	81 e0       	ldi	r24, 0x01	; 1
- 2f4:	0f c0       	rjmp	.+30     	; 0x314 <SystemDriverSMTick+0x138>
- 2f6:	85 e0       	ldi	r24, 0x05	; 5
- 2f8:	0d c0       	rjmp	.+26     	; 0x314 <SystemDriverSMTick+0x138>
- 2fa:	84 e0       	ldi	r24, 0x04	; 4
- 2fc:	0b c0       	rjmp	.+22     	; 0x314 <SystemDriverSMTick+0x138>
- 2fe:	81 e0       	ldi	r24, 0x01	; 1
- 300:	09 c0       	rjmp	.+18     	; 0x314 <SystemDriverSMTick+0x138>
- 302:	88 e0       	ldi	r24, 0x08	; 8
- 304:	07 c0       	rjmp	.+14     	; 0x314 <SystemDriverSMTick+0x138>
- 306:	88 e0       	ldi	r24, 0x08	; 8
- 308:	05 c0       	rjmp	.+10     	; 0x314 <SystemDriverSMTick+0x138>
- 30a:	8a e0       	ldi	r24, 0x0A	; 10
- 30c:	03 c0       	rjmp	.+6      	; 0x314 <SystemDriverSMTick+0x138>
- 30e:	89 e0       	ldi	r24, 0x09	; 9
- 310:	01 c0       	rjmp	.+2      	; 0x314 <SystemDriverSMTick+0x138>
- 312:	86 e0       	ldi	r24, 0x06	; 6
- 314:	80 93 8f 01 	sts	0x018F, r24
- 318:	08 95       	ret
+ 28c:	58 c0       	rjmp	.+176    	; 0x33e <SystemDriverSMTick+0x162>
+ 28e:	6c c0       	rjmp	.+216    	; 0x368 <SystemDriverSMTick+0x18c>
+ 290:	90 91 a4 01 	lds	r25, 0x01A4
+ 294:	91 34       	cpi	r25, 0x41	; 65
+ 296:	09 f0       	breq	.+2      	; 0x29a <SystemDriverSMTick+0xbe>
+ 298:	86 e0       	ldi	r24, 0x06	; 6
+ 29a:	10 92 57 01 	sts	0x0157, r1
+ 29e:	64 c0       	rjmp	.+200    	; 0x368 <SystemDriverSMTick+0x18c>
+ 2a0:	90 91 57 01 	lds	r25, 0x0157
+ 2a4:	9f 5f       	subi	r25, 0xFF	; 255
+ 2a6:	90 93 57 01 	sts	0x0157, r25
+ 2aa:	92 33       	cpi	r25, 0x32	; 50
+ 2ac:	08 f0       	brcs	.+2      	; 0x2b0 <SystemDriverSMTick+0xd4>
+ 2ae:	49 c0       	rjmp	.+146    	; 0x342 <SystemDriverSMTick+0x166>
+ 2b0:	90 91 a4 01 	lds	r25, 0x01A4
+ 2b4:	93 34       	cpi	r25, 0x43	; 67
+ 2b6:	09 f4       	brne	.+2      	; 0x2ba <SystemDriverSMTick+0xde>
+ 2b8:	46 c0       	rjmp	.+140    	; 0x346 <SystemDriverSMTick+0x16a>
+ 2ba:	91 34       	cpi	r25, 0x41	; 65
+ 2bc:	09 f0       	breq	.+2      	; 0x2c0 <SystemDriverSMTick+0xe4>
+ 2be:	54 c0       	rjmp	.+168    	; 0x368 <SystemDriverSMTick+0x18c>
+ 2c0:	44 c0       	rjmp	.+136    	; 0x34a <SystemDriverSMTick+0x16e>
+ 2c2:	90 91 57 01 	lds	r25, 0x0157
+ 2c6:	92 33       	cpi	r25, 0x32	; 50
+ 2c8:	28 f4       	brcc	.+10     	; 0x2d4 <SystemDriverSMTick+0xf8>
+ 2ca:	90 91 a4 01 	lds	r25, 0x01A4
+ 2ce:	93 34       	cpi	r25, 0x43	; 67
+ 2d0:	19 f4       	brne	.+6      	; 0x2d8 <SystemDriverSMTick+0xfc>
+ 2d2:	03 c0       	rjmp	.+6      	; 0x2da <SystemDriverSMTick+0xfe>
+ 2d4:	87 e0       	ldi	r24, 0x07	; 7
+ 2d6:	01 c0       	rjmp	.+2      	; 0x2da <SystemDriverSMTick+0xfe>
+ 2d8:	87 e0       	ldi	r24, 0x07	; 7
+ 2da:	10 92 57 01 	sts	0x0157, r1
+ 2de:	44 c0       	rjmp	.+136    	; 0x368 <SystemDriverSMTick+0x18c>
+ 2e0:	90 91 a4 01 	lds	r25, 0x01A4
+ 2e4:	93 32       	cpi	r25, 0x23	; 35
+ 2e6:	09 f0       	breq	.+2      	; 0x2ea <SystemDriverSMTick+0x10e>
+ 2e8:	3f c0       	rjmp	.+126    	; 0x368 <SystemDriverSMTick+0x18c>
+ 2ea:	31 c0       	rjmp	.+98     	; 0x34e <SystemDriverSMTick+0x172>
+ 2ec:	90 91 a4 01 	lds	r25, 0x01A4
+ 2f0:	93 32       	cpi	r25, 0x23	; 35
+ 2f2:	79 f5       	brne	.+94     	; 0x352 <SystemDriverSMTick+0x176>
+ 2f4:	39 c0       	rjmp	.+114    	; 0x368 <SystemDriverSMTick+0x18c>
+ 2f6:	90 91 a4 01 	lds	r25, 0x01A4
+ 2fa:	91 34       	cpi	r25, 0x41	; 65
+ 2fc:	09 f0       	breq	.+2      	; 0x300 <SystemDriverSMTick+0x124>
+ 2fe:	8b e0       	ldi	r24, 0x0B	; 11
+ 300:	10 92 57 01 	sts	0x0157, r1
+ 304:	31 c0       	rjmp	.+98     	; 0x368 <SystemDriverSMTick+0x18c>
+ 306:	90 91 a4 01 	lds	r25, 0x01A4
+ 30a:	93 34       	cpi	r25, 0x43	; 67
+ 30c:	21 f1       	breq	.+72     	; 0x356 <SystemDriverSMTick+0x17a>
+ 30e:	91 34       	cpi	r25, 0x41	; 65
+ 310:	59 f5       	brne	.+86     	; 0x368 <SystemDriverSMTick+0x18c>
+ 312:	23 c0       	rjmp	.+70     	; 0x35a <SystemDriverSMTick+0x17e>
+ 314:	90 91 a4 01 	lds	r25, 0x01A4
+ 318:	93 34       	cpi	r25, 0x43	; 67
+ 31a:	09 f5       	brne	.+66     	; 0x35e <SystemDriverSMTick+0x182>
+ 31c:	25 c0       	rjmp	.+74     	; 0x368 <SystemDriverSMTick+0x18c>
+ 31e:	90 91 a4 01 	lds	r25, 0x01A4
+ 322:	93 32       	cpi	r25, 0x23	; 35
+ 324:	09 f5       	brne	.+66     	; 0x368 <SystemDriverSMTick+0x18c>
+ 326:	1d c0       	rjmp	.+58     	; 0x362 <SystemDriverSMTick+0x186>
+ 328:	90 91 a4 01 	lds	r25, 0x01A4
+ 32c:	93 32       	cpi	r25, 0x23	; 35
+ 32e:	d9 f4       	brne	.+54     	; 0x366 <SystemDriverSMTick+0x18a>
+ 330:	1b c0       	rjmp	.+54     	; 0x368 <SystemDriverSMTick+0x18c>
+ 332:	81 e0       	ldi	r24, 0x01	; 1
+ 334:	19 c0       	rjmp	.+50     	; 0x368 <SystemDriverSMTick+0x18c>
+ 336:	85 e0       	ldi	r24, 0x05	; 5
+ 338:	17 c0       	rjmp	.+46     	; 0x368 <SystemDriverSMTick+0x18c>
+ 33a:	84 e0       	ldi	r24, 0x04	; 4
+ 33c:	15 c0       	rjmp	.+42     	; 0x368 <SystemDriverSMTick+0x18c>
+ 33e:	81 e0       	ldi	r24, 0x01	; 1
+ 340:	13 c0       	rjmp	.+38     	; 0x368 <SystemDriverSMTick+0x18c>
+ 342:	88 e0       	ldi	r24, 0x08	; 8
+ 344:	11 c0       	rjmp	.+34     	; 0x368 <SystemDriverSMTick+0x18c>
+ 346:	88 e0       	ldi	r24, 0x08	; 8
+ 348:	0f c0       	rjmp	.+30     	; 0x368 <SystemDriverSMTick+0x18c>
+ 34a:	8a e0       	ldi	r24, 0x0A	; 10
+ 34c:	0d c0       	rjmp	.+26     	; 0x368 <SystemDriverSMTick+0x18c>
+ 34e:	89 e0       	ldi	r24, 0x09	; 9
+ 350:	0b c0       	rjmp	.+22     	; 0x368 <SystemDriverSMTick+0x18c>
+ 352:	86 e0       	ldi	r24, 0x06	; 6
+ 354:	09 c0       	rjmp	.+18     	; 0x368 <SystemDriverSMTick+0x18c>
+ 356:	8d e0       	ldi	r24, 0x0D	; 13
+ 358:	07 c0       	rjmp	.+14     	; 0x368 <SystemDriverSMTick+0x18c>
+ 35a:	8f e0       	ldi	r24, 0x0F	; 15
+ 35c:	05 c0       	rjmp	.+10     	; 0x368 <SystemDriverSMTick+0x18c>
+ 35e:	8c e0       	ldi	r24, 0x0C	; 12
+ 360:	03 c0       	rjmp	.+6      	; 0x368 <SystemDriverSMTick+0x18c>
+ 362:	8e e0       	ldi	r24, 0x0E	; 14
+ 364:	01 c0       	rjmp	.+2      	; 0x368 <SystemDriverSMTick+0x18c>
+ 366:	8b e0       	ldi	r24, 0x0B	; 11
+ 368:	80 93 a9 01 	sts	0x01A9, r24
+ 36c:	08 95       	ret
 
-0000031a <findGCD>:
- 31a:	0f 93       	push	r16
- 31c:	1f 93       	push	r17
- 31e:	cf 93       	push	r28
- 320:	df 93       	push	r29
- 322:	b6 2f       	mov	r27, r22
- 324:	a7 2f       	mov	r26, r23
- 326:	f8 2f       	mov	r31, r24
- 328:	e9 2f       	mov	r30, r25
- 32a:	02 2f       	mov	r16, r18
- 32c:	13 2f       	mov	r17, r19
- 32e:	d4 2f       	mov	r29, r20
- 330:	c5 2f       	mov	r28, r21
- 332:	04 c0       	rjmp	.+8      	; 0x33c <findGCD+0x22>
- 334:	05 2f       	mov	r16, r21
- 336:	14 2f       	mov	r17, r20
- 338:	d3 2f       	mov	r29, r19
- 33a:	c2 2f       	mov	r28, r18
- 33c:	6b 2f       	mov	r22, r27
- 33e:	7a 2f       	mov	r23, r26
- 340:	8f 2f       	mov	r24, r31
- 342:	9e 2f       	mov	r25, r30
- 344:	20 2f       	mov	r18, r16
- 346:	31 2f       	mov	r19, r17
- 348:	4d 2f       	mov	r20, r29
- 34a:	5c 2f       	mov	r21, r28
- 34c:	d5 d2       	rcall	.+1450   	; 0x8f8 <__udivmodsi4>
- 34e:	b0 2f       	mov	r27, r16
- 350:	a1 2f       	mov	r26, r17
- 352:	fd 2f       	mov	r31, r29
- 354:	ec 2f       	mov	r30, r28
- 356:	56 2f       	mov	r21, r22
- 358:	47 2f       	mov	r20, r23
- 35a:	38 2f       	mov	r19, r24
- 35c:	29 2f       	mov	r18, r25
- 35e:	67 2b       	or	r22, r23
- 360:	68 2b       	or	r22, r24
- 362:	69 2b       	or	r22, r25
- 364:	39 f7       	brne	.-50     	; 0x334 <findGCD+0x1a>
- 366:	60 2f       	mov	r22, r16
- 368:	71 2f       	mov	r23, r17
- 36a:	8d 2f       	mov	r24, r29
- 36c:	9c 2f       	mov	r25, r28
- 36e:	df 91       	pop	r29
- 370:	cf 91       	pop	r28
- 372:	1f 91       	pop	r17
- 374:	0f 91       	pop	r16
- 376:	08 95       	ret
+0000036e <findGCD>:
+ 36e:	0f 93       	push	r16
+ 370:	1f 93       	push	r17
+ 372:	cf 93       	push	r28
+ 374:	df 93       	push	r29
+ 376:	b6 2f       	mov	r27, r22
+ 378:	a7 2f       	mov	r26, r23
+ 37a:	f8 2f       	mov	r31, r24
+ 37c:	e9 2f       	mov	r30, r25
+ 37e:	02 2f       	mov	r16, r18
+ 380:	13 2f       	mov	r17, r19
+ 382:	d4 2f       	mov	r29, r20
+ 384:	c5 2f       	mov	r28, r21
+ 386:	04 c0       	rjmp	.+8      	; 0x390 <findGCD+0x22>
+ 388:	05 2f       	mov	r16, r21
+ 38a:	14 2f       	mov	r17, r20
+ 38c:	d3 2f       	mov	r29, r19
+ 38e:	c2 2f       	mov	r28, r18
+ 390:	6b 2f       	mov	r22, r27
+ 392:	7a 2f       	mov	r23, r26
+ 394:	8f 2f       	mov	r24, r31
+ 396:	9e 2f       	mov	r25, r30
+ 398:	20 2f       	mov	r18, r16
+ 39a:	31 2f       	mov	r19, r17
+ 39c:	4d 2f       	mov	r20, r29
+ 39e:	5c 2f       	mov	r21, r28
+ 3a0:	e8 d2       	rcall	.+1488   	; 0x972 <__udivmodsi4>
+ 3a2:	b0 2f       	mov	r27, r16
+ 3a4:	a1 2f       	mov	r26, r17
+ 3a6:	fd 2f       	mov	r31, r29
+ 3a8:	ec 2f       	mov	r30, r28
+ 3aa:	56 2f       	mov	r21, r22
+ 3ac:	47 2f       	mov	r20, r23
+ 3ae:	38 2f       	mov	r19, r24
+ 3b0:	29 2f       	mov	r18, r25
+ 3b2:	67 2b       	or	r22, r23
+ 3b4:	68 2b       	or	r22, r24
+ 3b6:	69 2b       	or	r22, r25
+ 3b8:	39 f7       	brne	.-50     	; 0x388 <findGCD+0x1a>
+ 3ba:	60 2f       	mov	r22, r16
+ 3bc:	71 2f       	mov	r23, r17
+ 3be:	8d 2f       	mov	r24, r29
+ 3c0:	9c 2f       	mov	r25, r28
+ 3c2:	df 91       	pop	r29
+ 3c4:	cf 91       	pop	r28
+ 3c6:	1f 91       	pop	r17
+ 3c8:	0f 91       	pop	r16
+ 3ca:	08 95       	ret
 
-00000378 <TimerSet>:
- 378:	60 93 00 01 	sts	0x0100, r22
- 37c:	70 93 01 01 	sts	0x0101, r23
- 380:	80 93 02 01 	sts	0x0102, r24
- 384:	90 93 03 01 	sts	0x0103, r25
- 388:	60 93 38 01 	sts	0x0138, r22
- 38c:	70 93 39 01 	sts	0x0139, r23
- 390:	80 93 3a 01 	sts	0x013A, r24
- 394:	90 93 3b 01 	sts	0x013B, r25
- 398:	08 95       	ret
+000003cc <TimerSet>:
+ 3cc:	60 93 00 01 	sts	0x0100, r22
+ 3d0:	70 93 01 01 	sts	0x0101, r23
+ 3d4:	80 93 02 01 	sts	0x0102, r24
+ 3d8:	90 93 03 01 	sts	0x0103, r25
+ 3dc:	60 93 52 01 	sts	0x0152, r22
+ 3e0:	70 93 53 01 	sts	0x0153, r23
+ 3e4:	80 93 54 01 	sts	0x0154, r24
+ 3e8:	90 93 55 01 	sts	0x0155, r25
+ 3ec:	08 95       	ret
 
-0000039a <TimerOn>:
- 39a:	8b e0       	ldi	r24, 0x0B	; 11
- 39c:	80 93 81 00 	sts	0x0081, r24
- 3a0:	8d e7       	ldi	r24, 0x7D	; 125
- 3a2:	90 e0       	ldi	r25, 0x00	; 0
- 3a4:	90 93 89 00 	sts	0x0089, r25
- 3a8:	80 93 88 00 	sts	0x0088, r24
- 3ac:	82 e0       	ldi	r24, 0x02	; 2
- 3ae:	80 93 6f 00 	sts	0x006F, r24
- 3b2:	10 92 85 00 	sts	0x0085, r1
- 3b6:	10 92 84 00 	sts	0x0084, r1
- 3ba:	80 91 00 01 	lds	r24, 0x0100
- 3be:	90 91 01 01 	lds	r25, 0x0101
- 3c2:	a0 91 02 01 	lds	r26, 0x0102
- 3c6:	b0 91 03 01 	lds	r27, 0x0103
- 3ca:	80 93 38 01 	sts	0x0138, r24
- 3ce:	90 93 39 01 	sts	0x0139, r25
- 3d2:	a0 93 3a 01 	sts	0x013A, r26
- 3d6:	b0 93 3b 01 	sts	0x013B, r27
- 3da:	8f b7       	in	r24, 0x3f	; 63
- 3dc:	80 68       	ori	r24, 0x80	; 128
- 3de:	8f bf       	out	0x3f, r24	; 63
- 3e0:	08 95       	ret
+000003ee <TimerOn>:
+ 3ee:	8b e0       	ldi	r24, 0x0B	; 11
+ 3f0:	80 93 81 00 	sts	0x0081, r24
+ 3f4:	8d e7       	ldi	r24, 0x7D	; 125
+ 3f6:	90 e0       	ldi	r25, 0x00	; 0
+ 3f8:	90 93 89 00 	sts	0x0089, r25
+ 3fc:	80 93 88 00 	sts	0x0088, r24
+ 400:	82 e0       	ldi	r24, 0x02	; 2
+ 402:	80 93 6f 00 	sts	0x006F, r24
+ 406:	10 92 85 00 	sts	0x0085, r1
+ 40a:	10 92 84 00 	sts	0x0084, r1
+ 40e:	80 91 00 01 	lds	r24, 0x0100
+ 412:	90 91 01 01 	lds	r25, 0x0101
+ 416:	a0 91 02 01 	lds	r26, 0x0102
+ 41a:	b0 91 03 01 	lds	r27, 0x0103
+ 41e:	80 93 52 01 	sts	0x0152, r24
+ 422:	90 93 53 01 	sts	0x0153, r25
+ 426:	a0 93 54 01 	sts	0x0154, r26
+ 42a:	b0 93 55 01 	sts	0x0155, r27
+ 42e:	8f b7       	in	r24, 0x3f	; 63
+ 430:	80 68       	ori	r24, 0x80	; 128
+ 432:	8f bf       	out	0x3f, r24	; 63
+ 434:	08 95       	ret
 
-000003e2 <TimerISR>:
- 3e2:	81 e0       	ldi	r24, 0x01	; 1
- 3e4:	80 93 3c 01 	sts	0x013C, r24
- 3e8:	08 95       	ret
+00000436 <TimerISR>:
+ 436:	81 e0       	ldi	r24, 0x01	; 1
+ 438:	80 93 56 01 	sts	0x0156, r24
+ 43c:	08 95       	ret
 
-000003ea <__vector_13>:
- 3ea:	1f 92       	push	r1
- 3ec:	0f 92       	push	r0
- 3ee:	0f b6       	in	r0, 0x3f	; 63
- 3f0:	0f 92       	push	r0
- 3f2:	11 24       	eor	r1, r1
- 3f4:	0b b6       	in	r0, 0x3b	; 59
- 3f6:	0f 92       	push	r0
- 3f8:	2f 93       	push	r18
- 3fa:	3f 93       	push	r19
- 3fc:	4f 93       	push	r20
- 3fe:	5f 93       	push	r21
- 400:	6f 93       	push	r22
- 402:	7f 93       	push	r23
- 404:	8f 93       	push	r24
- 406:	9f 93       	push	r25
- 408:	af 93       	push	r26
- 40a:	bf 93       	push	r27
- 40c:	ef 93       	push	r30
- 40e:	ff 93       	push	r31
- 410:	80 91 38 01 	lds	r24, 0x0138
- 414:	90 91 39 01 	lds	r25, 0x0139
- 418:	a0 91 3a 01 	lds	r26, 0x013A
- 41c:	b0 91 3b 01 	lds	r27, 0x013B
- 420:	01 97       	sbiw	r24, 0x01	; 1
- 422:	a1 09       	sbc	r26, r1
- 424:	b1 09       	sbc	r27, r1
- 426:	80 93 38 01 	sts	0x0138, r24
- 42a:	90 93 39 01 	sts	0x0139, r25
- 42e:	a0 93 3a 01 	sts	0x013A, r26
- 432:	b0 93 3b 01 	sts	0x013B, r27
- 436:	89 2b       	or	r24, r25
- 438:	8a 2b       	or	r24, r26
- 43a:	8b 2b       	or	r24, r27
- 43c:	89 f4       	brne	.+34     	; 0x460 <__vector_13+0x76>
- 43e:	d1 df       	rcall	.-94     	; 0x3e2 <TimerISR>
- 440:	80 91 00 01 	lds	r24, 0x0100
- 444:	90 91 01 01 	lds	r25, 0x0101
- 448:	a0 91 02 01 	lds	r26, 0x0102
- 44c:	b0 91 03 01 	lds	r27, 0x0103
- 450:	80 93 38 01 	sts	0x0138, r24
- 454:	90 93 39 01 	sts	0x0139, r25
- 458:	a0 93 3a 01 	sts	0x013A, r26
- 45c:	b0 93 3b 01 	sts	0x013B, r27
- 460:	ff 91       	pop	r31
- 462:	ef 91       	pop	r30
- 464:	bf 91       	pop	r27
- 466:	af 91       	pop	r26
- 468:	9f 91       	pop	r25
- 46a:	8f 91       	pop	r24
- 46c:	7f 91       	pop	r23
- 46e:	6f 91       	pop	r22
- 470:	5f 91       	pop	r21
- 472:	4f 91       	pop	r20
- 474:	3f 91       	pop	r19
- 476:	2f 91       	pop	r18
- 478:	0f 90       	pop	r0
- 47a:	0b be       	out	0x3b, r0	; 59
- 47c:	0f 90       	pop	r0
- 47e:	0f be       	out	0x3f, r0	; 63
- 480:	0f 90       	pop	r0
- 482:	1f 90       	pop	r1
- 484:	18 95       	reti
+0000043e <__vector_13>:
+ 43e:	1f 92       	push	r1
+ 440:	0f 92       	push	r0
+ 442:	0f b6       	in	r0, 0x3f	; 63
+ 444:	0f 92       	push	r0
+ 446:	11 24       	eor	r1, r1
+ 448:	0b b6       	in	r0, 0x3b	; 59
+ 44a:	0f 92       	push	r0
+ 44c:	2f 93       	push	r18
+ 44e:	3f 93       	push	r19
+ 450:	4f 93       	push	r20
+ 452:	5f 93       	push	r21
+ 454:	6f 93       	push	r22
+ 456:	7f 93       	push	r23
+ 458:	8f 93       	push	r24
+ 45a:	9f 93       	push	r25
+ 45c:	af 93       	push	r26
+ 45e:	bf 93       	push	r27
+ 460:	ef 93       	push	r30
+ 462:	ff 93       	push	r31
+ 464:	80 91 52 01 	lds	r24, 0x0152
+ 468:	90 91 53 01 	lds	r25, 0x0153
+ 46c:	a0 91 54 01 	lds	r26, 0x0154
+ 470:	b0 91 55 01 	lds	r27, 0x0155
+ 474:	01 97       	sbiw	r24, 0x01	; 1
+ 476:	a1 09       	sbc	r26, r1
+ 478:	b1 09       	sbc	r27, r1
+ 47a:	80 93 52 01 	sts	0x0152, r24
+ 47e:	90 93 53 01 	sts	0x0153, r25
+ 482:	a0 93 54 01 	sts	0x0154, r26
+ 486:	b0 93 55 01 	sts	0x0155, r27
+ 48a:	89 2b       	or	r24, r25
+ 48c:	8a 2b       	or	r24, r26
+ 48e:	8b 2b       	or	r24, r27
+ 490:	89 f4       	brne	.+34     	; 0x4b4 <__vector_13+0x76>
+ 492:	d1 df       	rcall	.-94     	; 0x436 <TimerISR>
+ 494:	80 91 00 01 	lds	r24, 0x0100
+ 498:	90 91 01 01 	lds	r25, 0x0101
+ 49c:	a0 91 02 01 	lds	r26, 0x0102
+ 4a0:	b0 91 03 01 	lds	r27, 0x0103
+ 4a4:	80 93 52 01 	sts	0x0152, r24
+ 4a8:	90 93 53 01 	sts	0x0153, r25
+ 4ac:	a0 93 54 01 	sts	0x0154, r26
+ 4b0:	b0 93 55 01 	sts	0x0155, r27
+ 4b4:	ff 91       	pop	r31
+ 4b6:	ef 91       	pop	r30
+ 4b8:	bf 91       	pop	r27
+ 4ba:	af 91       	pop	r26
+ 4bc:	9f 91       	pop	r25
+ 4be:	8f 91       	pop	r24
+ 4c0:	7f 91       	pop	r23
+ 4c2:	6f 91       	pop	r22
+ 4c4:	5f 91       	pop	r21
+ 4c6:	4f 91       	pop	r20
+ 4c8:	3f 91       	pop	r19
+ 4ca:	2f 91       	pop	r18
+ 4cc:	0f 90       	pop	r0
+ 4ce:	0b be       	out	0x3b, r0	; 59
+ 4d0:	0f 90       	pop	r0
+ 4d2:	0f be       	out	0x3f, r0	; 63
+ 4d4:	0f 90       	pop	r0
+ 4d6:	1f 90       	pop	r1
+ 4d8:	18 95       	reti
 
-00000486 <updateTimeString>:
- 486:	8a e3       	ldi	r24, 0x3A	; 58
- 488:	80 93 6f 01 	sts	0x016F, r24
- 48c:	80 93 6c 01 	sts	0x016C, r24
- 490:	80 91 8b 01 	lds	r24, 0x018B
- 494:	8a 30       	cpi	r24, 0x0A	; 10
- 496:	58 f0       	brcs	.+22     	; 0x4ae <updateTimeString+0x28>
- 498:	9d ec       	ldi	r25, 0xCD	; 205
- 49a:	89 9f       	mul	r24, r25
- 49c:	91 2d       	mov	r25, r1
- 49e:	11 24       	eor	r1, r1
- 4a0:	96 95       	lsr	r25
- 4a2:	96 95       	lsr	r25
- 4a4:	96 95       	lsr	r25
- 4a6:	90 5d       	subi	r25, 0xD0	; 208
- 4a8:	90 93 6a 01 	sts	0x016A, r25
- 4ac:	03 c0       	rjmp	.+6      	; 0x4b4 <updateTimeString+0x2e>
- 4ae:	90 e3       	ldi	r25, 0x30	; 48
- 4b0:	90 93 6a 01 	sts	0x016A, r25
- 4b4:	9d ec       	ldi	r25, 0xCD	; 205
- 4b6:	89 9f       	mul	r24, r25
- 4b8:	91 2d       	mov	r25, r1
- 4ba:	11 24       	eor	r1, r1
- 4bc:	96 95       	lsr	r25
- 4be:	96 95       	lsr	r25
- 4c0:	96 95       	lsr	r25
- 4c2:	99 0f       	add	r25, r25
- 4c4:	29 2f       	mov	r18, r25
- 4c6:	22 0f       	add	r18, r18
- 4c8:	22 0f       	add	r18, r18
- 4ca:	92 0f       	add	r25, r18
- 4cc:	89 1b       	sub	r24, r25
- 4ce:	80 5d       	subi	r24, 0xD0	; 208
- 4d0:	80 93 6b 01 	sts	0x016B, r24
- 4d4:	80 91 8c 01 	lds	r24, 0x018C
- 4d8:	8a 30       	cpi	r24, 0x0A	; 10
- 4da:	58 f0       	brcs	.+22     	; 0x4f2 <updateTimeString+0x6c>
- 4dc:	9d ec       	ldi	r25, 0xCD	; 205
- 4de:	89 9f       	mul	r24, r25
- 4e0:	91 2d       	mov	r25, r1
- 4e2:	11 24       	eor	r1, r1
- 4e4:	96 95       	lsr	r25
- 4e6:	96 95       	lsr	r25
- 4e8:	96 95       	lsr	r25
- 4ea:	90 5d       	subi	r25, 0xD0	; 208
- 4ec:	90 93 6d 01 	sts	0x016D, r25
- 4f0:	03 c0       	rjmp	.+6      	; 0x4f8 <updateTimeString+0x72>
- 4f2:	90 e3       	ldi	r25, 0x30	; 48
- 4f4:	90 93 6d 01 	sts	0x016D, r25
- 4f8:	9d ec       	ldi	r25, 0xCD	; 205
- 4fa:	89 9f       	mul	r24, r25
- 4fc:	91 2d       	mov	r25, r1
- 4fe:	11 24       	eor	r1, r1
- 500:	96 95       	lsr	r25
- 502:	96 95       	lsr	r25
- 504:	96 95       	lsr	r25
- 506:	99 0f       	add	r25, r25
- 508:	29 2f       	mov	r18, r25
- 50a:	22 0f       	add	r18, r18
- 50c:	22 0f       	add	r18, r18
- 50e:	92 0f       	add	r25, r18
- 510:	89 1b       	sub	r24, r25
- 512:	80 5d       	subi	r24, 0xD0	; 208
- 514:	80 93 6e 01 	sts	0x016E, r24
- 518:	80 91 8d 01 	lds	r24, 0x018D
- 51c:	8a 30       	cpi	r24, 0x0A	; 10
- 51e:	58 f0       	brcs	.+22     	; 0x536 <updateTimeString+0xb0>
- 520:	9d ec       	ldi	r25, 0xCD	; 205
- 522:	89 9f       	mul	r24, r25
- 524:	91 2d       	mov	r25, r1
- 526:	11 24       	eor	r1, r1
- 528:	96 95       	lsr	r25
- 52a:	96 95       	lsr	r25
- 52c:	96 95       	lsr	r25
- 52e:	90 5d       	subi	r25, 0xD0	; 208
- 530:	90 93 70 01 	sts	0x0170, r25
- 534:	03 c0       	rjmp	.+6      	; 0x53c <updateTimeString+0xb6>
- 536:	90 e3       	ldi	r25, 0x30	; 48
- 538:	90 93 70 01 	sts	0x0170, r25
- 53c:	9d ec       	ldi	r25, 0xCD	; 205
- 53e:	89 9f       	mul	r24, r25
- 540:	91 2d       	mov	r25, r1
- 542:	11 24       	eor	r1, r1
- 544:	96 95       	lsr	r25
- 546:	96 95       	lsr	r25
- 548:	96 95       	lsr	r25
- 54a:	99 0f       	add	r25, r25
- 54c:	29 2f       	mov	r18, r25
- 54e:	22 0f       	add	r18, r18
- 550:	22 0f       	add	r18, r18
- 552:	92 0f       	add	r25, r18
- 554:	89 1b       	sub	r24, r25
- 556:	80 5d       	subi	r24, 0xD0	; 208
- 558:	80 93 71 01 	sts	0x0171, r24
- 55c:	80 91 8e 01 	lds	r24, 0x018E
- 560:	88 23       	and	r24, r24
- 562:	21 f0       	breq	.+8      	; 0x56c <updateTimeString+0xe6>
- 564:	81 e4       	ldi	r24, 0x41	; 65
- 566:	80 93 73 01 	sts	0x0173, r24
- 56a:	08 95       	ret
- 56c:	80 e5       	ldi	r24, 0x50	; 80
- 56e:	80 93 73 01 	sts	0x0173, r24
- 572:	08 95       	ret
+000004da <updateTimeString>:
+ 4da:	8a e3       	ldi	r24, 0x3A	; 58
+ 4dc:	80 93 89 01 	sts	0x0189, r24
+ 4e0:	80 93 86 01 	sts	0x0186, r24
+ 4e4:	80 91 a5 01 	lds	r24, 0x01A5
+ 4e8:	8a 30       	cpi	r24, 0x0A	; 10
+ 4ea:	58 f0       	brcs	.+22     	; 0x502 <updateTimeString+0x28>
+ 4ec:	9d ec       	ldi	r25, 0xCD	; 205
+ 4ee:	89 9f       	mul	r24, r25
+ 4f0:	91 2d       	mov	r25, r1
+ 4f2:	11 24       	eor	r1, r1
+ 4f4:	96 95       	lsr	r25
+ 4f6:	96 95       	lsr	r25
+ 4f8:	96 95       	lsr	r25
+ 4fa:	90 5d       	subi	r25, 0xD0	; 208
+ 4fc:	90 93 84 01 	sts	0x0184, r25
+ 500:	03 c0       	rjmp	.+6      	; 0x508 <updateTimeString+0x2e>
+ 502:	90 e3       	ldi	r25, 0x30	; 48
+ 504:	90 93 84 01 	sts	0x0184, r25
+ 508:	9d ec       	ldi	r25, 0xCD	; 205
+ 50a:	89 9f       	mul	r24, r25
+ 50c:	91 2d       	mov	r25, r1
+ 50e:	11 24       	eor	r1, r1
+ 510:	96 95       	lsr	r25
+ 512:	96 95       	lsr	r25
+ 514:	96 95       	lsr	r25
+ 516:	99 0f       	add	r25, r25
+ 518:	29 2f       	mov	r18, r25
+ 51a:	22 0f       	add	r18, r18
+ 51c:	22 0f       	add	r18, r18
+ 51e:	92 0f       	add	r25, r18
+ 520:	89 1b       	sub	r24, r25
+ 522:	80 5d       	subi	r24, 0xD0	; 208
+ 524:	80 93 85 01 	sts	0x0185, r24
+ 528:	80 91 a6 01 	lds	r24, 0x01A6
+ 52c:	8a 30       	cpi	r24, 0x0A	; 10
+ 52e:	58 f0       	brcs	.+22     	; 0x546 <updateTimeString+0x6c>
+ 530:	9d ec       	ldi	r25, 0xCD	; 205
+ 532:	89 9f       	mul	r24, r25
+ 534:	91 2d       	mov	r25, r1
+ 536:	11 24       	eor	r1, r1
+ 538:	96 95       	lsr	r25
+ 53a:	96 95       	lsr	r25
+ 53c:	96 95       	lsr	r25
+ 53e:	90 5d       	subi	r25, 0xD0	; 208
+ 540:	90 93 87 01 	sts	0x0187, r25
+ 544:	03 c0       	rjmp	.+6      	; 0x54c <updateTimeString+0x72>
+ 546:	90 e3       	ldi	r25, 0x30	; 48
+ 548:	90 93 87 01 	sts	0x0187, r25
+ 54c:	9d ec       	ldi	r25, 0xCD	; 205
+ 54e:	89 9f       	mul	r24, r25
+ 550:	91 2d       	mov	r25, r1
+ 552:	11 24       	eor	r1, r1
+ 554:	96 95       	lsr	r25
+ 556:	96 95       	lsr	r25
+ 558:	96 95       	lsr	r25
+ 55a:	99 0f       	add	r25, r25
+ 55c:	29 2f       	mov	r18, r25
+ 55e:	22 0f       	add	r18, r18
+ 560:	22 0f       	add	r18, r18
+ 562:	92 0f       	add	r25, r18
+ 564:	89 1b       	sub	r24, r25
+ 566:	80 5d       	subi	r24, 0xD0	; 208
+ 568:	80 93 88 01 	sts	0x0188, r24
+ 56c:	80 91 a7 01 	lds	r24, 0x01A7
+ 570:	8a 30       	cpi	r24, 0x0A	; 10
+ 572:	58 f0       	brcs	.+22     	; 0x58a <updateTimeString+0xb0>
+ 574:	9d ec       	ldi	r25, 0xCD	; 205
+ 576:	89 9f       	mul	r24, r25
+ 578:	91 2d       	mov	r25, r1
+ 57a:	11 24       	eor	r1, r1
+ 57c:	96 95       	lsr	r25
+ 57e:	96 95       	lsr	r25
+ 580:	96 95       	lsr	r25
+ 582:	90 5d       	subi	r25, 0xD0	; 208
+ 584:	90 93 8a 01 	sts	0x018A, r25
+ 588:	03 c0       	rjmp	.+6      	; 0x590 <updateTimeString+0xb6>
+ 58a:	90 e3       	ldi	r25, 0x30	; 48
+ 58c:	90 93 8a 01 	sts	0x018A, r25
+ 590:	9d ec       	ldi	r25, 0xCD	; 205
+ 592:	89 9f       	mul	r24, r25
+ 594:	91 2d       	mov	r25, r1
+ 596:	11 24       	eor	r1, r1
+ 598:	96 95       	lsr	r25
+ 59a:	96 95       	lsr	r25
+ 59c:	96 95       	lsr	r25
+ 59e:	99 0f       	add	r25, r25
+ 5a0:	29 2f       	mov	r18, r25
+ 5a2:	22 0f       	add	r18, r18
+ 5a4:	22 0f       	add	r18, r18
+ 5a6:	92 0f       	add	r25, r18
+ 5a8:	89 1b       	sub	r24, r25
+ 5aa:	80 5d       	subi	r24, 0xD0	; 208
+ 5ac:	80 93 8b 01 	sts	0x018B, r24
+ 5b0:	80 91 a8 01 	lds	r24, 0x01A8
+ 5b4:	88 23       	and	r24, r24
+ 5b6:	21 f0       	breq	.+8      	; 0x5c0 <updateTimeString+0xe6>
+ 5b8:	81 e4       	ldi	r24, 0x41	; 65
+ 5ba:	80 93 8d 01 	sts	0x018D, r24
+ 5be:	08 95       	ret
+ 5c0:	80 e5       	ldi	r24, 0x50	; 80
+ 5c2:	80 93 8d 01 	sts	0x018D, r24
+ 5c6:	08 95       	ret
 
-00000574 <LCDDisplaySMTick>:
- 574:	88 23       	and	r24, r24
- 576:	49 f0       	breq	.+18     	; 0x58a <LCDDisplaySMTick+0x16>
- 578:	ea e6       	ldi	r30, 0x6A	; 106
- 57a:	f1 e0       	ldi	r31, 0x01	; 1
- 57c:	8a e8       	ldi	r24, 0x8A	; 138
- 57e:	91 e0       	ldi	r25, 0x01	; 1
- 580:	20 e2       	ldi	r18, 0x20	; 32
- 582:	21 93       	st	Z+, r18
- 584:	e8 17       	cp	r30, r24
- 586:	f9 07       	cpc	r31, r25
- 588:	e1 f7       	brne	.-8      	; 0x582 <LCDDisplaySMTick+0xe>
- 58a:	80 91 8f 01 	lds	r24, 0x018F
- 58e:	84 30       	cpi	r24, 0x04	; 4
- 590:	c9 f0       	breq	.+50     	; 0x5c4 <LCDDisplaySMTick+0x50>
- 592:	40 f4       	brcc	.+16     	; 0x5a4 <LCDDisplaySMTick+0x30>
- 594:	81 30       	cpi	r24, 0x01	; 1
- 596:	81 f0       	breq	.+32     	; 0x5b8 <LCDDisplaySMTick+0x44>
- 598:	58 f1       	brcs	.+86     	; 0x5f0 <LCDDisplaySMTick+0x7c>
- 59a:	82 30       	cpi	r24, 0x02	; 2
- 59c:	99 f0       	breq	.+38     	; 0x5c4 <LCDDisplaySMTick+0x50>
- 59e:	83 30       	cpi	r24, 0x03	; 3
- 5a0:	19 f5       	brne	.+70     	; 0x5e8 <LCDDisplaySMTick+0x74>
- 5a2:	0a c0       	rjmp	.+20     	; 0x5b8 <LCDDisplaySMTick+0x44>
- 5a4:	87 30       	cpi	r24, 0x07	; 7
- 5a6:	d9 f0       	breq	.+54     	; 0x5de <LCDDisplaySMTick+0x6a>
- 5a8:	18 f4       	brcc	.+6      	; 0x5b0 <LCDDisplaySMTick+0x3c>
- 5aa:	86 30       	cpi	r24, 0x06	; 6
- 5ac:	e9 f4       	brne	.+58     	; 0x5e8 <LCDDisplaySMTick+0x74>
- 5ae:	12 c0       	rjmp	.+36     	; 0x5d4 <LCDDisplaySMTick+0x60>
- 5b0:	8b 50       	subi	r24, 0x0B	; 11
- 5b2:	84 30       	cpi	r24, 0x04	; 4
- 5b4:	c8 f4       	brcc	.+50     	; 0x5e8 <LCDDisplaySMTick+0x74>
- 5b6:	1c c0       	rjmp	.+56     	; 0x5f0 <LCDDisplaySMTick+0x7c>
- 5b8:	81 e0       	ldi	r24, 0x01	; 1
- 5ba:	85 b9       	out	0x05, r24	; 5
- 5bc:	6c e0       	ldi	r22, 0x0C	; 12
- 5be:	71 e0       	ldi	r23, 0x01	; 1
- 5c0:	af dd       	rcall	.-1186   	; 0x120 <LCD_DisplayString>
- 5c2:	16 c0       	rjmp	.+44     	; 0x5f0 <LCDDisplaySMTick+0x7c>
- 5c4:	88 e0       	ldi	r24, 0x08	; 8
- 5c6:	85 b9       	out	0x05, r24	; 5
- 5c8:	5e df       	rcall	.-324    	; 0x486 <updateTimeString>
- 5ca:	6a e6       	ldi	r22, 0x6A	; 106
- 5cc:	71 e0       	ldi	r23, 0x01	; 1
- 5ce:	81 e0       	ldi	r24, 0x01	; 1
- 5d0:	a7 dd       	rcall	.-1202   	; 0x120 <LCD_DisplayString>
- 5d2:	0e c0       	rjmp	.+28     	; 0x5f0 <LCDDisplaySMTick+0x7c>
- 5d4:	62 e1       	ldi	r22, 0x12	; 18
- 5d6:	71 e0       	ldi	r23, 0x01	; 1
- 5d8:	81 e0       	ldi	r24, 0x01	; 1
- 5da:	a2 dd       	rcall	.-1212   	; 0x120 <LCD_DisplayString>
- 5dc:	09 c0       	rjmp	.+18     	; 0x5f0 <LCDDisplaySMTick+0x7c>
- 5de:	6c e1       	ldi	r22, 0x1C	; 28
- 5e0:	71 e0       	ldi	r23, 0x01	; 1
- 5e2:	81 e0       	ldi	r24, 0x01	; 1
- 5e4:	9d dd       	rcall	.-1222   	; 0x120 <LCD_DisplayString>
- 5e6:	04 c0       	rjmp	.+8      	; 0x5f0 <LCDDisplaySMTick+0x7c>
- 5e8:	6b e2       	ldi	r22, 0x2B	; 43
- 5ea:	71 e0       	ldi	r23, 0x01	; 1
- 5ec:	81 e0       	ldi	r24, 0x01	; 1
- 5ee:	98 dd       	rcall	.-1232   	; 0x120 <LCD_DisplayString>
- 5f0:	80 e0       	ldi	r24, 0x00	; 0
- 5f2:	08 95       	ret
+000005c8 <LCDDisplaySMTick>:
+ 5c8:	88 23       	and	r24, r24
+ 5ca:	49 f0       	breq	.+18     	; 0x5de <LCDDisplaySMTick+0x16>
+ 5cc:	e4 e8       	ldi	r30, 0x84	; 132
+ 5ce:	f1 e0       	ldi	r31, 0x01	; 1
+ 5d0:	84 ea       	ldi	r24, 0xA4	; 164
+ 5d2:	91 e0       	ldi	r25, 0x01	; 1
+ 5d4:	20 e2       	ldi	r18, 0x20	; 32
+ 5d6:	21 93       	st	Z+, r18
+ 5d8:	e8 17       	cp	r30, r24
+ 5da:	f9 07       	cpc	r31, r25
+ 5dc:	e1 f7       	brne	.-8      	; 0x5d6 <LCDDisplaySMTick+0xe>
+ 5de:	80 91 a9 01 	lds	r24, 0x01A9
+ 5e2:	86 30       	cpi	r24, 0x06	; 6
+ 5e4:	51 f1       	breq	.+84     	; 0x63a <LCDDisplaySMTick+0x72>
+ 5e6:	70 f4       	brcc	.+28     	; 0x604 <LCDDisplaySMTick+0x3c>
+ 5e8:	82 30       	cpi	r24, 0x02	; 2
+ 5ea:	f9 f0       	breq	.+62     	; 0x62a <LCDDisplaySMTick+0x62>
+ 5ec:	30 f4       	brcc	.+12     	; 0x5fa <LCDDisplaySMTick+0x32>
+ 5ee:	88 23       	and	r24, r24
+ 5f0:	09 f4       	brne	.+2      	; 0x5f4 <LCDDisplaySMTick+0x2c>
+ 5f2:	3b c0       	rjmp	.+118    	; 0x66a <LCDDisplaySMTick+0xa2>
+ 5f4:	81 30       	cpi	r24, 0x01	; 1
+ 5f6:	a9 f5       	brne	.+106    	; 0x662 <LCDDisplaySMTick+0x9a>
+ 5f8:	12 c0       	rjmp	.+36     	; 0x61e <LCDDisplaySMTick+0x56>
+ 5fa:	83 30       	cpi	r24, 0x03	; 3
+ 5fc:	81 f0       	breq	.+32     	; 0x61e <LCDDisplaySMTick+0x56>
+ 5fe:	84 30       	cpi	r24, 0x04	; 4
+ 600:	81 f5       	brne	.+96     	; 0x662 <LCDDisplaySMTick+0x9a>
+ 602:	13 c0       	rjmp	.+38     	; 0x62a <LCDDisplaySMTick+0x62>
+ 604:	8c 30       	cpi	r24, 0x0C	; 12
+ 606:	41 f1       	breq	.+80     	; 0x658 <LCDDisplaySMTick+0x90>
+ 608:	28 f4       	brcc	.+10     	; 0x614 <LCDDisplaySMTick+0x4c>
+ 60a:	87 30       	cpi	r24, 0x07	; 7
+ 60c:	d9 f0       	breq	.+54     	; 0x644 <LCDDisplaySMTick+0x7c>
+ 60e:	8b 30       	cpi	r24, 0x0B	; 11
+ 610:	41 f5       	brne	.+80     	; 0x662 <LCDDisplaySMTick+0x9a>
+ 612:	1d c0       	rjmp	.+58     	; 0x64e <LCDDisplaySMTick+0x86>
+ 614:	8d 30       	cpi	r24, 0x0D	; 13
+ 616:	d9 f0       	breq	.+54     	; 0x64e <LCDDisplaySMTick+0x86>
+ 618:	8e 30       	cpi	r24, 0x0E	; 14
+ 61a:	19 f5       	brne	.+70     	; 0x662 <LCDDisplaySMTick+0x9a>
+ 61c:	1d c0       	rjmp	.+58     	; 0x658 <LCDDisplaySMTick+0x90>
+ 61e:	81 e0       	ldi	r24, 0x01	; 1
+ 620:	85 b9       	out	0x05, r24	; 5
+ 622:	6c e0       	ldi	r22, 0x0C	; 12
+ 624:	71 e0       	ldi	r23, 0x01	; 1
+ 626:	7c dd       	rcall	.-1288   	; 0x120 <LCD_DisplayString>
+ 628:	20 c0       	rjmp	.+64     	; 0x66a <LCDDisplaySMTick+0xa2>
+ 62a:	88 e0       	ldi	r24, 0x08	; 8
+ 62c:	85 b9       	out	0x05, r24	; 5
+ 62e:	55 df       	rcall	.-342    	; 0x4da <updateTimeString>
+ 630:	64 e8       	ldi	r22, 0x84	; 132
+ 632:	71 e0       	ldi	r23, 0x01	; 1
+ 634:	81 e0       	ldi	r24, 0x01	; 1
+ 636:	74 dd       	rcall	.-1304   	; 0x120 <LCD_DisplayString>
+ 638:	18 c0       	rjmp	.+48     	; 0x66a <LCDDisplaySMTick+0xa2>
+ 63a:	62 e1       	ldi	r22, 0x12	; 18
+ 63c:	71 e0       	ldi	r23, 0x01	; 1
+ 63e:	81 e0       	ldi	r24, 0x01	; 1
+ 640:	6f dd       	rcall	.-1314   	; 0x120 <LCD_DisplayString>
+ 642:	13 c0       	rjmp	.+38     	; 0x66a <LCDDisplaySMTick+0xa2>
+ 644:	6c e1       	ldi	r22, 0x1C	; 28
+ 646:	71 e0       	ldi	r23, 0x01	; 1
+ 648:	81 e0       	ldi	r24, 0x01	; 1
+ 64a:	6a dd       	rcall	.-1324   	; 0x120 <LCD_DisplayString>
+ 64c:	0e c0       	rjmp	.+28     	; 0x66a <LCDDisplaySMTick+0xa2>
+ 64e:	6b e2       	ldi	r22, 0x2B	; 43
+ 650:	71 e0       	ldi	r23, 0x01	; 1
+ 652:	81 e0       	ldi	r24, 0x01	; 1
+ 654:	65 dd       	rcall	.-1334   	; 0x120 <LCD_DisplayString>
+ 656:	09 c0       	rjmp	.+18     	; 0x66a <LCDDisplaySMTick+0xa2>
+ 658:	6a e3       	ldi	r22, 0x3A	; 58
+ 65a:	71 e0       	ldi	r23, 0x01	; 1
+ 65c:	81 e0       	ldi	r24, 0x01	; 1
+ 65e:	60 dd       	rcall	.-1344   	; 0x120 <LCD_DisplayString>
+ 660:	04 c0       	rjmp	.+8      	; 0x66a <LCDDisplaySMTick+0xa2>
+ 662:	64 e4       	ldi	r22, 0x44	; 68
+ 664:	71 e0       	ldi	r23, 0x01	; 1
+ 666:	81 e0       	ldi	r24, 0x01	; 1
+ 668:	5b dd       	rcall	.-1354   	; 0x120 <LCD_DisplayString>
+ 66a:	80 e0       	ldi	r24, 0x00	; 0
+ 66c:	08 95       	ret
 
-000005f4 <GetKeypadKey>:
- 5f4:	8f ee       	ldi	r24, 0xEF	; 239
- 5f6:	82 b9       	out	0x02, r24	; 2
- 5f8:	00 00       	nop
- 5fa:	00 9b       	sbis	0x00, 0	; 0
- 5fc:	29 c0       	rjmp	.+82     	; 0x650 <GetKeypadKey+0x5c>
- 5fe:	01 9b       	sbis	0x00, 1	; 0
- 600:	29 c0       	rjmp	.+82     	; 0x654 <GetKeypadKey+0x60>
- 602:	02 9b       	sbis	0x00, 2	; 0
- 604:	29 c0       	rjmp	.+82     	; 0x658 <GetKeypadKey+0x64>
- 606:	03 9b       	sbis	0x00, 3	; 0
- 608:	29 c0       	rjmp	.+82     	; 0x65c <GetKeypadKey+0x68>
- 60a:	8f ed       	ldi	r24, 0xDF	; 223
- 60c:	82 b9       	out	0x02, r24	; 2
- 60e:	00 00       	nop
- 610:	00 9b       	sbis	0x00, 0	; 0
- 612:	26 c0       	rjmp	.+76     	; 0x660 <GetKeypadKey+0x6c>
- 614:	01 9b       	sbis	0x00, 1	; 0
- 616:	26 c0       	rjmp	.+76     	; 0x664 <GetKeypadKey+0x70>
- 618:	02 9b       	sbis	0x00, 2	; 0
- 61a:	26 c0       	rjmp	.+76     	; 0x668 <GetKeypadKey+0x74>
- 61c:	03 9b       	sbis	0x00, 3	; 0
- 61e:	26 c0       	rjmp	.+76     	; 0x66c <GetKeypadKey+0x78>
- 620:	8f eb       	ldi	r24, 0xBF	; 191
- 622:	82 b9       	out	0x02, r24	; 2
- 624:	00 00       	nop
- 626:	00 9b       	sbis	0x00, 0	; 0
- 628:	23 c0       	rjmp	.+70     	; 0x670 <GetKeypadKey+0x7c>
- 62a:	01 9b       	sbis	0x00, 1	; 0
- 62c:	23 c0       	rjmp	.+70     	; 0x674 <GetKeypadKey+0x80>
- 62e:	02 9b       	sbis	0x00, 2	; 0
- 630:	23 c0       	rjmp	.+70     	; 0x678 <GetKeypadKey+0x84>
- 632:	03 9b       	sbis	0x00, 3	; 0
- 634:	23 c0       	rjmp	.+70     	; 0x67c <GetKeypadKey+0x88>
- 636:	8f e7       	ldi	r24, 0x7F	; 127
- 638:	82 b9       	out	0x02, r24	; 2
- 63a:	00 00       	nop
- 63c:	00 9b       	sbis	0x00, 0	; 0
- 63e:	20 c0       	rjmp	.+64     	; 0x680 <GetKeypadKey+0x8c>
- 640:	01 9b       	sbis	0x00, 1	; 0
- 642:	20 c0       	rjmp	.+64     	; 0x684 <GetKeypadKey+0x90>
- 644:	02 9b       	sbis	0x00, 2	; 0
- 646:	20 c0       	rjmp	.+64     	; 0x688 <GetKeypadKey+0x94>
- 648:	03 99       	sbic	0x00, 3	; 0
- 64a:	20 c0       	rjmp	.+64     	; 0x68c <GetKeypadKey+0x98>
- 64c:	84 e4       	ldi	r24, 0x44	; 68
- 64e:	08 95       	ret
- 650:	81 e3       	ldi	r24, 0x31	; 49
- 652:	08 95       	ret
- 654:	84 e3       	ldi	r24, 0x34	; 52
- 656:	08 95       	ret
- 658:	87 e3       	ldi	r24, 0x37	; 55
- 65a:	08 95       	ret
- 65c:	8a e2       	ldi	r24, 0x2A	; 42
- 65e:	08 95       	ret
- 660:	82 e3       	ldi	r24, 0x32	; 50
- 662:	08 95       	ret
- 664:	85 e3       	ldi	r24, 0x35	; 53
- 666:	08 95       	ret
- 668:	88 e3       	ldi	r24, 0x38	; 56
- 66a:	08 95       	ret
- 66c:	80 e3       	ldi	r24, 0x30	; 48
- 66e:	08 95       	ret
- 670:	83 e3       	ldi	r24, 0x33	; 51
- 672:	08 95       	ret
- 674:	86 e3       	ldi	r24, 0x36	; 54
- 676:	08 95       	ret
- 678:	89 e3       	ldi	r24, 0x39	; 57
- 67a:	08 95       	ret
- 67c:	83 e2       	ldi	r24, 0x23	; 35
- 67e:	08 95       	ret
- 680:	81 e4       	ldi	r24, 0x41	; 65
- 682:	08 95       	ret
- 684:	82 e4       	ldi	r24, 0x42	; 66
- 686:	08 95       	ret
- 688:	83 e4       	ldi	r24, 0x43	; 67
- 68a:	08 95       	ret
- 68c:	80 e0       	ldi	r24, 0x00	; 0
- 68e:	08 95       	ret
-
-00000690 <UpdateInputSMTick>:
- 690:	b1 df       	rcall	.-158    	; 0x5f4 <GetKeypadKey>
- 692:	98 2f       	mov	r25, r24
- 694:	91 54       	subi	r25, 0x41	; 65
- 696:	94 30       	cpi	r25, 0x04	; 4
- 698:	20 f0       	brcs	.+8      	; 0x6a2 <UpdateInputSMTick+0x12>
- 69a:	83 32       	cpi	r24, 0x23	; 35
- 69c:	11 f0       	breq	.+4      	; 0x6a2 <UpdateInputSMTick+0x12>
- 69e:	8a 32       	cpi	r24, 0x2A	; 42
- 6a0:	19 f4       	brne	.+6      	; 0x6a8 <UpdateInputSMTick+0x18>
- 6a2:	80 93 8a 01 	sts	0x018A, r24
- 6a6:	02 c0       	rjmp	.+4      	; 0x6ac <UpdateInputSMTick+0x1c>
- 6a8:	10 92 8a 01 	sts	0x018A, r1
- 6ac:	80 e0       	ldi	r24, 0x00	; 0
- 6ae:	08 95       	ret
-
-000006b0 <initializeSavedAlarms>:
- 6b0:	e3 e9       	ldi	r30, 0x93	; 147
- 6b2:	f1 e0       	ldi	r31, 0x01	; 1
- 6b4:	8b ea       	ldi	r24, 0xAB	; 171
- 6b6:	91 e0       	ldi	r25, 0x01	; 1
- 6b8:	df 01       	movw	r26, r30
- 6ba:	13 97       	sbiw	r26, 0x03	; 3
- 6bc:	1c 92       	st	X, r1
- 6be:	df 01       	movw	r26, r30
- 6c0:	12 97       	sbiw	r26, 0x02	; 2
- 6c2:	1c 92       	st	X, r1
- 6c4:	df 01       	movw	r26, r30
- 6c6:	11 97       	sbiw	r26, 0x01	; 1
- 6c8:	1c 92       	st	X, r1
- 6ca:	10 82       	st	Z, r1
- 6cc:	34 96       	adiw	r30, 0x04	; 4
- 6ce:	e8 17       	cp	r30, r24
- 6d0:	f9 07       	cpc	r31, r25
- 6d2:	91 f7       	brne	.-28     	; 0x6b8 <initializeSavedAlarms+0x8>
+0000066e <GetKeypadKey>:
+ 66e:	8f ee       	ldi	r24, 0xEF	; 239
+ 670:	82 b9       	out	0x02, r24	; 2
+ 672:	00 00       	nop
+ 674:	00 9b       	sbis	0x00, 0	; 0
+ 676:	29 c0       	rjmp	.+82     	; 0x6ca <GetKeypadKey+0x5c>
+ 678:	01 9b       	sbis	0x00, 1	; 0
+ 67a:	29 c0       	rjmp	.+82     	; 0x6ce <GetKeypadKey+0x60>
+ 67c:	02 9b       	sbis	0x00, 2	; 0
+ 67e:	29 c0       	rjmp	.+82     	; 0x6d2 <GetKeypadKey+0x64>
+ 680:	03 9b       	sbis	0x00, 3	; 0
+ 682:	29 c0       	rjmp	.+82     	; 0x6d6 <GetKeypadKey+0x68>
+ 684:	8f ed       	ldi	r24, 0xDF	; 223
+ 686:	82 b9       	out	0x02, r24	; 2
+ 688:	00 00       	nop
+ 68a:	00 9b       	sbis	0x00, 0	; 0
+ 68c:	26 c0       	rjmp	.+76     	; 0x6da <GetKeypadKey+0x6c>
+ 68e:	01 9b       	sbis	0x00, 1	; 0
+ 690:	26 c0       	rjmp	.+76     	; 0x6de <GetKeypadKey+0x70>
+ 692:	02 9b       	sbis	0x00, 2	; 0
+ 694:	26 c0       	rjmp	.+76     	; 0x6e2 <GetKeypadKey+0x74>
+ 696:	03 9b       	sbis	0x00, 3	; 0
+ 698:	26 c0       	rjmp	.+76     	; 0x6e6 <GetKeypadKey+0x78>
+ 69a:	8f eb       	ldi	r24, 0xBF	; 191
+ 69c:	82 b9       	out	0x02, r24	; 2
+ 69e:	00 00       	nop
+ 6a0:	00 9b       	sbis	0x00, 0	; 0
+ 6a2:	23 c0       	rjmp	.+70     	; 0x6ea <GetKeypadKey+0x7c>
+ 6a4:	01 9b       	sbis	0x00, 1	; 0
+ 6a6:	23 c0       	rjmp	.+70     	; 0x6ee <GetKeypadKey+0x80>
+ 6a8:	02 9b       	sbis	0x00, 2	; 0
+ 6aa:	23 c0       	rjmp	.+70     	; 0x6f2 <GetKeypadKey+0x84>
+ 6ac:	03 9b       	sbis	0x00, 3	; 0
+ 6ae:	23 c0       	rjmp	.+70     	; 0x6f6 <GetKeypadKey+0x88>
+ 6b0:	8f e7       	ldi	r24, 0x7F	; 127
+ 6b2:	82 b9       	out	0x02, r24	; 2
+ 6b4:	00 00       	nop
+ 6b6:	00 9b       	sbis	0x00, 0	; 0
+ 6b8:	20 c0       	rjmp	.+64     	; 0x6fa <GetKeypadKey+0x8c>
+ 6ba:	01 9b       	sbis	0x00, 1	; 0
+ 6bc:	20 c0       	rjmp	.+64     	; 0x6fe <GetKeypadKey+0x90>
+ 6be:	02 9b       	sbis	0x00, 2	; 0
+ 6c0:	20 c0       	rjmp	.+64     	; 0x702 <GetKeypadKey+0x94>
+ 6c2:	03 99       	sbic	0x00, 3	; 0
+ 6c4:	20 c0       	rjmp	.+64     	; 0x706 <GetKeypadKey+0x98>
+ 6c6:	84 e4       	ldi	r24, 0x44	; 68
+ 6c8:	08 95       	ret
+ 6ca:	81 e3       	ldi	r24, 0x31	; 49
+ 6cc:	08 95       	ret
+ 6ce:	84 e3       	ldi	r24, 0x34	; 52
+ 6d0:	08 95       	ret
+ 6d2:	87 e3       	ldi	r24, 0x37	; 55
  6d4:	08 95       	ret
+ 6d6:	8a e2       	ldi	r24, 0x2A	; 42
+ 6d8:	08 95       	ret
+ 6da:	82 e3       	ldi	r24, 0x32	; 50
+ 6dc:	08 95       	ret
+ 6de:	85 e3       	ldi	r24, 0x35	; 53
+ 6e0:	08 95       	ret
+ 6e2:	88 e3       	ldi	r24, 0x38	; 56
+ 6e4:	08 95       	ret
+ 6e6:	80 e3       	ldi	r24, 0x30	; 48
+ 6e8:	08 95       	ret
+ 6ea:	83 e3       	ldi	r24, 0x33	; 51
+ 6ec:	08 95       	ret
+ 6ee:	86 e3       	ldi	r24, 0x36	; 54
+ 6f0:	08 95       	ret
+ 6f2:	89 e3       	ldi	r24, 0x39	; 57
+ 6f4:	08 95       	ret
+ 6f6:	83 e2       	ldi	r24, 0x23	; 35
+ 6f8:	08 95       	ret
+ 6fa:	81 e4       	ldi	r24, 0x41	; 65
+ 6fc:	08 95       	ret
+ 6fe:	82 e4       	ldi	r24, 0x42	; 66
+ 700:	08 95       	ret
+ 702:	83 e4       	ldi	r24, 0x43	; 67
+ 704:	08 95       	ret
+ 706:	80 e0       	ldi	r24, 0x00	; 0
+ 708:	08 95       	ret
 
-000006d6 <loadAlarmsFromEEPROM>:
- 6d6:	0f 93       	push	r16
- 6d8:	1f 93       	push	r17
- 6da:	cf 93       	push	r28
- 6dc:	df 93       	push	r29
- 6de:	84 e1       	ldi	r24, 0x14	; 20
- 6e0:	90 e0       	ldi	r25, 0x00	; 0
- 6e2:	2c d1       	rcall	.+600    	; 0x93c <__eerd_byte_m1284>
- 6e4:	84 31       	cpi	r24, 0x14	; 20
- 6e6:	f9 f4       	brne	.+62     	; 0x726 <loadAlarmsFromEEPROM+0x50>
- 6e8:	c3 e0       	ldi	r28, 0x03	; 3
- 6ea:	d0 e0       	ldi	r29, 0x00	; 0
- 6ec:	ce 01       	movw	r24, r28
- 6ee:	03 97       	sbiw	r24, 0x03	; 3
- 6f0:	25 d1       	rcall	.+586    	; 0x93c <__eerd_byte_m1284>
- 6f2:	8e 01       	movw	r16, r28
- 6f4:	00 57       	subi	r16, 0x70	; 112
- 6f6:	1e 4f       	sbci	r17, 0xFE	; 254
- 6f8:	f8 01       	movw	r30, r16
- 6fa:	33 97       	sbiw	r30, 0x03	; 3
- 6fc:	80 83       	st	Z, r24
- 6fe:	ce 01       	movw	r24, r28
- 700:	02 97       	sbiw	r24, 0x02	; 2
- 702:	1c d1       	rcall	.+568    	; 0x93c <__eerd_byte_m1284>
- 704:	f8 01       	movw	r30, r16
- 706:	32 97       	sbiw	r30, 0x02	; 2
- 708:	80 83       	st	Z, r24
- 70a:	ce 01       	movw	r24, r28
- 70c:	01 97       	sbiw	r24, 0x01	; 1
- 70e:	16 d1       	rcall	.+556    	; 0x93c <__eerd_byte_m1284>
- 710:	f8 01       	movw	r30, r16
- 712:	31 97       	sbiw	r30, 0x01	; 1
- 714:	80 83       	st	Z, r24
- 716:	ce 01       	movw	r24, r28
- 718:	11 d1       	rcall	.+546    	; 0x93c <__eerd_byte_m1284>
- 71a:	f8 01       	movw	r30, r16
- 71c:	80 83       	st	Z, r24
- 71e:	24 96       	adiw	r28, 0x04	; 4
- 720:	cb 31       	cpi	r28, 0x1B	; 27
- 722:	d1 05       	cpc	r29, r1
- 724:	19 f7       	brne	.-58     	; 0x6ec <loadAlarmsFromEEPROM+0x16>
- 726:	df 91       	pop	r29
- 728:	cf 91       	pop	r28
- 72a:	1f 91       	pop	r17
- 72c:	0f 91       	pop	r16
- 72e:	08 95       	ret
+0000070a <UpdateInputSMTick>:
+ 70a:	b1 df       	rcall	.-158    	; 0x66e <GetKeypadKey>
+ 70c:	98 2f       	mov	r25, r24
+ 70e:	91 54       	subi	r25, 0x41	; 65
+ 710:	94 30       	cpi	r25, 0x04	; 4
+ 712:	20 f0       	brcs	.+8      	; 0x71c <UpdateInputSMTick+0x12>
+ 714:	83 32       	cpi	r24, 0x23	; 35
+ 716:	11 f0       	breq	.+4      	; 0x71c <UpdateInputSMTick+0x12>
+ 718:	8a 32       	cpi	r24, 0x2A	; 42
+ 71a:	19 f4       	brne	.+6      	; 0x722 <UpdateInputSMTick+0x18>
+ 71c:	80 93 a4 01 	sts	0x01A4, r24
+ 720:	02 c0       	rjmp	.+4      	; 0x726 <UpdateInputSMTick+0x1c>
+ 722:	10 92 a4 01 	sts	0x01A4, r1
+ 726:	80 e0       	ldi	r24, 0x00	; 0
+ 728:	08 95       	ret
 
-00000730 <main>:
+0000072a <initializeSavedAlarms>:
+ 72a:	ed ea       	ldi	r30, 0xAD	; 173
+ 72c:	f1 e0       	ldi	r31, 0x01	; 1
+ 72e:	85 ec       	ldi	r24, 0xC5	; 197
+ 730:	91 e0       	ldi	r25, 0x01	; 1
+ 732:	df 01       	movw	r26, r30
+ 734:	13 97       	sbiw	r26, 0x03	; 3
+ 736:	1c 92       	st	X, r1
+ 738:	df 01       	movw	r26, r30
+ 73a:	12 97       	sbiw	r26, 0x02	; 2
+ 73c:	1c 92       	st	X, r1
+ 73e:	df 01       	movw	r26, r30
+ 740:	11 97       	sbiw	r26, 0x01	; 1
+ 742:	1c 92       	st	X, r1
+ 744:	10 82       	st	Z, r1
+ 746:	34 96       	adiw	r30, 0x04	; 4
+ 748:	e8 17       	cp	r30, r24
+ 74a:	f9 07       	cpc	r31, r25
+ 74c:	91 f7       	brne	.-28     	; 0x732 <initializeSavedAlarms+0x8>
+ 74e:	08 95       	ret
+
+00000750 <loadAlarmsFromEEPROM>:
+ 750:	0f 93       	push	r16
+ 752:	1f 93       	push	r17
+ 754:	cf 93       	push	r28
+ 756:	df 93       	push	r29
+ 758:	84 e1       	ldi	r24, 0x14	; 20
+ 75a:	90 e0       	ldi	r25, 0x00	; 0
+ 75c:	2c d1       	rcall	.+600    	; 0x9b6 <__eerd_byte_m1284>
+ 75e:	84 31       	cpi	r24, 0x14	; 20
+ 760:	f9 f4       	brne	.+62     	; 0x7a0 <loadAlarmsFromEEPROM+0x50>
+ 762:	c3 e0       	ldi	r28, 0x03	; 3
+ 764:	d0 e0       	ldi	r29, 0x00	; 0
+ 766:	ce 01       	movw	r24, r28
+ 768:	03 97       	sbiw	r24, 0x03	; 3
+ 76a:	25 d1       	rcall	.+586    	; 0x9b6 <__eerd_byte_m1284>
+ 76c:	8e 01       	movw	r16, r28
+ 76e:	06 55       	subi	r16, 0x56	; 86
+ 770:	1e 4f       	sbci	r17, 0xFE	; 254
+ 772:	f8 01       	movw	r30, r16
+ 774:	33 97       	sbiw	r30, 0x03	; 3
+ 776:	80 83       	st	Z, r24
+ 778:	ce 01       	movw	r24, r28
+ 77a:	02 97       	sbiw	r24, 0x02	; 2
+ 77c:	1c d1       	rcall	.+568    	; 0x9b6 <__eerd_byte_m1284>
+ 77e:	f8 01       	movw	r30, r16
+ 780:	32 97       	sbiw	r30, 0x02	; 2
+ 782:	80 83       	st	Z, r24
+ 784:	ce 01       	movw	r24, r28
+ 786:	01 97       	sbiw	r24, 0x01	; 1
+ 788:	16 d1       	rcall	.+556    	; 0x9b6 <__eerd_byte_m1284>
+ 78a:	f8 01       	movw	r30, r16
+ 78c:	31 97       	sbiw	r30, 0x01	; 1
+ 78e:	80 83       	st	Z, r24
+ 790:	ce 01       	movw	r24, r28
+ 792:	11 d1       	rcall	.+546    	; 0x9b6 <__eerd_byte_m1284>
+ 794:	f8 01       	movw	r30, r16
+ 796:	80 83       	st	Z, r24
+ 798:	24 96       	adiw	r28, 0x04	; 4
+ 79a:	cb 31       	cpi	r28, 0x1B	; 27
+ 79c:	d1 05       	cpc	r29, r1
+ 79e:	19 f7       	brne	.-58     	; 0x766 <loadAlarmsFromEEPROM+0x16>
+ 7a0:	df 91       	pop	r29
+ 7a2:	cf 91       	pop	r28
+ 7a4:	1f 91       	pop	r17
+ 7a6:	0f 91       	pop	r16
+ 7a8:	08 95       	ret
+
+000007aa <main>:
 // End State Machine drivers
 // 
 
 // Scheduler
 int main(void)
 {
- 730:	cf 93       	push	r28
- 732:	df 93       	push	r29
- 734:	cd b7       	in	r28, 0x3d	; 61
- 736:	de b7       	in	r29, 0x3e	; 62
- 738:	28 97       	sbiw	r28, 0x08	; 8
- 73a:	0f b6       	in	r0, 0x3f	; 63
- 73c:	f8 94       	cli
- 73e:	de bf       	out	0x3e, r29	; 62
- 740:	0f be       	out	0x3f, r0	; 63
- 742:	cd bf       	out	0x3d, r28	; 61
+ 7aa:	cf 93       	push	r28
+ 7ac:	df 93       	push	r29
+ 7ae:	cd b7       	in	r28, 0x3d	; 61
+ 7b0:	de b7       	in	r29, 0x3e	; 62
+ 7b2:	28 97       	sbiw	r28, 0x08	; 8
+ 7b4:	0f b6       	in	r0, 0x3f	; 63
+ 7b6:	f8 94       	cli
+ 7b8:	de bf       	out	0x3e, r29	; 62
+ 7ba:	0f be       	out	0x3f, r0	; 63
+ 7bc:	cd bf       	out	0x3d, r28	; 61
 	// Set DDR and initialise PORTs
 	//Keypad on A
 	DDRA = 0xF0; PORTA = 0x0F;
- 744:	80 ef       	ldi	r24, 0xF0	; 240
- 746:	81 b9       	out	0x01, r24	; 1
- 748:	8f e0       	ldi	r24, 0x0F	; 15
- 74a:	82 b9       	out	0x02, r24	; 2
+ 7be:	80 ef       	ldi	r24, 0xF0	; 240
+ 7c0:	81 b9       	out	0x01, r24	; 1
+ 7c2:	8f e0       	ldi	r24, 0x0F	; 15
+ 7c4:	82 b9       	out	0x02, r24	; 2
 	DDRB = 0xFF; PORTB = 0x00;
- 74c:	1f ef       	ldi	r17, 0xFF	; 255
- 74e:	14 b9       	out	0x04, r17	; 4
- 750:	15 b8       	out	0x05, r1	; 5
+ 7c6:	1f ef       	ldi	r17, 0xFF	; 255
+ 7c8:	14 b9       	out	0x04, r17	; 4
+ 7ca:	15 b8       	out	0x05, r1	; 5
 	DDRC = 0xFF; PORTC = 0x00;
- 752:	17 b9       	out	0x07, r17	; 7
- 754:	18 b8       	out	0x08, r1	; 8
+ 7cc:	17 b9       	out	0x07, r17	; 7
+ 7ce:	18 b8       	out	0x08, r1	; 8
 	DDRD = 0xFF; PORTD = 0x00;
- 756:	1a b9       	out	0x0a, r17	; 10
- 758:	1b b8       	out	0x0b, r1	; 11
+ 7d0:	1a b9       	out	0x0a, r17	; 10
+ 7d2:	1b b8       	out	0x0b, r1	; 11
 	unsigned long int UpdateInputSM_calc = 100; // 100ms period
 	unsigned long int SystemDriverSM_calc = 100; // 100ms period
 	
 	// Calculate GCD	
 	unsigned long int tmpGCD = 1;
 	tmpGCD = findGCD(TimeCrunchSM_calc, LCDDisplaySM_calc );
- 75a:	28 ee       	ldi	r18, 0xE8	; 232
- 75c:	33 e0       	ldi	r19, 0x03	; 3
- 75e:	40 e0       	ldi	r20, 0x00	; 0
- 760:	50 e0       	ldi	r21, 0x00	; 0
- 762:	68 ee       	ldi	r22, 0xE8	; 232
- 764:	73 e0       	ldi	r23, 0x03	; 3
- 766:	80 e0       	ldi	r24, 0x00	; 0
- 768:	90 e0       	ldi	r25, 0x00	; 0
- 76a:	d7 dd       	rcall	.-1106   	; 0x31a <findGCD>
+ 7d4:	28 ee       	ldi	r18, 0xE8	; 232
+ 7d6:	33 e0       	ldi	r19, 0x03	; 3
+ 7d8:	40 e0       	ldi	r20, 0x00	; 0
+ 7da:	50 e0       	ldi	r21, 0x00	; 0
+ 7dc:	68 ee       	ldi	r22, 0xE8	; 232
+ 7de:	73 e0       	ldi	r23, 0x03	; 3
+ 7e0:	80 e0       	ldi	r24, 0x00	; 0
+ 7e2:	90 e0       	ldi	r25, 0x00	; 0
+ 7e4:	c4 dd       	rcall	.-1144   	; 0x36e <findGCD>
 	tmpGCD = findGCD(tmpGCD, UpdateInputSM_calc);
- 76c:	24 e6       	ldi	r18, 0x64	; 100
- 76e:	30 e0       	ldi	r19, 0x00	; 0
- 770:	40 e0       	ldi	r20, 0x00	; 0
- 772:	50 e0       	ldi	r21, 0x00	; 0
- 774:	d2 dd       	rcall	.-1116   	; 0x31a <findGCD>
+ 7e6:	24 e6       	ldi	r18, 0x64	; 100
+ 7e8:	30 e0       	ldi	r19, 0x00	; 0
+ 7ea:	40 e0       	ldi	r20, 0x00	; 0
+ 7ec:	50 e0       	ldi	r21, 0x00	; 0
+ 7ee:	bf dd       	rcall	.-1154   	; 0x36e <findGCD>
 	tmpGCD = findGCD(tmpGCD, SystemDriverSM_calc);
- 776:	24 e6       	ldi	r18, 0x64	; 100
- 778:	30 e0       	ldi	r19, 0x00	; 0
- 77a:	40 e0       	ldi	r20, 0x00	; 0
- 77c:	50 e0       	ldi	r21, 0x00	; 0
- 77e:	cd dd       	rcall	.-1126   	; 0x31a <findGCD>
- 780:	6b 01       	movw	r12, r22
- 782:	7c 01       	movw	r14, r24
+ 7f0:	24 e6       	ldi	r18, 0x64	; 100
+ 7f2:	30 e0       	ldi	r19, 0x00	; 0
+ 7f4:	40 e0       	ldi	r20, 0x00	; 0
+ 7f6:	50 e0       	ldi	r21, 0x00	; 0
+ 7f8:	ba dd       	rcall	.-1164   	; 0x36e <findGCD>
+ 7fa:	6b 01       	movw	r12, r22
+ 7fc:	7c 01       	movw	r14, r24
 	//tmpGCD = findGCD(tmpGCD, ... );
 		
 	unsigned long int GCD = tmpGCD;
 	
 	// Recalculate GCD periods for scheduler
 	unsigned long int TimeCrunchSM_period = TimeCrunchSM_calc/GCD;
- 784:	68 ee       	ldi	r22, 0xE8	; 232
- 786:	73 e0       	ldi	r23, 0x03	; 3
- 788:	80 e0       	ldi	r24, 0x00	; 0
- 78a:	90 e0       	ldi	r25, 0x00	; 0
- 78c:	a7 01       	movw	r20, r14
- 78e:	96 01       	movw	r18, r12
- 790:	b3 d0       	rcall	.+358    	; 0x8f8 <__udivmodsi4>
- 792:	92 2e       	mov	r9, r18
- 794:	a3 2e       	mov	r10, r19
- 796:	b4 2e       	mov	r11, r20
- 798:	05 2f       	mov	r16, r21
+ 7fe:	68 ee       	ldi	r22, 0xE8	; 232
+ 800:	73 e0       	ldi	r23, 0x03	; 3
+ 802:	80 e0       	ldi	r24, 0x00	; 0
+ 804:	90 e0       	ldi	r25, 0x00	; 0
+ 806:	a7 01       	movw	r20, r14
+ 808:	96 01       	movw	r18, r12
+ 80a:	b3 d0       	rcall	.+358    	; 0x972 <__udivmodsi4>
+ 80c:	92 2e       	mov	r9, r18
+ 80e:	a3 2e       	mov	r10, r19
+ 810:	b4 2e       	mov	r11, r20
+ 812:	05 2f       	mov	r16, r21
 	unsigned long int LCDDisplaySM_period = LCDDisplaySM_calc/GCD;
 	unsigned long int UpdateInputSM_period = UpdateInputSM_calc/GCD;
- 79a:	64 e6       	ldi	r22, 0x64	; 100
- 79c:	70 e0       	ldi	r23, 0x00	; 0
- 79e:	80 e0       	ldi	r24, 0x00	; 0
- 7a0:	90 e0       	ldi	r25, 0x00	; 0
- 7a2:	a7 01       	movw	r20, r14
- 7a4:	96 01       	movw	r18, r12
- 7a6:	a8 d0       	rcall	.+336    	; 0x8f8 <__udivmodsi4>
+ 814:	64 e6       	ldi	r22, 0x64	; 100
+ 816:	70 e0       	ldi	r23, 0x00	; 0
+ 818:	80 e0       	ldi	r24, 0x00	; 0
+ 81a:	90 e0       	ldi	r25, 0x00	; 0
+ 81c:	a7 01       	movw	r20, r14
+ 81e:	96 01       	movw	r18, r12
+ 820:	a8 d0       	rcall	.+336    	; 0x972 <__udivmodsi4>
 	// Set up task scheduler
 	static task TimeCrunchSMTask,
 				LCDDisplaySMTask,
 				UpdateInputSMTask,
 				SystemDriverSMTask;
 	task *tasks[] = {&UpdateInputSMTask, &SystemDriverSMTask, &TimeCrunchSMTask, &LCDDisplaySMTask}; // keep display at the end. keep UpdateInput in the beginning and SystemDriverSM second
- 7a8:	88 e0       	ldi	r24, 0x08	; 8
- 7aa:	e4 e0       	ldi	r30, 0x04	; 4
- 7ac:	f1 e0       	ldi	r31, 0x01	; 1
- 7ae:	de 01       	movw	r26, r28
- 7b0:	11 96       	adiw	r26, 0x01	; 1
- 7b2:	01 90       	ld	r0, Z+
- 7b4:	0d 92       	st	X+, r0
- 7b6:	8a 95       	dec	r24
- 7b8:	e1 f7       	brne	.-8      	; 0x7b2 <main+0x82>
+ 822:	88 e0       	ldi	r24, 0x08	; 8
+ 824:	e4 e0       	ldi	r30, 0x04	; 4
+ 826:	f1 e0       	ldi	r31, 0x01	; 1
+ 828:	de 01       	movw	r26, r28
+ 82a:	11 96       	adiw	r26, 0x01	; 1
+ 82c:	01 90       	ld	r0, Z+
+ 82e:	0d 92       	st	X+, r0
+ 830:	8a 95       	dec	r24
+ 832:	e1 f7       	brne	.-8      	; 0x82c <main+0x82>
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 	
 	//UpdateInputSM declaration
 	UpdateInputSMTask.state = -1;
- 7ba:	10 93 3e 01 	sts	0x013E, r17
+ 834:	10 93 58 01 	sts	0x0158, r17
 	UpdateInputSMTask.period = UpdateInputSMTask.elapsedTime = UpdateInputSM_period;
- 7be:	e3 e4       	ldi	r30, 0x43	; 67
- 7c0:	f1 e0       	ldi	r31, 0x01	; 1
- 7c2:	20 83       	st	Z, r18
- 7c4:	31 83       	std	Z+1, r19	; 0x01
- 7c6:	42 83       	std	Z+2, r20	; 0x02
- 7c8:	53 83       	std	Z+3, r21	; 0x03
- 7ca:	ef e3       	ldi	r30, 0x3F	; 63
- 7cc:	f1 e0       	ldi	r31, 0x01	; 1
- 7ce:	20 83       	st	Z, r18
- 7d0:	31 83       	std	Z+1, r19	; 0x01
- 7d2:	42 83       	std	Z+2, r20	; 0x02
- 7d4:	53 83       	std	Z+3, r21	; 0x03
+ 838:	ed e5       	ldi	r30, 0x5D	; 93
+ 83a:	f1 e0       	ldi	r31, 0x01	; 1
+ 83c:	20 83       	st	Z, r18
+ 83e:	31 83       	std	Z+1, r19	; 0x01
+ 840:	42 83       	std	Z+2, r20	; 0x02
+ 842:	53 83       	std	Z+3, r21	; 0x03
+ 844:	e9 e5       	ldi	r30, 0x59	; 89
+ 846:	f1 e0       	ldi	r31, 0x01	; 1
+ 848:	20 83       	st	Z, r18
+ 84a:	31 83       	std	Z+1, r19	; 0x01
+ 84c:	42 83       	std	Z+2, r20	; 0x02
+ 84e:	53 83       	std	Z+3, r21	; 0x03
 	UpdateInputSMTask.TickFct = &UpdateInputSMTick;
- 7d6:	88 e4       	ldi	r24, 0x48	; 72
- 7d8:	93 e0       	ldi	r25, 0x03	; 3
- 7da:	90 93 48 01 	sts	0x0148, r25
- 7de:	80 93 47 01 	sts	0x0147, r24
+ 850:	85 e8       	ldi	r24, 0x85	; 133
+ 852:	93 e0       	ldi	r25, 0x03	; 3
+ 854:	90 93 62 01 	sts	0x0162, r25
+ 858:	80 93 61 01 	sts	0x0161, r24
 	
 	//SystemDriverSM declaration
 	SystemDriverSMTask.state = -1;
- 7e2:	10 93 49 01 	sts	0x0149, r17
+ 85c:	10 93 63 01 	sts	0x0163, r17
 	SystemDriverSMTask.period = SystemDriverSMTask.elapsedTime = SystemDriverSM_period;
- 7e6:	ee e4       	ldi	r30, 0x4E	; 78
- 7e8:	f1 e0       	ldi	r31, 0x01	; 1
- 7ea:	20 83       	st	Z, r18
- 7ec:	31 83       	std	Z+1, r19	; 0x01
- 7ee:	42 83       	std	Z+2, r20	; 0x02
- 7f0:	53 83       	std	Z+3, r21	; 0x03
- 7f2:	ea e4       	ldi	r30, 0x4A	; 74
- 7f4:	f1 e0       	ldi	r31, 0x01	; 1
- 7f6:	20 83       	st	Z, r18
- 7f8:	31 83       	std	Z+1, r19	; 0x01
- 7fa:	42 83       	std	Z+2, r20	; 0x02
- 7fc:	53 83       	std	Z+3, r21	; 0x03
+ 860:	e8 e6       	ldi	r30, 0x68	; 104
+ 862:	f1 e0       	ldi	r31, 0x01	; 1
+ 864:	20 83       	st	Z, r18
+ 866:	31 83       	std	Z+1, r19	; 0x01
+ 868:	42 83       	std	Z+2, r20	; 0x02
+ 86a:	53 83       	std	Z+3, r21	; 0x03
+ 86c:	e4 e6       	ldi	r30, 0x64	; 100
+ 86e:	f1 e0       	ldi	r31, 0x01	; 1
+ 870:	20 83       	st	Z, r18
+ 872:	31 83       	std	Z+1, r19	; 0x01
+ 874:	42 83       	std	Z+2, r20	; 0x02
+ 876:	53 83       	std	Z+3, r21	; 0x03
 	SystemDriverSMTask.TickFct = &SystemDriverSMTick;
- 7fe:	8e ee       	ldi	r24, 0xEE	; 238
- 800:	90 e0       	ldi	r25, 0x00	; 0
- 802:	90 93 53 01 	sts	0x0153, r25
- 806:	80 93 52 01 	sts	0x0152, r24
+ 878:	8e ee       	ldi	r24, 0xEE	; 238
+ 87a:	90 e0       	ldi	r25, 0x00	; 0
+ 87c:	90 93 6d 01 	sts	0x016D, r25
+ 880:	80 93 6c 01 	sts	0x016C, r24
 	
 	// TimeCrunchSM declaration
 	TimeCrunchSMTask.state = -1;
- 80a:	10 93 54 01 	sts	0x0154, r17
+ 884:	10 93 6e 01 	sts	0x016E, r17
 	TimeCrunchSMTask.period = TimeCrunchSMTask.elapsedTime = TimeCrunchSM_period;
- 80e:	e9 e5       	ldi	r30, 0x59	; 89
- 810:	f1 e0       	ldi	r31, 0x01	; 1
- 812:	90 82       	st	Z, r9
- 814:	a1 82       	std	Z+1, r10	; 0x01
- 816:	b2 82       	std	Z+2, r11	; 0x02
- 818:	03 83       	std	Z+3, r16	; 0x03
- 81a:	e5 e5       	ldi	r30, 0x55	; 85
- 81c:	f1 e0       	ldi	r31, 0x01	; 1
- 81e:	90 82       	st	Z, r9
- 820:	a1 82       	std	Z+1, r10	; 0x01
- 822:	b2 82       	std	Z+2, r11	; 0x02
- 824:	03 83       	std	Z+3, r16	; 0x03
+ 888:	e3 e7       	ldi	r30, 0x73	; 115
+ 88a:	f1 e0       	ldi	r31, 0x01	; 1
+ 88c:	90 82       	st	Z, r9
+ 88e:	a1 82       	std	Z+1, r10	; 0x01
+ 890:	b2 82       	std	Z+2, r11	; 0x02
+ 892:	03 83       	std	Z+3, r16	; 0x03
+ 894:	ef e6       	ldi	r30, 0x6F	; 111
+ 896:	f1 e0       	ldi	r31, 0x01	; 1
+ 898:	90 82       	st	Z, r9
+ 89a:	a1 82       	std	Z+1, r10	; 0x01
+ 89c:	b2 82       	std	Z+2, r11	; 0x02
+ 89e:	03 83       	std	Z+3, r16	; 0x03
 	TimeCrunchSMTask.TickFct = &TimeCrunchSMTick;
- 826:	84 eb       	ldi	r24, 0xB4	; 180
- 828:	90 e0       	ldi	r25, 0x00	; 0
- 82a:	90 93 5e 01 	sts	0x015E, r25
- 82e:	80 93 5d 01 	sts	0x015D, r24
+ 8a0:	84 eb       	ldi	r24, 0xB4	; 180
+ 8a2:	90 e0       	ldi	r25, 0x00	; 0
+ 8a4:	90 93 78 01 	sts	0x0178, r25
+ 8a8:	80 93 77 01 	sts	0x0177, r24
 	//LCDDisplaySM declaration
 	LCDDisplaySMTask.state = -1;
- 832:	10 93 5f 01 	sts	0x015F, r17
+ 8ac:	10 93 79 01 	sts	0x0179, r17
 	LCDDisplaySMTask.period = LCDDisplaySMTask.elapsedTime = LCDDisplaySM_period;
- 836:	e4 e6       	ldi	r30, 0x64	; 100
- 838:	f1 e0       	ldi	r31, 0x01	; 1
- 83a:	90 82       	st	Z, r9
- 83c:	a1 82       	std	Z+1, r10	; 0x01
- 83e:	b2 82       	std	Z+2, r11	; 0x02
- 840:	03 83       	std	Z+3, r16	; 0x03
- 842:	e0 e6       	ldi	r30, 0x60	; 96
- 844:	f1 e0       	ldi	r31, 0x01	; 1
- 846:	90 82       	st	Z, r9
- 848:	a1 82       	std	Z+1, r10	; 0x01
- 84a:	b2 82       	std	Z+2, r11	; 0x02
- 84c:	03 83       	std	Z+3, r16	; 0x03
+ 8b0:	ee e7       	ldi	r30, 0x7E	; 126
+ 8b2:	f1 e0       	ldi	r31, 0x01	; 1
+ 8b4:	90 82       	st	Z, r9
+ 8b6:	a1 82       	std	Z+1, r10	; 0x01
+ 8b8:	b2 82       	std	Z+2, r11	; 0x02
+ 8ba:	03 83       	std	Z+3, r16	; 0x03
+ 8bc:	ea e7       	ldi	r30, 0x7A	; 122
+ 8be:	f1 e0       	ldi	r31, 0x01	; 1
+ 8c0:	90 82       	st	Z, r9
+ 8c2:	a1 82       	std	Z+1, r10	; 0x01
+ 8c4:	b2 82       	std	Z+2, r11	; 0x02
+ 8c6:	03 83       	std	Z+3, r16	; 0x03
 	LCDDisplaySMTask.TickFct = &LCDDisplaySMTick;
- 84e:	8a eb       	ldi	r24, 0xBA	; 186
- 850:	92 e0       	ldi	r25, 0x02	; 2
- 852:	90 93 69 01 	sts	0x0169, r25
- 856:	80 93 68 01 	sts	0x0168, r24
+ 8c8:	84 ee       	ldi	r24, 0xE4	; 228
+ 8ca:	92 e0       	ldi	r25, 0x02	; 2
+ 8cc:	90 93 83 01 	sts	0x0183, r25
+ 8d0:	80 93 82 01 	sts	0x0182, r24
 	
 	// HW initializations ======================================================
 	// Set timer and turn it on
 	TimerSet(GCD);
- 85a:	c7 01       	movw	r24, r14
- 85c:	b6 01       	movw	r22, r12
- 85e:	8c dd       	rcall	.-1256   	; 0x378 <TimerSet>
+ 8d4:	c7 01       	movw	r24, r14
+ 8d6:	b6 01       	movw	r22, r12
+ 8d8:	79 dd       	rcall	.-1294   	; 0x3cc <TimerSet>
 	TimerOn();
- 860:	9c dd       	rcall	.-1224   	; 0x39a <TimerOn>
+ 8da:	89 dd       	rcall	.-1262   	; 0x3ee <TimerOn>
 	// Start LCD
 	LCD_init();
- 862:	74 dc       	rcall	.-1816   	; 0x14c <LCD_init>
+ 8dc:	37 dc       	rcall	.-1938   	; 0x14c <LCD_init>
 	// MEM initializations ======================================================
 	initializeSavedAlarms(); // zero saved Alarms 
- 864:	25 df       	rcall	.-438    	; 0x6b0 <initializeSavedAlarms>
+ 8de:	25 df       	rcall	.-438    	; 0x72a <initializeSavedAlarms>
 	loadAlarmsFromEEPROM();  // load Alarms if previously saved.
- 866:	37 df       	rcall	.-402    	; 0x6d6 <loadAlarmsFromEEPROM>
+ 8e0:	37 df       	rcall	.-402    	; 0x750 <loadAlarmsFromEEPROM>
 	
 	unsigned short i; // for loop iterator
     while(1)
     {
 		for(i=0; i<numTasks; ++i){
- 868:	00 e0       	ldi	r16, 0x00	; 0
- 86a:	10 e0       	ldi	r17, 0x00	; 0
- 86c:	c1 2c       	mov	r12, r1
- 86e:	d1 2c       	mov	r13, r1
- 870:	38 c0       	rjmp	.+112    	; 0x8e2 <main+0x1b2>
+ 8e2:	00 e0       	ldi	r16, 0x00	; 0
+ 8e4:	10 e0       	ldi	r17, 0x00	; 0
+ 8e6:	c1 2c       	mov	r12, r1
+ 8e8:	d1 2c       	mov	r13, r1
+ 8ea:	38 c0       	rjmp	.+112    	; 0x95c <main+0x1b2>
 			if(tasks[i]->elapsedTime == tasks[i]->period){
- 872:	f8 01       	movw	r30, r16
- 874:	ee 0f       	add	r30, r30
- 876:	ff 1f       	adc	r31, r31
- 878:	81 e0       	ldi	r24, 0x01	; 1
- 87a:	90 e0       	ldi	r25, 0x00	; 0
- 87c:	8c 0f       	add	r24, r28
- 87e:	9d 1f       	adc	r25, r29
- 880:	e8 0f       	add	r30, r24
- 882:	f9 1f       	adc	r31, r25
- 884:	e0 80       	ld	r14, Z
- 886:	f1 80       	ldd	r15, Z+1	; 0x01
- 888:	d7 01       	movw	r26, r14
- 88a:	15 96       	adiw	r26, 0x05	; 5
- 88c:	4d 91       	ld	r20, X+
- 88e:	5d 91       	ld	r21, X+
- 890:	6d 91       	ld	r22, X+
- 892:	7c 91       	ld	r23, X
- 894:	18 97       	sbiw	r26, 0x08	; 8
- 896:	11 96       	adiw	r26, 0x01	; 1
- 898:	8d 91       	ld	r24, X+
- 89a:	9d 91       	ld	r25, X+
- 89c:	0d 90       	ld	r0, X+
- 89e:	bc 91       	ld	r27, X
- 8a0:	a0 2d       	mov	r26, r0
- 8a2:	48 17       	cp	r20, r24
- 8a4:	59 07       	cpc	r21, r25
- 8a6:	6a 07       	cpc	r22, r26
- 8a8:	7b 07       	cpc	r23, r27
- 8aa:	69 f4       	brne	.+26     	; 0x8c6 <main+0x196>
+ 8ec:	f8 01       	movw	r30, r16
+ 8ee:	ee 0f       	add	r30, r30
+ 8f0:	ff 1f       	adc	r31, r31
+ 8f2:	81 e0       	ldi	r24, 0x01	; 1
+ 8f4:	90 e0       	ldi	r25, 0x00	; 0
+ 8f6:	8c 0f       	add	r24, r28
+ 8f8:	9d 1f       	adc	r25, r29
+ 8fa:	e8 0f       	add	r30, r24
+ 8fc:	f9 1f       	adc	r31, r25
+ 8fe:	e0 80       	ld	r14, Z
+ 900:	f1 80       	ldd	r15, Z+1	; 0x01
+ 902:	d7 01       	movw	r26, r14
+ 904:	15 96       	adiw	r26, 0x05	; 5
+ 906:	4d 91       	ld	r20, X+
+ 908:	5d 91       	ld	r21, X+
+ 90a:	6d 91       	ld	r22, X+
+ 90c:	7c 91       	ld	r23, X
+ 90e:	18 97       	sbiw	r26, 0x08	; 8
+ 910:	11 96       	adiw	r26, 0x01	; 1
+ 912:	8d 91       	ld	r24, X+
+ 914:	9d 91       	ld	r25, X+
+ 916:	0d 90       	ld	r0, X+
+ 918:	bc 91       	ld	r27, X
+ 91a:	a0 2d       	mov	r26, r0
+ 91c:	48 17       	cp	r20, r24
+ 91e:	59 07       	cpc	r21, r25
+ 920:	6a 07       	cpc	r22, r26
+ 922:	7b 07       	cpc	r23, r27
+ 924:	69 f4       	brne	.+26     	; 0x940 <main+0x196>
 				// tick and set next state
 				tasks[i]->state = tasks[i]->TickFct(tasks[i]->state);
- 8ac:	d7 01       	movw	r26, r14
- 8ae:	19 96       	adiw	r26, 0x09	; 9
- 8b0:	ed 91       	ld	r30, X+
- 8b2:	fc 91       	ld	r31, X
- 8b4:	1a 97       	sbiw	r26, 0x0a	; 10
- 8b6:	8c 91       	ld	r24, X
- 8b8:	09 95       	icall
- 8ba:	f7 01       	movw	r30, r14
- 8bc:	80 83       	st	Z, r24
+ 926:	d7 01       	movw	r26, r14
+ 928:	19 96       	adiw	r26, 0x09	; 9
+ 92a:	ed 91       	ld	r30, X+
+ 92c:	fc 91       	ld	r31, X
+ 92e:	1a 97       	sbiw	r26, 0x0a	; 10
+ 930:	8c 91       	ld	r24, X
+ 932:	09 95       	icall
+ 934:	f7 01       	movw	r30, r14
+ 936:	80 83       	st	Z, r24
 				//reset elapsed time
 				tasks[i]->elapsedTime = 0;
- 8be:	15 82       	std	Z+5, r1	; 0x05
- 8c0:	16 82       	std	Z+6, r1	; 0x06
- 8c2:	17 82       	std	Z+7, r1	; 0x07
- 8c4:	10 86       	std	Z+8, r1	; 0x08
+ 938:	15 82       	std	Z+5, r1	; 0x05
+ 93a:	16 82       	std	Z+6, r1	; 0x06
+ 93c:	17 82       	std	Z+7, r1	; 0x07
+ 93e:	10 86       	std	Z+8, r1	; 0x08
 			}
 			tasks[i]->elapsedTime += 1;
- 8c6:	f7 01       	movw	r30, r14
- 8c8:	85 81       	ldd	r24, Z+5	; 0x05
- 8ca:	96 81       	ldd	r25, Z+6	; 0x06
- 8cc:	a7 81       	ldd	r26, Z+7	; 0x07
- 8ce:	b0 85       	ldd	r27, Z+8	; 0x08
- 8d0:	01 96       	adiw	r24, 0x01	; 1
- 8d2:	a1 1d       	adc	r26, r1
- 8d4:	b1 1d       	adc	r27, r1
- 8d6:	85 83       	std	Z+5, r24	; 0x05
- 8d8:	96 83       	std	Z+6, r25	; 0x06
- 8da:	a7 83       	std	Z+7, r26	; 0x07
- 8dc:	b0 87       	std	Z+8, r27	; 0x08
+ 940:	f7 01       	movw	r30, r14
+ 942:	85 81       	ldd	r24, Z+5	; 0x05
+ 944:	96 81       	ldd	r25, Z+6	; 0x06
+ 946:	a7 81       	ldd	r26, Z+7	; 0x07
+ 948:	b0 85       	ldd	r27, Z+8	; 0x08
+ 94a:	01 96       	adiw	r24, 0x01	; 1
+ 94c:	a1 1d       	adc	r26, r1
+ 94e:	b1 1d       	adc	r27, r1
+ 950:	85 83       	std	Z+5, r24	; 0x05
+ 952:	96 83       	std	Z+6, r25	; 0x06
+ 954:	a7 83       	std	Z+7, r26	; 0x07
+ 956:	b0 87       	std	Z+8, r27	; 0x08
 	loadAlarmsFromEEPROM();  // load Alarms if previously saved.
 	
 	unsigned short i; // for loop iterator
     while(1)
     {
 		for(i=0; i<numTasks; ++i){
- 8de:	0f 5f       	subi	r16, 0xFF	; 255
- 8e0:	1f 4f       	sbci	r17, 0xFF	; 255
- 8e2:	04 30       	cpi	r16, 0x04	; 4
- 8e4:	11 05       	cpc	r17, r1
- 8e6:	28 f2       	brcs	.-118    	; 0x872 <main+0x142>
+ 958:	0f 5f       	subi	r16, 0xFF	; 255
+ 95a:	1f 4f       	sbci	r17, 0xFF	; 255
+ 95c:	04 30       	cpi	r16, 0x04	; 4
+ 95e:	11 05       	cpc	r17, r1
+ 960:	28 f2       	brcs	.-118    	; 0x8ec <main+0x142>
 				//reset elapsed time
 				tasks[i]->elapsedTime = 0;
 			}
 			tasks[i]->elapsedTime += 1;
 		}
 		while(!TimerFlag);
- 8e8:	80 91 3c 01 	lds	r24, 0x013C
- 8ec:	88 23       	and	r24, r24
- 8ee:	e1 f3       	breq	.-8      	; 0x8e8 <main+0x1b8>
+ 962:	80 91 56 01 	lds	r24, 0x0156
+ 966:	88 23       	and	r24, r24
+ 968:	e1 f3       	breq	.-8      	; 0x962 <main+0x1b8>
 		TimerFlag = 0;
- 8f0:	10 92 3c 01 	sts	0x013C, r1
+ 96a:	10 92 56 01 	sts	0x0156, r1
 	loadAlarmsFromEEPROM();  // load Alarms if previously saved.
 	
 	unsigned short i; // for loop iterator
     while(1)
     {
 		for(i=0; i<numTasks; ++i){
- 8f4:	86 01       	movw	r16, r12
+ 96e:	86 01       	movw	r16, r12
 			}
 			tasks[i]->elapsedTime += 1;
 		}
 		while(!TimerFlag);
 		TimerFlag = 0;
     }
- 8f6:	f5 cf       	rjmp	.-22     	; 0x8e2 <main+0x1b2>
+ 970:	f5 cf       	rjmp	.-22     	; 0x95c <main+0x1b2>
 
-000008f8 <__udivmodsi4>:
- 8f8:	a1 e2       	ldi	r26, 0x21	; 33
- 8fa:	1a 2e       	mov	r1, r26
- 8fc:	aa 1b       	sub	r26, r26
- 8fe:	bb 1b       	sub	r27, r27
- 900:	fd 01       	movw	r30, r26
- 902:	0d c0       	rjmp	.+26     	; 0x91e <__udivmodsi4_ep>
+00000972 <__udivmodsi4>:
+ 972:	a1 e2       	ldi	r26, 0x21	; 33
+ 974:	1a 2e       	mov	r1, r26
+ 976:	aa 1b       	sub	r26, r26
+ 978:	bb 1b       	sub	r27, r27
+ 97a:	fd 01       	movw	r30, r26
+ 97c:	0d c0       	rjmp	.+26     	; 0x998 <__udivmodsi4_ep>
 
-00000904 <__udivmodsi4_loop>:
- 904:	aa 1f       	adc	r26, r26
- 906:	bb 1f       	adc	r27, r27
- 908:	ee 1f       	adc	r30, r30
- 90a:	ff 1f       	adc	r31, r31
- 90c:	a2 17       	cp	r26, r18
- 90e:	b3 07       	cpc	r27, r19
- 910:	e4 07       	cpc	r30, r20
- 912:	f5 07       	cpc	r31, r21
- 914:	20 f0       	brcs	.+8      	; 0x91e <__udivmodsi4_ep>
- 916:	a2 1b       	sub	r26, r18
- 918:	b3 0b       	sbc	r27, r19
- 91a:	e4 0b       	sbc	r30, r20
- 91c:	f5 0b       	sbc	r31, r21
+0000097e <__udivmodsi4_loop>:
+ 97e:	aa 1f       	adc	r26, r26
+ 980:	bb 1f       	adc	r27, r27
+ 982:	ee 1f       	adc	r30, r30
+ 984:	ff 1f       	adc	r31, r31
+ 986:	a2 17       	cp	r26, r18
+ 988:	b3 07       	cpc	r27, r19
+ 98a:	e4 07       	cpc	r30, r20
+ 98c:	f5 07       	cpc	r31, r21
+ 98e:	20 f0       	brcs	.+8      	; 0x998 <__udivmodsi4_ep>
+ 990:	a2 1b       	sub	r26, r18
+ 992:	b3 0b       	sbc	r27, r19
+ 994:	e4 0b       	sbc	r30, r20
+ 996:	f5 0b       	sbc	r31, r21
 
-0000091e <__udivmodsi4_ep>:
- 91e:	66 1f       	adc	r22, r22
- 920:	77 1f       	adc	r23, r23
- 922:	88 1f       	adc	r24, r24
- 924:	99 1f       	adc	r25, r25
- 926:	1a 94       	dec	r1
- 928:	69 f7       	brne	.-38     	; 0x904 <__udivmodsi4_loop>
- 92a:	60 95       	com	r22
- 92c:	70 95       	com	r23
- 92e:	80 95       	com	r24
- 930:	90 95       	com	r25
- 932:	9b 01       	movw	r18, r22
- 934:	ac 01       	movw	r20, r24
- 936:	bd 01       	movw	r22, r26
- 938:	cf 01       	movw	r24, r30
- 93a:	08 95       	ret
+00000998 <__udivmodsi4_ep>:
+ 998:	66 1f       	adc	r22, r22
+ 99a:	77 1f       	adc	r23, r23
+ 99c:	88 1f       	adc	r24, r24
+ 99e:	99 1f       	adc	r25, r25
+ 9a0:	1a 94       	dec	r1
+ 9a2:	69 f7       	brne	.-38     	; 0x97e <__udivmodsi4_loop>
+ 9a4:	60 95       	com	r22
+ 9a6:	70 95       	com	r23
+ 9a8:	80 95       	com	r24
+ 9aa:	90 95       	com	r25
+ 9ac:	9b 01       	movw	r18, r22
+ 9ae:	ac 01       	movw	r20, r24
+ 9b0:	bd 01       	movw	r22, r26
+ 9b2:	cf 01       	movw	r24, r30
+ 9b4:	08 95       	ret
 
-0000093c <__eerd_byte_m1284>:
- 93c:	f9 99       	sbic	0x1f, 1	; 31
- 93e:	fe cf       	rjmp	.-4      	; 0x93c <__eerd_byte_m1284>
- 940:	92 bd       	out	0x22, r25	; 34
- 942:	81 bd       	out	0x21, r24	; 33
- 944:	f8 9a       	sbi	0x1f, 0	; 31
- 946:	99 27       	eor	r25, r25
- 948:	80 b5       	in	r24, 0x20	; 32
- 94a:	08 95       	ret
+000009b6 <__eerd_byte_m1284>:
+ 9b6:	f9 99       	sbic	0x1f, 1	; 31
+ 9b8:	fe cf       	rjmp	.-4      	; 0x9b6 <__eerd_byte_m1284>
+ 9ba:	92 bd       	out	0x22, r25	; 34
+ 9bc:	81 bd       	out	0x21, r24	; 33
+ 9be:	f8 9a       	sbi	0x1f, 0	; 31
+ 9c0:	99 27       	eor	r25, r25
+ 9c2:	80 b5       	in	r24, 0x20	; 32
+ 9c4:	08 95       	ret
 
-0000094c <_exit>:
- 94c:	f8 94       	cli
+000009c6 <_exit>:
+ 9c6:	f8 94       	cli
 
-0000094e <__stop_program>:
- 94e:	ff cf       	rjmp	.-2      	; 0x94e <__stop_program>
+000009c8 <__stop_program>:
+ 9c8:	ff cf       	rjmp	.-2      	; 0x9c8 <__stop_program>

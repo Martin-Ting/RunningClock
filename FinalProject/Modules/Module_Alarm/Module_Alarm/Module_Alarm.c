@@ -45,7 +45,8 @@ typedef struct _alarm{
 	unsigned char IsAM;
 	unsigned char IsActive;
 } Alarm;
-
+unsigned savedAlarmIterator;
+unsigned char saveAlarmString[32];
 Alarm savedAlarms[NUMALARMS];
 // zero savedAlarms should only be called on startup
 void initializeSavedAlarms(){
@@ -59,7 +60,7 @@ void initializeSavedAlarms(){
 
 // fill savedAlarms with EEPROM data. Should really only be called on startup. any updates to savedalarms will be immediately represented in EEPROM
 void loadAlarmsFromEEPROM(){
-	if(eeprom_read_byte((uint8_t)(EEPROM_ALARM_TOPADDRESS)) == EEPROM_ALARM_TOPADDRESS){
+	if(eeprom_read_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS)) == EEPROM_ALARM_TOPADDRESS){
 		// when this is false, it means that there is trash in the memory!
 		for(unsigned char i = 0; i < NUMALARMS; ++i){	// These addresses must be read in this order in correspondance with EEPROMAddresses enum.
 			savedAlarms[i].Hour = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i));
@@ -74,7 +75,7 @@ void saveAlarmsToEEPROM(){
 	if (eeprom_read_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS)) != EEPROM_ALARM_TOPADDRESS){
 		// store EEPROM_ALARM_TOPADDRESS at memory address EEPROM_ALARM_TOPADDRESS as a flag that the memory has been saved to already. 
 		// This will persist through resets 
-		eeprom_save_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS), EEPROM_ALARM_TOPADDRESS);
+		eeprom_write_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS), EEPROM_ALARM_TOPADDRESS);
 	}
 	for(unsigned char i = 0; i < NUMALARMS; ++i){
 		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i), savedAlarms[i].Hour);
@@ -90,7 +91,7 @@ enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', 
 enum SystemDriverSMStates { SystemDriver_init,
 	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall, SystemDriver_timedisplaytitle_nextmenuitem,
 	SystemDriver_alarmaddtitle, SystemDriver_alarmaddscroll, SystemDriver_alarmaddtitle_fall, SystemDriver_alarmaddscroll_fall, SystemDriver_alarmaddtitle_nextmenuitem,
-	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_alarmview_fall, 
+	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_fall, SystemDriver_alarmview_nextmenuitem,
 		SystemDriver_alarmview_next, SystemDriver_alarmview_select, SystemDriver_alarmview_back, 
 		SystemDriver_alarmview_next_fall, SystemDriver_alarmview_select_fall, SystemDriver_alarmview_back_fall, 
 	// Add Alarm Title Screen,					Alarm scroller
@@ -111,7 +112,7 @@ unsigned char menuNavigationInput;
 	Inputs: I/O variables //TODO fill this out
 	Outputs: SYSTEMSTATE to drive certain actions. Particularly display.  */
 #define MAXMENUTITLETIME 50 //100period ms * 50 = 5000 s seconds
-
+#define FIRSTMENUITEM SystemDriver_timedisplaytitle
 signed char SystemDriverSMTick (signed char state){
 	static unsigned char stateTimer = 0;
 	// Transitions
@@ -180,38 +181,57 @@ signed char SystemDriverSMTick (signed char state){
 			break;
 		case SystemDriver_alarmaddtitle_nextmenuitem:
 			if(menuNavigationInput !=  Keypad_next){
-				state = SystemDriver_timedisplaytitle;
+				state = SystemDriver_alarmviewtitle;
 			}
 			stateTimer = 0;
 			break;
 		//=================================================================
 		case SystemDriver_alarmviewtitle :
+			if(menuNavigationInput == Keypad_select){ // c is select
+				state = SystemDriver_alarmviewtitle_fall;
+			}else if (menuNavigationInput == Keypad_next){
+				state = SystemDriver_alarmview_nextmenuitem;
+			}
 			break;
 		case SystemDriver_alarmviewtitle_fall:
+			if(menuNavigationInput != Keypad_select){
+				state = SystemDriver_alarmview;
+			}
 			break;
 		case SystemDriver_alarmview:
+			if(menuNavigationInput == Keypad_menu){
+				state = SystemDriver_alarmview_fall;
+			}
 			break;
-		case SystemDriver_alarmview_alarmview_fall:
+		case SystemDriver_alarmview_fall:
+			if(menuNavigationInput != Keypad_menu){
+				state = SystemDriver_alarmviewtitle;
+			}
 			break;
 		// Input NEXT
 		case SystemDriver_alarmview_next:
+			// increment alarm index
 			break;
 		case SystemDriver_alarmview_next_fall:
 			break;
 		// Input SELECT
 		case SystemDriver_alarmview_select:
+			// reverse active for alarm at index
 			break;
 		case SystemDriver_alarmview_select_fall:
 			break;
 		// Input BACK
 		case SystemDriver_alarmview_back:
+			// decrement alarm index
 			break;
 		case SystemDriver_alarmview_back_fall:
 			break;
-		
+		case SystemDriver_alarmview_nextmenuitem:
+			state = FIRSTMENUITEM;
+			break;
 		//=================================================================
 		default:
-			state = SystemDriver_timedisplaytitle;
+			state = FIRSTMENUITEM;
 			break;
 	}
 	SYSTEMSTATE = state;
@@ -251,10 +271,15 @@ signed char LCDDisplaySMTick( signed char state ){
 		case LCDDisplay_updatelcd:
 			break;
 		default:
-			state = LCDDisplay_updatelcd; // initialize anything that is going to be displayed and such
-			for(int i = 0; i < 32; ++i){
+			state = LCDDisplay_updatelcd; 
+			// initialize anything that is going to be displayed and such
+			// initializations for clockview			
+			for(unsigned char i = 0; i < 32; ++i){
 				timeString[i] = ' ';
 			}
+			//initializations for Alarms
+			savedAlarmIterator = 0;
+			
 			break;
 	}
 	switch(state){
@@ -286,10 +311,11 @@ signed char LCDDisplaySMTick( signed char state ){
 */
 				case SystemDriver_alarmviewtitle:
 				case SystemDriver_alarmviewtitle_fall:
+					LCD_DisplayString(1, "alarmviewtitle");
 					break;
 				case SystemDriver_alarmview:
-				case SystemDriver_alarmview_alarmview_fall:
-					
+				case SystemDriver_alarmview_fall:
+					LCD_DisplayString(1, "alarmview");
 					break;
 				/*// Input NEXT
 				case SystemDriver_alarmview_next:
