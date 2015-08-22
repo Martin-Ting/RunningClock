@@ -48,6 +48,15 @@ void LCD_WriteData(unsigned char Data) {
    CLR_BIT(CONTROL_BUS,E);
    delay_ms(1);
 }	
+void LCD_Cursor(unsigned char column) {
+	if ( column < 17 ) { // 16x1 LCD: column < 9
+		// 16x2 LCD: column < 17
+		LCD_WriteCommand(0x80 + column - 1);
+		} else {
+		LCD_WriteCommand(0xB8 + column - 9);	// 16x1 LCD: column - 1
+		// 16x2 LCD: column - 9
+	}
+}
 void LCD_DisplayString( unsigned char column, const unsigned char* string) {
    LCD_ClearScreen();
    unsigned char c = column;
@@ -55,17 +64,10 @@ void LCD_DisplayString( unsigned char column, const unsigned char* string) {
       LCD_Cursor(c++);
       LCD_WriteData(*string++);
    }
+	LCD_Cursor(32);
 }
 
-void LCD_Cursor(unsigned char column) {
-   if ( column < 17 ) { // 16x1 LCD: column < 9
-						// 16x2 LCD: column < 17
-      LCD_WriteCommand(0x80 + column - 1);
-   } else {
-      LCD_WriteCommand(0xB8 + column - 9);	// 16x1 LCD: column - 1
-											// 16x2 LCD: column - 9
-   }
-}
+
 
 void delay_ms(int miliSec) //for 8 Mhz crystal
 

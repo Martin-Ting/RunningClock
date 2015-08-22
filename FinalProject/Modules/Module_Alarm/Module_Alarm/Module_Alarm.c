@@ -46,8 +46,54 @@ typedef struct _alarm{
 	unsigned char IsActive;
 } Alarm;
 unsigned savedAlarmIterator;
-unsigned char saveAlarmString[32];
+unsigned char savedAlarmString[32];
 Alarm savedAlarms[NUMALARMS];
+
+#define ALARMVIEWNUMBERINDEXTENS 7
+#define ALARMVIEWNUMBERINDEXONES 8
+#define ALARMVIEWONOFFINDEX 12
+#define ALARMVIEWHOURSINDEX 17
+#define ALARMVIEWCOLONINDEX 19
+#define ALARMVIEWMINUTESINDEX 20
+#define ALARMVIEWAMPMINDEX 23
+void updateAlarmString(){ 
+	static Alarm* currAlarm;
+	currAlarm = &savedAlarms[savedAlarmIterator];
+	savedAlarmString[0] = '>';
+	savedAlarmString[1] = 'A';
+	savedAlarmString[2] = 'L';
+	savedAlarmString[3] = 'A';
+	savedAlarmString[4] = 'R';
+	savedAlarmString[5] = 'M';
+
+	savedAlarmString[ALARMVIEWNUMBERINDEXTENS] = '0' + (savedAlarmIterator+1)/10;
+	savedAlarmString[ALARMVIEWNUMBERINDEXONES] = '0' + (savedAlarmIterator+1)%10;
+	if(currAlarm->IsActive == 0x00){
+		savedAlarmString[ALARMVIEWONOFFINDEX] = 'O';
+		savedAlarmString[ALARMVIEWONOFFINDEX+1] = 'F';
+		savedAlarmString[ALARMVIEWONOFFINDEX+2] = 'F';
+		
+	} else{
+		savedAlarmString[ALARMVIEWONOFFINDEX] = ' ';
+		savedAlarmString[ALARMVIEWONOFFINDEX+1] = 'O';
+		savedAlarmString[ALARMVIEWONOFFINDEX+2] = 'N';
+	}
+	savedAlarmString[ALARMVIEWHOURSINDEX] = '0'+ currAlarm->Hour/10;
+	savedAlarmString[ALARMVIEWHOURSINDEX+1] = '0'+ currAlarm->Hour%10;
+	savedAlarmString[ALARMVIEWCOLONINDEX] = ':';
+	savedAlarmString[ALARMVIEWMINUTESINDEX] = '0'+currAlarm->Minute/10;
+	savedAlarmString[ALARMVIEWMINUTESINDEX+1] = '0'+currAlarm->Minute%10;
+	if(currAlarm->IsAM == 0x00){
+		//PM
+		savedAlarmString[ALARMVIEWAMPMINDEX] = 'P';
+	}else{
+		//AM
+		savedAlarmString[ALARMVIEWAMPMINDEX] = 'A';
+		
+	}
+	savedAlarmString[ALARMVIEWAMPMINDEX+1] = 'M';
+}
+
 // zero savedAlarms should only be called on startup
 void initializeSavedAlarms(){
 	for(unsigned char i = 0; i < NUMALARMS; ++i){
@@ -87,13 +133,15 @@ void saveAlarmsToEEPROM(){
 
 //=====================================================================================================================================================================
 // Shared Variables ========
-enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#' };
+enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#', Keypad_HH = '*', Keypad_MM = '0' };
 enum SystemDriverSMStates { SystemDriver_init,
 	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall, SystemDriver_timedisplaytitle_nextmenuitem,
 	SystemDriver_alarmaddtitle, SystemDriver_alarmaddscroll, SystemDriver_alarmaddtitle_fall, SystemDriver_alarmaddscroll_fall, SystemDriver_alarmaddtitle_nextmenuitem,
 	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_fall, SystemDriver_alarmview_nextmenuitem,
+		SystemDriver_alarmview_HH, SystemDriver_alarmview_MM, 
+			SystemDriver_alarmview_HH_fall, SystemDriver_alarmview_MM_fall,
 		SystemDriver_alarmview_next, SystemDriver_alarmview_select, SystemDriver_alarmview_back, 
-		SystemDriver_alarmview_next_fall, SystemDriver_alarmview_select_fall, SystemDriver_alarmview_back_fall, 
+			SystemDriver_alarmview_next_fall, SystemDriver_alarmview_select_fall, SystemDriver_alarmview_back_fall, 
 	// Add Alarm Title Screen,					Alarm scroller
 	//	Press C for Select and go to scroller	Left (A) or Right (B) to scroll through
 SystemDriver_error } SYSTEMSTATE;
@@ -201,6 +249,45 @@ signed char SystemDriverSMTick (signed char state){
 		case SystemDriver_alarmview:
 			if(menuNavigationInput == Keypad_menu){
 				state = SystemDriver_alarmview_fall;
+			} else if(menuNavigationInput == Keypad_select){
+				state = SystemDriver_alarmview_select;
+			} else if(menuNavigationInput == Keypad_back){
+				state = SystemDriver_alarmview_back;
+			} else if(menuNavigationInput == Keypad_next){
+				state = SystemDriver_alarmview_next;
+			} else if(menuNavigationInput == Keypad_HH){
+				state = SystemDriver_alarmview_HH;
+			} else if(menuNavigationInput == Keypad_MM){
+				state = SystemDriver_alarmview_MM;
+			}
+			break;
+		// Input HH
+		case SystemDriver_alarmview_HH:
+			if(savedAlarms[savedAlarmIterator].Hour < 12){
+				savedAlarms[savedAlarmIterator].Hour++;
+			} else {
+				savedAlarms[savedAlarmIterator].Hour = 0;
+				savedAlarms[savedAlarmIterator].IsAM = ~savedAlarms[savedAlarmIterator].IsAM;
+			}
+			state = SystemDriver_alarmview_HH_fall;
+			break;
+		case SystemDriver_alarmview_HH_fall:
+			if(menuNavigationInput != Keypad_HH){
+				state = SystemDriver_alarmview;
+			}
+			break;
+		// Input MM
+		case SystemDriver_alarmview_MM:
+			if(savedAlarms[savedAlarmIterator].Minute < 59){
+				savedAlarms[savedAlarmIterator].Minute++;
+			} else {
+				savedAlarms[savedAlarmIterator].Minute = 0;
+			}
+			state = SystemDriver_alarmview_MM_fall;
+			break;
+		case SystemDriver_alarmview_MM_fall:
+			if(menuNavigationInput != Keypad_MM){
+				state = SystemDriver_alarmview;
 			}
 			break;
 		case SystemDriver_alarmview_fall:
@@ -211,23 +298,45 @@ signed char SystemDriverSMTick (signed char state){
 		// Input NEXT
 		case SystemDriver_alarmview_next:
 			// increment alarm index
+			if(savedAlarmIterator < NUMALARMS-1){
+				savedAlarmIterator++;
+			}			
+			state = SystemDriver_alarmview_next_fall;
 			break;
 		case SystemDriver_alarmview_next_fall:
+			if(menuNavigationInput != Keypad_next){
+				state = SystemDriver_alarmview;
+			}
 			break;
 		// Input SELECT
 		case SystemDriver_alarmview_select:
 			// reverse active for alarm at index
+			savedAlarms[savedAlarmIterator].IsActive = ~savedAlarms[savedAlarmIterator].IsActive;
+			state = SystemDriver_alarmview_select_fall;
 			break;
 		case SystemDriver_alarmview_select_fall:
+			if(menuNavigationInput != Keypad_select){
+				state = SystemDriver_alarmview;
+			}
 			break;
 		// Input BACK
 		case SystemDriver_alarmview_back:
 			// decrement alarm index
+			if(savedAlarmIterator > 0){
+				savedAlarmIterator--;
+			}
+			state = SystemDriver_alarmview_back_fall;
 			break;
 		case SystemDriver_alarmview_back_fall:
+			if(menuNavigationInput != Keypad_back){
+				state = SystemDriver_alarmview;
+			}
 			break;
 		case SystemDriver_alarmview_nextmenuitem:
-			state = FIRSTMENUITEM;
+			if(menuNavigationInput != Keypad_next){
+				saveAlarmsToEEPROM();
+				state = FIRSTMENUITEM;
+			}
 			break;
 		//=================================================================
 		default:
@@ -251,7 +360,7 @@ signed char UpdateInputSMTick (signed char state){
 	unsigned char tmpKeypadInput = GetKeypadKey();
 	// Process Menu Input keys : A B C D * #
 	if(tmpKeypadInput == 'A' || tmpKeypadInput == 'B' || tmpKeypadInput == 'C' || tmpKeypadInput == 'D'
-		|| tmpKeypadInput == '#' || tmpKeypadInput == '*'  ){
+		|| tmpKeypadInput == '#' || tmpKeypadInput == '*' || tmpKeypadInput == '0' ){
 		menuNavigationInput = tmpKeypadInput;
 	} else {
 		menuNavigationInput = 0;	
@@ -269,8 +378,10 @@ enum LCDDisplaySMStates { LCDDisplay_updatelcd };
 signed char LCDDisplaySMTick( signed char state ){
 	switch(state){
 		case LCDDisplay_updatelcd:
+			PORTB = 0x00;
 			break;
-		default:
+		case -1:
+			PORTB = 0xFF;
 			state = LCDDisplay_updatelcd; 
 			// initialize anything that is going to be displayed and such
 			// initializations for clockview			
@@ -279,48 +390,60 @@ signed char LCDDisplaySMTick( signed char state ){
 			}
 			//initializations for Alarms
 			savedAlarmIterator = 0;
-			
+			for(unsigned char i = 0; i < 32; ++i){
+				savedAlarmString[i] = ' ';
+			}
 			break;
 	}
+
 	switch(state){
 		case LCDDisplay_updatelcd:
 			switch(SYSTEMSTATE){
 				case SystemDriver_init:
 					break;
+//=========================================================================================
 				case SystemDriver_timedisplaytitle:
 				case SystemDriver_timedisplaytitle_fall:
-					PORTB = 0x01;
-					LCD_DisplayString(1, "Clock");
+					LCD_DisplayString(1, "     Clock ");
 					break;
 				case SystemDriver_timedisplay:
 				case SystemDriver_timedisplay_fall:
-				PORTB = 0x08;
 					updateTimeString();
 					LCD_DisplayString(1, timeString);
 					break;
-					case SystemDriver_alarmaddtitle:
+				case SystemDriver_timedisplaytitle_nextmenuitem:
+					break;
+//=========================================================================================
+				case SystemDriver_alarmaddtitle:
+				case SystemDriver_alarmaddtitle_fall:
 					LCD_DisplayString(1, "Add Alarm");
 					break;
 				case SystemDriver_alarmaddscroll:
+				case SystemDriver_alarmaddscroll_fall:
 					LCD_DisplayString(1, "alarmaddscroll");
 					break;
+				case SystemDriver_alarmaddtitle_nextmenuitem:
+					break;
 /*
-	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_alarmview_fall,
-	SystemDriver_alarmview_next, SystemDriver_alarmview_select, SystemDriver_alarmview_back,
-	SystemDriver_alarmview_next_fall, SystemDriver_alarmview_select_fall, SystemDriver_alarmview_back_fall,
+
 */
+//=======================================================================================
 				case SystemDriver_alarmviewtitle:
 				case SystemDriver_alarmviewtitle_fall:
-					LCD_DisplayString(1, "alarmviewtitle");
+					LCD_DisplayString(1, "     Alarms");
 					break;
+				case SystemDriver_alarmview_HH:
+				case SystemDriver_alarmview_HH_fall:
+				case SystemDriver_alarmview_MM:
+				case SystemDriver_alarmview_MM_fall:
 				case SystemDriver_alarmview:
 				case SystemDriver_alarmview_fall:
-					LCD_DisplayString(1, "alarmview");
+					updateAlarmString();
+					LCD_DisplayString(1, savedAlarmString);
 					break;
-				/*// Input NEXT
+				// Input NEXT
 				case SystemDriver_alarmview_next:
 				case SystemDriver_alarmview_next_fall:
-					break;
 				// Input SELECT
 				case SystemDriver_alarmview_select:
 				case SystemDriver_alarmview_select_fall:
@@ -328,9 +451,11 @@ signed char LCDDisplaySMTick( signed char state ){
 				// Input BACK
 				case SystemDriver_alarmview_back:
 				case SystemDriver_alarmview_back_fall:
-					break;*/
+					break;
+				case SystemDriver_alarmview_nextmenuitem:
+					break;
 				default:
-				LCD_DisplayString(1, "Initializing");
+					LCD_DisplayString(1, "Initializing");
 					break;
 			}
 
@@ -338,6 +463,7 @@ signed char LCDDisplaySMTick( signed char state ){
 		default: 
 			break;
 	}
+
 	return state;
 }
 /* External list:
