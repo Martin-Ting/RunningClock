@@ -34,6 +34,13 @@ void tick(){
 			myString[1] = tmpAlarms[2].Minute;
 			LCD_DisplayString(1, myString);
 			break;
+		case 'B':
+			saveAlarmsToEEPROM();
+		case 'C':
+			loadAlarmsFromEEPROM();
+		case 'D':
+			// change some elements and save them here
+			// then test with case 'A' to see if stuff really changed.
 		default:
 			PORTB = 0x55;
 			break;
@@ -60,8 +67,6 @@ int main(void)
 	savedAlarms[4].Hour = 'n';
 	savedAlarms[4].Minute = 'o';
 	savedAlarms[4].IsAM = 'p';
-	saveAlarmsToEEPROM();
-	loadAlarmsFromEEPROM();
 	TimerSet(500);
 	TimerOn();
 	LCD_init();

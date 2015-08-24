@@ -18,118 +18,28 @@
 #include "timer.h"
 //	TimerISR >>
 //	TimerFlag 
+#include "keypad.h"
+// getKeypadKey() Function
+#include "module_eepromaddresses.h"
+// enum EEPROMAddresses
+#include "module_alarm.h"
+// _alarm struct
+// Alarm savedAlarms[]
+// unsigned char savedAlarmString[]
+// unsigned char savedAlarmIterator
 #include "module_timecrunchsm.h"
 // eetime_t struct
 // time : eetime_t
 // TimeCrunchSMTick() Function
-#include "keypad.h"
-// getKeypadKey() Function
 
-// EEPROMAdddresses 
-#define NUMALARMS EEPROM_ALARM_TOPADDRESS/3
-#define NUMALARMELEMENTS 4
-enum EEPROMAddresses { _addrAlarm1Hour, _addrAlarm1Minute, _addr1IsAM, _addr1IsActive,
-				  	   _addrAlarm2Hour, _addrAlarm2Minute, _addr2IsAM, _addr2IsActive,
-					   _addrAlarm3Hour, _addrAlarm3Minute, _addr3IsAM, _addr3IsActive,
-					   _addrAlarm4Hour, _addrAlarm4Minute, _addr4IsAM, _addr4IsActive,
-					   _addrAlarm5Hour, _addrAlarm5Minute, _addr5IsAM, _addr5IsActive,
-					   EEPROM_ALARM_TOPADDRESS,
-					   EEPROM_TOPADDRESS };
+
+
 
 //=====================================================================================================================================================================
 //Alarm functionality.
-// Alarm struct
-typedef struct _alarm{
-	unsigned char Hour;
-	unsigned char Minute;
-	unsigned char IsAM;
-	unsigned char IsActive;
-} Alarm;
-unsigned savedAlarmIterator;
-unsigned char savedAlarmString[32];
-Alarm savedAlarms[NUMALARMS];
 
-#define ALARMVIEWNUMBERINDEXTENS 7
-#define ALARMVIEWNUMBERINDEXONES 8
-#define ALARMVIEWONOFFINDEX 12
-#define ALARMVIEWHOURSINDEX 17
-#define ALARMVIEWCOLONINDEX 19
-#define ALARMVIEWMINUTESINDEX 20
-#define ALARMVIEWAMPMINDEX 23
-void updateAlarmString(){ 
-	static Alarm* currAlarm;
-	currAlarm = &savedAlarms[savedAlarmIterator];
-	savedAlarmString[0] = '>';
-	savedAlarmString[1] = 'A';
-	savedAlarmString[2] = 'L';
-	savedAlarmString[3] = 'A';
-	savedAlarmString[4] = 'R';
-	savedAlarmString[5] = 'M';
 
-	savedAlarmString[ALARMVIEWNUMBERINDEXTENS] = '0' + (savedAlarmIterator+1)/10;
-	savedAlarmString[ALARMVIEWNUMBERINDEXONES] = '0' + (savedAlarmIterator+1)%10;
-	if(currAlarm->IsActive == 0x00){
-		savedAlarmString[ALARMVIEWONOFFINDEX] = 'O';
-		savedAlarmString[ALARMVIEWONOFFINDEX+1] = 'F';
-		savedAlarmString[ALARMVIEWONOFFINDEX+2] = 'F';
-		
-	} else{
-		savedAlarmString[ALARMVIEWONOFFINDEX] = ' ';
-		savedAlarmString[ALARMVIEWONOFFINDEX+1] = 'O';
-		savedAlarmString[ALARMVIEWONOFFINDEX+2] = 'N';
-	}
-	savedAlarmString[ALARMVIEWHOURSINDEX] = '0'+ currAlarm->Hour/10;
-	savedAlarmString[ALARMVIEWHOURSINDEX+1] = '0'+ currAlarm->Hour%10;
-	savedAlarmString[ALARMVIEWCOLONINDEX] = ':';
-	savedAlarmString[ALARMVIEWMINUTESINDEX] = '0'+currAlarm->Minute/10;
-	savedAlarmString[ALARMVIEWMINUTESINDEX+1] = '0'+currAlarm->Minute%10;
-	if(currAlarm->IsAM == 0x00){
-		//PM
-		savedAlarmString[ALARMVIEWAMPMINDEX] = 'P';
-	}else{
-		//AM
-		savedAlarmString[ALARMVIEWAMPMINDEX] = 'A';
-		
-	}
-	savedAlarmString[ALARMVIEWAMPMINDEX+1] = 'M';
-}
 
-// zero savedAlarms should only be called on startup
-void initializeSavedAlarms(){
-	for(unsigned char i = 0; i < NUMALARMS; ++i){
-		savedAlarms[i].Hour = 0;
-		savedAlarms[i].Minute = 0;
-		savedAlarms[i].IsAM = 0;
-		savedAlarms[i].IsActive = 0; // 0x00 for inactive 0xFF for active. ~
-	}
-}
-
-// fill savedAlarms with EEPROM data. Should really only be called on startup. any updates to savedalarms will be immediately represented in EEPROM
-void loadAlarmsFromEEPROM(){
-	if(eeprom_read_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS)) == EEPROM_ALARM_TOPADDRESS){
-		// when this is false, it means that there is trash in the memory!
-		for(unsigned char i = 0; i < NUMALARMS; ++i){	// These addresses must be read in this order in correspondance with EEPROMAddresses enum.
-			savedAlarms[i].Hour = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i));
-			savedAlarms[i].Minute = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i+1));
-			savedAlarms[i].IsAM = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i+2));
-			savedAlarms[i].IsActive = eeprom_read_byte((uint8_t*) (NUMALARMELEMENTS*i+3));
-		}
-	}
-}
-// save savedAlarms contents to EEPROM. This will be called everytime an Alarm is updated.
-void saveAlarmsToEEPROM(){
-	if (eeprom_read_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS)) != EEPROM_ALARM_TOPADDRESS){
-		// store EEPROM_ALARM_TOPADDRESS at memory address EEPROM_ALARM_TOPADDRESS as a flag that the memory has been saved to already. 
-		// This will persist through resets 
-		eeprom_write_byte((uint8_t*)(EEPROM_ALARM_TOPADDRESS), EEPROM_ALARM_TOPADDRESS);
-	}
-	for(unsigned char i = 0; i < NUMALARMS; ++i){
-		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i), savedAlarms[i].Hour);
-		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i+1), savedAlarms[i].Minute);
-		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i+2), savedAlarms[i].IsAM);
-		eeprom_write_byte((uint8_t*) (NUMALARMELEMENTS*i+3), savedAlarms[i].IsActive);
-	}
-}
 
 //=====================================================================================================================================================================
 // Shared Variables ========
@@ -236,6 +146,8 @@ signed char SystemDriverSMTick (signed char state){
 		//=================================================================
 		case SystemDriver_alarmviewtitle :
 			if(menuNavigationInput == Keypad_select){ // c is select
+				// going to alarm view so load alarms from EEPROM
+				loadAlarmsFromEEPROM();
 				state = SystemDriver_alarmviewtitle_fall;
 			}else if (menuNavigationInput == Keypad_next){
 				state = SystemDriver_alarmview_nextmenuitem;
@@ -248,6 +160,8 @@ signed char SystemDriverSMTick (signed char state){
 			break;
 		case SystemDriver_alarmview:
 			if(menuNavigationInput == Keypad_menu){
+				// leaving state so save Alarms
+				saveAlarmsToEEPROM();
 				state = SystemDriver_alarmview_fall;
 			} else if(menuNavigationInput == Keypad_select){
 				state = SystemDriver_alarmview_select;
@@ -298,7 +212,7 @@ signed char SystemDriverSMTick (signed char state){
 		// Input NEXT
 		case SystemDriver_alarmview_next:
 			// increment alarm index
-			if(savedAlarmIterator < NUMALARMS-1){
+			if(savedAlarmIterator < NUMALARMS - 1){
 				savedAlarmIterator++;
 			}			
 			state = SystemDriver_alarmview_next_fall;
@@ -334,7 +248,6 @@ signed char SystemDriverSMTick (signed char state){
 			break;
 		case SystemDriver_alarmview_nextmenuitem:
 			if(menuNavigationInput != Keypad_next){
-				saveAlarmsToEEPROM();
 				state = FIRSTMENUITEM;
 			}
 			break;
@@ -365,6 +278,9 @@ signed char UpdateInputSMTick (signed char state){
 	} else {
 		menuNavigationInput = 0;	
 	}
+	if(ALARMON == ALARMACTIVE && tmpKeypadInput == 'D'){
+		ALARMON = ALARMINACTIVE;
+	}
 	return state;
 }
 
@@ -378,10 +294,8 @@ enum LCDDisplaySMStates { LCDDisplay_updatelcd };
 signed char LCDDisplaySMTick( signed char state ){
 	switch(state){
 		case LCDDisplay_updatelcd:
-			PORTB = 0x00;
 			break;
 		case -1:
-			PORTB = 0xFF;
 			state = LCDDisplay_updatelcd; 
 			// initialize anything that is going to be displayed and such
 			// initializations for clockview			
@@ -487,12 +401,13 @@ int main(void)
 	unsigned long int LCDDisplaySM_calc = 1000;	// 100ms period
 	unsigned long int UpdateInputSM_calc = 100; // 100ms period
 	unsigned long int SystemDriverSM_calc = 100; // 100ms period
-	
+	unsigned long int CheckAlarmSM_calc = 100; // 100ms period
 	// Calculate GCD	
 	unsigned long int tmpGCD = 1;
 	tmpGCD = findGCD(TimeCrunchSM_calc, LCDDisplaySM_calc );
 	tmpGCD = findGCD(tmpGCD, UpdateInputSM_calc);
 	tmpGCD = findGCD(tmpGCD, SystemDriverSM_calc);
+	tmpGCD = findGCD(tmpGCD, CheckAlarmSM_calc);
 	//tmpGCD = findGCD(tmpGCD, ... );
 	//tmpGCD = findGCD(tmpGCD, ... );
 	//tmpGCD = findGCD(tmpGCD, ... );
@@ -504,13 +419,15 @@ int main(void)
 	unsigned long int LCDDisplaySM_period = LCDDisplaySM_calc/GCD;
 	unsigned long int UpdateInputSM_period = UpdateInputSM_calc/GCD;
 	unsigned long int SystemDriverSM_period = SystemDriverSM_calc/GCD;
-	
+	unsigned long int CheckAlarmSM_period = SystemDriverSM_calc/GCD;
 	// Set up task scheduler
 	static task TimeCrunchSMTask,
 				LCDDisplaySMTask,
 				UpdateInputSMTask,
-				SystemDriverSMTask;
-	task *tasks[] = {&UpdateInputSMTask, &SystemDriverSMTask, &TimeCrunchSMTask, &LCDDisplaySMTask}; // keep display at the end. keep UpdateInput in the beginning and SystemDriverSM second
+				SystemDriverSMTask,
+				CheckAlarmSMTask;
+	// keep display at the end, checkalarm after TimeCrunchSM. keep UpdateInput in the beginning and SystemDriverSM second
+	task *tasks[] = {&UpdateInputSMTask, &SystemDriverSMTask, &TimeCrunchSMTask, &CheckAlarmSMTask, &LCDDisplaySMTask}; 
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 	
 	//UpdateInputSM declaration
@@ -527,11 +444,16 @@ int main(void)
 	TimeCrunchSMTask.state = -1;
 	TimeCrunchSMTask.period = TimeCrunchSMTask.elapsedTime = TimeCrunchSM_period;
 	TimeCrunchSMTask.TickFct = &TimeCrunchSMTick;
+
 	//LCDDisplaySM declaration
 	LCDDisplaySMTask.state = -1;
 	LCDDisplaySMTask.period = LCDDisplaySMTask.elapsedTime = LCDDisplaySM_period;
 	LCDDisplaySMTask.TickFct = &LCDDisplaySMTick;
 	
+	//CheckAlarmSM declaration
+	CheckAlarmSMTask.state = -1;
+	CheckAlarmSMTask.period = CheckAlarmSMTask.elapsedTime = CheckAlarmSM_period;
+	CheckAlarmSMTask.TickFct = &CheckAlarmSMTick;
 	// HW initializations ======================================================
 	// Set timer and turn it on
 	TimerSet(GCD);
@@ -540,7 +462,7 @@ int main(void)
 	LCD_init();
 	// MEM initializations ======================================================
 	initializeSavedAlarms(); // zero saved Alarms 
-	loadAlarmsFromEEPROM();  // load Alarms if previously saved.
+	//loadAlarmsFromEEPROM();  // load Alarms if previously saved.
 	
 	unsigned short i; // for loop iterator
     while(1)

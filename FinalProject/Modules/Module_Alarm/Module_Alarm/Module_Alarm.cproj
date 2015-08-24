@@ -124,7 +124,16 @@
     <Compile Include="Module_Alarm.c">
       <SubType>compile</SubType>
     </Compile>
+    <Compile Include="module_alarm.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="module_eepromaddresses.h">
+      <SubType>compile</SubType>
+    </Compile>
     <Compile Include="module_timecrunchsm.h">
+      <SubType>compile</SubType>
+    </Compile>
+    <Compile Include="pwm.h">
       <SubType>compile</SubType>
     </Compile>
     <Compile Include="scheduler.h">

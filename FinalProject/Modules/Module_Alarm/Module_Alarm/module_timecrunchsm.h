@@ -23,6 +23,7 @@ typedef struct {
 //Shared Variables
 eetime_t time;
 unsigned char timeString[32];
+unsigned char minuteTickFlag;
 
 void updateTimeString(){
 	timeString[2] = timeString[5] = ':';
@@ -40,7 +41,7 @@ void updateTimeString(){
 	timeString[MINUTEINDEX+1]='0'+(time.Minute % 10);
 	if(time.Second >= 10){// Update Second
 		timeString[SECONDINDEX] = '0'+(time.Second/10);
-		}else{
+	}else{
 		timeString[SECONDINDEX] = '0';
 	}
 	timeString[SECONDINDEX+1]='0'+(time.Second % 10);
@@ -61,9 +62,15 @@ signed char TimeCrunchSMTick (signed char state){
 	//Transitions
 	switch(state){
 		case TimeCrunch_updatetime:
-		break;
+			break;
 		default:
-		break;
+			time.Hour = 11;
+			time.Minute = 58;
+			time.Second = 50;
+			time.IsAM = 0xFF;
+			minuteTickFlag = 0x00;
+			state =  TimeCrunch_updatetime;
+			break;
 	}
 	switch(state){
 		case TimeCrunch_updatetime:
@@ -81,17 +88,15 @@ signed char TimeCrunchSMTick (signed char state){
 				} else { // update Minutes
 					time.Minute++;
 				}
+				// Seconds being reset to 0 means the top of a minute.
+				minuteTickFlag = 0xFF;
 				time.Second = 0;
 			} else { // update Seconds
 				time.Second++;
 			}
 			break;
 		default:
-			time.Hour = 11;
-			time.Minute = 59;
-			time.Second = 40;
-			time.IsAM = 0x00;
-			state =  TimeCrunch_updatetime;
+
 			break;
 	}
 	return state;

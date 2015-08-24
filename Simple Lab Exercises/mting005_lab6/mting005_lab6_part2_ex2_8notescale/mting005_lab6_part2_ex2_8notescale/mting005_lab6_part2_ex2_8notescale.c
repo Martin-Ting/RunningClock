@@ -16,7 +16,7 @@ volatile unsigned char TimerFlag = 0;
 // Timer =============================================================================
 //TimerISR() sets this to 1. C Programmer should clear to 0
 //volatile unsigned char TimerFlag = 0;
-//Internal variables for mapping AVR's ISR to our cleaner TimerISR model.
+//Internal variables for mapping AVR's ISR to our cleane7r TimerISR model.
 unsigned long _avr_timer_M = 1;		  // start count from here, down to 0. Default 1 ms.
 unsigned long _avr_timer_cntcurr = 0; // Current internal count of 1 ms ticks
 
@@ -215,6 +215,8 @@ int main(void)
 	TimerOn();
 
 	//PWM_on();
+	PWM_on();
+	set_PWM(pitchScale[currPitch]);
     while(1)
     {
 		//set_PWM(pitchScale[5]);
