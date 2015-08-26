@@ -51,6 +51,7 @@ void updateTimeString(){
 	}else{
 		timeString[AMPMINDEX] = 'P';
 	}
+	timeString[31] = '\0';
 }
 // State Machine
 enum TimeCrunchSMStates { TimeCrunch_updatetime };

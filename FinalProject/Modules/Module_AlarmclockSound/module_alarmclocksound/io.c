@@ -12,7 +12,7 @@
 #define DATA_BUS PORTC		// port connected to pins 7-14 of LCD display
 #define CONTROL_BUS PORTD	// port connected to pins 4 and 6 of LCD disp.
 #define RS 6			// pin number of uC connected to pin 4 of LCD disp.
-#define E 7			// pin number of uC connected to pin 6 of LCD disp.
+#define E_PORT 7			// pin number of uC connected to pin 6 of LCD disp.
 
 /*-------------------------------------------------------------------------*/
 
@@ -34,18 +34,18 @@ void LCD_init(void) {
 void LCD_WriteCommand (unsigned char Command) {
    CLR_BIT(CONTROL_BUS,RS);
    DATA_BUS = Command;
-   SET_BIT(CONTROL_BUS,E);
+   SET_BIT(CONTROL_BUS,E_PORT);
    asm("nop");
-   CLR_BIT(CONTROL_BUS,E);
+   CLR_BIT(CONTROL_BUS,E_PORT);
    delay_ms(2); // ClearScreen requires 1.52ms to execute
 }
 
 void LCD_WriteData(unsigned char Data) {
    SET_BIT(CONTROL_BUS,RS);
    DATA_BUS = Data;
-   SET_BIT(CONTROL_BUS,E);
+   SET_BIT(CONTROL_BUS,E_PORT);
    asm("nop");
-   CLR_BIT(CONTROL_BUS,E);
+   CLR_BIT(CONTROL_BUS,E_PORT);
    delay_ms(1);
 }	
 void LCD_Cursor(unsigned char column) {
@@ -64,7 +64,7 @@ void LCD_DisplayString( unsigned char column, const unsigned char* string) {
       LCD_Cursor(c++);
       LCD_WriteData(*string++);
    }
-	LCD_Cursor(32);
+	LCD_Cursor(0); 
 }
 
 

@@ -43,7 +43,7 @@ unsigned char activatedAlarm;
 
 extern eetime_t time;
 
-volatile unsigned char ALARMON;
+unsigned char ALARMON;
 
 
 // zero savedAlarms should only be called on startup
@@ -145,14 +145,14 @@ void updateAlarmString(){
 		savedAlarmString[ALARMVIEWAMPMINDEX] = 'A';
 	}
 	savedAlarmString[ALARMVIEWAMPMINDEX+1] = 'M';
+	savedAlarmString[31] = '\0';
 }
 
 void AlarmOn(){
-	PWM_on();
-	set_PWM(261.63);
+	ALARMON = ALARMACTIVE;
 }
 void AlarmOff(){
-	PWM_off();
+	ALARMON = ALARMINACTIVE;
 }
 
 enum CheckAlarmSMStates { CheckAlarm_checkcurrenttime, CheckAlarm_AlarmOn };

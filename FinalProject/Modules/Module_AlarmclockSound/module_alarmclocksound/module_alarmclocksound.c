@@ -31,7 +31,7 @@
 // eetime_t struct
 // time : eetime_t
 // TimeCrunchSMTick() Function
-
+#include "module_alarmclocksound.h"
 
 
 
@@ -402,12 +402,14 @@ int main(void)
 	unsigned long int UpdateInputSM_calc = 100; // 100ms period
 	unsigned long int SystemDriverSM_calc = 100; // 100ms period
 	unsigned long int CheckAlarmSM_calc = 100; // 100ms period
+	unsigned long int PlayAlarmSoundSM_calc = 50; // 50ms period
 	// Calculate GCD	
 	unsigned long int tmpGCD = 1;
 	tmpGCD = findGCD(TimeCrunchSM_calc, LCDDisplaySM_calc );
 	tmpGCD = findGCD(tmpGCD, UpdateInputSM_calc);
 	tmpGCD = findGCD(tmpGCD, SystemDriverSM_calc);
 	tmpGCD = findGCD(tmpGCD, CheckAlarmSM_calc);
+	tmpGCD = findGCD(tmpGCD, PlayAlarmSoundSM_calc);
 	//tmpGCD = findGCD(tmpGCD, ... );
 	//tmpGCD = findGCD(tmpGCD, ... );
 	//tmpGCD = findGCD(tmpGCD, ... );
@@ -419,15 +421,17 @@ int main(void)
 	unsigned long int LCDDisplaySM_period = LCDDisplaySM_calc/GCD;
 	unsigned long int UpdateInputSM_period = UpdateInputSM_calc/GCD;
 	unsigned long int SystemDriverSM_period = SystemDriverSM_calc/GCD;
-	unsigned long int CheckAlarmSM_period = SystemDriverSM_calc/GCD;
+	unsigned long int CheckAlarmSM_period = CheckAlarmSM_calc/GCD;
+	unsigned long int PlayAlarmSoundSM_period = PlayAlarmSoundSM_calc/GCD;
 	// Set up task scheduler
 	static task TimeCrunchSMTask,
 				LCDDisplaySMTask,
 				UpdateInputSMTask,
 				SystemDriverSMTask,
-				CheckAlarmSMTask;
-	// keep display at the end, checkalarm after TimeCrunchSM. keep UpdateInput in the beginning and SystemDriverSM second
-	task *tasks[] = {&UpdateInputSMTask, &SystemDriverSMTask, &TimeCrunchSMTask, &CheckAlarmSMTask, &LCDDisplaySMTask}; 
+				CheckAlarmSMTask,
+				PlayAlarmSoundSMTask;
+	// keep display at the end, checkalarm after TimeCrunchSM, PlayAlarmSound after checkAlarm. keep UpdateInput in the beginning and SystemDriverSM second
+	task *tasks[] = {&UpdateInputSMTask, &SystemDriverSMTask, &TimeCrunchSMTask, &CheckAlarmSMTask, &PlayAlarmSoundSMTask, &LCDDisplaySMTask}; 
 	const unsigned short numTasks = sizeof(tasks)/sizeof(task*);
 	
 	//UpdateInputSM declaration
@@ -454,6 +458,11 @@ int main(void)
 	CheckAlarmSMTask.state = -1;
 	CheckAlarmSMTask.period = CheckAlarmSMTask.elapsedTime = CheckAlarmSM_period;
 	CheckAlarmSMTask.TickFct = &CheckAlarmSMTick;
+	
+	//PlayAlarmSoundSM declaration
+	PlayAlarmSoundSMTask.state = -1;
+	PlayAlarmSoundSMTask.period = PlayAlarmSoundSMTask.elapsedTime = PlayAlarmSoundSM_period;
+	PlayAlarmSoundSMTask.TickFct = &PlayAlarmSoundSMTick;
 	// HW initializations ======================================================
 	// Set timer and turn it on
 	TimerSet(GCD);
@@ -462,7 +471,8 @@ int main(void)
 	LCD_init();
 	// MEM initializations ======================================================
 	initializeSavedAlarms(); // zero saved Alarms 
-	//loadAlarmsFromEEPROM();  // load Alarms if previously saved.
+	//initSongs();
+	loadAlarmsFromEEPROM();  // load Alarms if previously saved.
 	
 	unsigned short i; // for loop iterator
     while(1)
