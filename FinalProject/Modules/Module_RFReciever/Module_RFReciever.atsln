@@ -1,0 +1,20 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 11.00
+# Atmel Studio Solution File, Format Version 11.00
+Project("{54F91283-7BC4-4236-8FF9-10F437C3AD48}") = "Module_RFReciever", "Module_RFReciever\Module_RFReciever.cproj", "{40A21C10-3535-43F8-B8EC-0CBEF057A795}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|AVR = Debug|AVR
+		Release|AVR = Release|AVR
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{40A21C10-3535-43F8-B8EC-0CBEF057A795}.Debug|AVR.ActiveCfg = Debug|AVR
+		{40A21C10-3535-43F8-B8EC-0CBEF057A795}.Debug|AVR.Build.0 = Debug|AVR
+		{40A21C10-3535-43F8-B8EC-0CBEF057A795}.Release|AVR.ActiveCfg = Release|AVR
+		{40A21C10-3535-43F8-B8EC-0CBEF057A795}.Release|AVR.Build.0 = Release|AVR
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

@@ -1,6 +1,9 @@
 #ifndef MODULE_ALARM_H
 #define MODULE_ALARM_H
 #include "pwm.h"
+
+//#define MOTORFUNCTION
+
 /*
 void set_PWM(double);
 void PWM_on();
@@ -84,7 +87,6 @@ void saveAlarmsToEEPROM(){
 }
 
 void disableAlarm(){
-	ALARMON = ALARMINACTIVE;
 	savedAlarms[activatedAlarm].IsActive = ALARMINACTIVE;
 	saveAlarmsToEEPROM();
 }
@@ -127,7 +129,7 @@ void updateAlarmString(){
 		savedAlarmString[ALARMVIEWONOFFINDEX+1] = 'F';
 		savedAlarmString[ALARMVIEWONOFFINDEX+2] = 'F';
 		
-		} else{
+	} else{
 		savedAlarmString[ALARMVIEWONOFFINDEX] = ' ';
 		savedAlarmString[ALARMVIEWONOFFINDEX+1] = 'O';
 		savedAlarmString[ALARMVIEWONOFFINDEX+2] = 'N';
@@ -150,9 +152,15 @@ void updateAlarmString(){
 
 void AlarmOn(){
 	ALARMON = ALARMACTIVE;
+#ifdef MOTORFUNCTION
+	PORTB |= 0x03;
+#endif
 }
 void AlarmOff(){
 	ALARMON = ALARMINACTIVE;
+#ifdef MOTORFUNCTION
+	PORTB &= 0xFC;
+#endif
 }
 
 enum CheckAlarmSMStates { CheckAlarm_checkcurrenttime, CheckAlarm_AlarmOn };

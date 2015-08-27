@@ -45,8 +45,13 @@
 // Shared Variables ========
 enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#', Keypad_HH = '*', Keypad_MM = '0' };
 enum SystemDriverSMStates { SystemDriver_init,
+	// Time Display System Driver States
 	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall, SystemDriver_timedisplaytitle_nextmenuitem,
-	SystemDriver_alarmaddtitle, SystemDriver_alarmaddscroll, SystemDriver_alarmaddtitle_fall, SystemDriver_alarmaddscroll_fall, SystemDriver_alarmaddtitle_nextmenuitem,
+	// Tone Select System Driver states
+	SystemDriver_toneselecttitle, SystemDriver_toneselectdisplay, SystemDriver_toneselecttitle_fall, SystemDriver_toneselecttitle_nextmenuitem,
+		SystemDriver_toneselect_next, SystemDriver_toneselect_back, SystemDriver_toneselect_select,
+			SystemDriver_toneselect_next_fall, SystemDriver_toneselect_back_fall, SystemDriver_toneselect_select_fall,
+	// Alarm View System Driver states
 	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_fall, SystemDriver_alarmview_nextmenuitem,
 		SystemDriver_alarmview_HH, SystemDriver_alarmview_MM, 
 			SystemDriver_alarmview_HH_fall, SystemDriver_alarmview_MM_fall,
@@ -71,6 +76,9 @@ unsigned char menuNavigationInput;
 	Outputs: SYSTEMSTATE to drive certain actions. Particularly display.  */
 #define MAXMENUTITLETIME 50 //100period ms * 50 = 5000 s seconds
 #define FIRSTMENUITEM SystemDriver_timedisplaytitle
+
+
+
 signed char SystemDriverSMTick (signed char state){
 	static unsigned char stateTimer = 0;
 	// Transitions
@@ -91,7 +99,7 @@ signed char SystemDriverSMTick (signed char state){
 			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput != Keypad_select){
 				state = SystemDriver_timedisplay;
 			} else if (menuNavigationInput ==  Keypad_next){
-				state = SystemDriver_alarmaddtitle;
+				state = SystemDriver_timedisplaytitle_nextmenuitem;
 			}
 			stateTimer = 0;
 			break;
@@ -106,42 +114,78 @@ signed char SystemDriverSMTick (signed char state){
 			}
 			break;
 		case SystemDriver_timedisplaytitle_nextmenuitem:
-			if(menuNavigationInput !=  Keypad_next){
-				state = SystemDriver_alarmaddtitle;
+			if(menuNavigationInput!= Keypad_next){
+				state = SystemDriver_toneselecttitle;
 			}
-			stateTimer = 0;
-			break;
 		//=================================================================
-		case SystemDriver_alarmaddtitle:
-			stateTimer++;
-			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput == Keypad_select){ // c is select
-				state = SystemDriver_alarmaddtitle_fall;
+		// 				unsigned char tmpSong = 0;
+		// 				unsigned char TEMPSONGON;
+		case SystemDriver_toneselecttitle:
+			if(menuNavigationInput == Keypad_select){ // c is select
+				state = SystemDriver_toneselecttitle_fall;
 			}else if (menuNavigationInput == Keypad_next){
-				state = SystemDriver_alarmaddtitle_nextmenuitem;
+				state = SystemDriver_toneselecttitle_nextmenuitem;
 			}
 			break;
-		case SystemDriver_alarmaddtitle_fall:
-			// consume input or else transition due to state timer
-			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput != Keypad_select){
-				state = SystemDriver_alarmaddscroll;
-			} 
-			stateTimer = 0;
-			break;
-		case SystemDriver_alarmaddscroll:
-			if(menuNavigationInput == Keypad_menu){
-				state = SystemDriver_alarmaddscroll_fall;
+		case SystemDriver_toneselecttitle_fall:
+			if(menuNavigationInput != Keypad_select){
+				state = SystemDriver_toneselectdisplay;
 			}
 			break;
-		case SystemDriver_alarmaddscroll_fall:
-			if(menuNavigationInput != Keypad_menu){
-				state = SystemDriver_alarmaddtitle;
+		case SystemDriver_toneselectdisplay:
+			TEMPSONGON = ALARMACTIVE;
+			if(menuNavigationInput == Keypad_back){
+				state = SystemDriver_toneselect_back;
+			} else if(menuNavigationInput == Keypad_select){
+				state = SystemDriver_toneselect_select;
+			} else if(menuNavigationInput == Keypad_next){
+				state = SystemDriver_toneselect_next;
+			} else if(menuNavigationInput == Keypad_menu){
+				// hit this flag to turn off the song playing before going to next menu item
+				TEMPSONGON = ALARMINACTIVE;
+				state = SystemDriver_toneselecttitle_nextmenuitem;
 			}
 			break;
-		case SystemDriver_alarmaddtitle_nextmenuitem:
+		case SystemDriver_toneselecttitle_nextmenuitem:
 			if(menuNavigationInput !=  Keypad_next){
 				state = SystemDriver_alarmviewtitle;
 			}
 			stateTimer = 0;
+			break;
+		case SystemDriver_toneselect_next:
+			if(tmpSong < NUMSONGS - 1){
+				tmpSong++;
+				// hit this flag to turn off the song playing and reset it
+				TEMPSONGON = ALARMINACTIVE;
+			}
+			state = SystemDriver_toneselect_next_fall;
+			break;
+		case SystemDriver_toneselect_next_fall:
+			if(menuNavigationInput != Keypad_next){
+				state = SystemDriver_toneselectdisplay;
+			}
+			break;
+		case SystemDriver_toneselect_back:				
+			if(tmpSong > 0){
+				tmpSong--;
+				// hit this flag to turn off the song playing and reset it
+				TEMPSONGON = ALARMINACTIVE;
+ 			}
+			state = SystemDriver_toneselect_back_fall;
+			break;
+		case SystemDriver_toneselect_back_fall:
+			if(menuNavigationInput != Keypad_back){
+				state = SystemDriver_toneselectdisplay;
+			}
+			break;
+		case SystemDriver_toneselect_select:
+			currentSong = tmpSong;
+			state = SystemDriver_toneselect_next_fall;
+			break;
+		case SystemDriver_toneselect_select_fall:
+			if(menuNavigationInput != Keypad_select){
+				state = SystemDriver_toneselectdisplay;
+			}
 			break;
 		//=================================================================
 		case SystemDriver_alarmviewtitle :
@@ -248,6 +292,7 @@ signed char SystemDriverSMTick (signed char state){
 			break;
 		case SystemDriver_alarmview_nextmenuitem:
 			if(menuNavigationInput != Keypad_next){
+				stateTimer = 0;
 				state = FIRSTMENUITEM;
 			}
 			break;
@@ -259,7 +304,6 @@ signed char SystemDriverSMTick (signed char state){
 	SYSTEMSTATE = state;
 	return state;
 }
-
 
 enum UpdateInputSMStates { UpdateInput_update };
 /*  
@@ -276,7 +320,7 @@ signed char UpdateInputSMTick (signed char state){
 		|| tmpKeypadInput == '#' || tmpKeypadInput == '*' || tmpKeypadInput == '0' ){
 		menuNavigationInput = tmpKeypadInput;
 	} else {
-		menuNavigationInput = 0;	
+		menuNavigationInput = 0;
 	}
 	if(ALARMON == ALARMACTIVE && tmpKeypadInput == 'D'){
 		ALARMON = ALARMINACTIVE;
@@ -307,6 +351,9 @@ signed char LCDDisplaySMTick( signed char state ){
 			for(unsigned char i = 0; i < 32; ++i){
 				savedAlarmString[i] = ' ';
 			}
+			for(unsigned char i = 0; i < 32; ++i){
+				songString[i] = ' ';
+			}
 			break;
 	}
 
@@ -328,15 +375,21 @@ signed char LCDDisplaySMTick( signed char state ){
 				case SystemDriver_timedisplaytitle_nextmenuitem:
 					break;
 //=========================================================================================
-				case SystemDriver_alarmaddtitle:
-				case SystemDriver_alarmaddtitle_fall:
-					LCD_DisplayString(1, "Add Alarm");
+				case SystemDriver_toneselecttitle:
+				case SystemDriver_toneselecttitle_fall:
+					LCD_DisplayString(1, "   Select Tone");
 					break;
-				case SystemDriver_alarmaddscroll:
-				case SystemDriver_alarmaddscroll_fall:
-					LCD_DisplayString(1, "alarmaddscroll");
+				case SystemDriver_toneselect_select:
+				case SystemDriver_toneselect_select_fall:
+				case SystemDriver_toneselect_back:
+				case SystemDriver_toneselect_back_fall:
+				case SystemDriver_toneselect_next:
+				case SystemDriver_toneselect_next_fall:
+				case SystemDriver_toneselectdisplay:
+					updateSongString();
+					LCD_DisplayString(1, songString);
 					break;
-				case SystemDriver_alarmaddtitle_nextmenuitem:
+				case SystemDriver_toneselecttitle_nextmenuitem:
 					break;
 /*
 
@@ -400,7 +453,7 @@ int main(void)
 	unsigned long int TimeCrunchSM_calc = 1000; // 1 s period
 	unsigned long int LCDDisplaySM_calc = 1000;	// 100ms period
 	unsigned long int UpdateInputSM_calc = 100; // 100ms period
-	unsigned long int SystemDriverSM_calc = 100; // 100ms period
+	unsigned long int SystemDriverSM_calc = 150; // 100ms period
 	unsigned long int CheckAlarmSM_calc = 100; // 100ms period
 	unsigned long int PlayAlarmSoundSM_calc = 50; // 50ms period
 	// Calculate GCD	

@@ -67,7 +67,7 @@ signed char TimeCrunchSMTick (signed char state){
 		default:
 			time.Hour = 11;
 			time.Minute = 58;
-			time.Second = 50;
+			time.Second = 55;
 			time.IsAM = 0xFF;
 			minuteTickFlag = 0x00;
 			state =  TimeCrunch_updatetime;

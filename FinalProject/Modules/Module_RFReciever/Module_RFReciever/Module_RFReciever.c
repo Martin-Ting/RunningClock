@@ -1,4 +1,13 @@
 /*
+ * Module_RFReciever.c
+ *
+ * Created: 8/26/2015 1:55:27 PM
+ *  Author: user
+ */ 
+
+
+#include <avr/io.h>
+/*
  * mting005_lab1_part5.cpp
  *
  * Created: 7/28/2015 1:05:23 PM
@@ -9,11 +18,18 @@
 #include <avr/io.h>
 #include "timer.h"
 
-#define SIGNALINPUT (~PIND&0x01)
+#define SIGNALINPUT (~PINA&0x01)
 #define SIGNALHIGH 0x01
 #define SIGNALLOW 0x00
 
+// When signal is high, it will submit 5 pulses per second
+#define SIGNALTHRESH 4
+
+
+
 unsigned char SignalFrequency;
+unsigned char RFSignalIn;
+
 enum ResetSignalCountSMStates { ResetSignalCount_reset };
 signed char RSCState = -1;
 unsigned char MAXFREQ = 0;
@@ -23,7 +39,14 @@ void ResetSignalCountSMTick(){
 				if(SignalFrequency > MAXFREQ){
 					MAXFREQ = SignalFrequency;
 				}
-				PORTB = MAXFREQ;
+				//PORTB = SignalFrequency;
+				if(SignalFrequency < SIGNALTHRESH){
+					PORTB |= 0x02;
+					RFSignalIn = SIGNALHIGH;
+				}else{
+					PORTB &= 0x01;
+					RFSignalIn = SIGNALLOW;
+				}
 				
 				SignalFrequency = 0;
 				break;
@@ -53,6 +76,7 @@ void CountSignalSMTick(){
 		default:
 			CSState = CountSignal_waitforsignal;
 			SignalFrequency = 0;
+			RFSignalIn = 0;
 			break;
 	}
 	switch(CSState){
@@ -68,10 +92,54 @@ void CountSignalSMTick(){
 	}
 }
 
+
+void DriveWheels(){
+	//			   \/ M2
+	// sets 0000 0101
+	//			 ^ M1
+	PORTC = (PORTC & 0xF0) | 0x05;
+	PORTB |= 0x01;
+}
+void StopDrivewheels(){
+	PORTC = PORTC & 0xF0;
+	PORTB &= 0xFE;
+}
+
+enum DriveCarSMStates { DriveCar_wait, DriveCar_drive };
+signed char DriverCarSMstate = -1;
+void DriveCarSMTick(){
+	switch(DriverCarSMstate){
+		case DriveCar_wait:
+			if(RFSignalIn == SIGNALHIGH){
+				DriverCarSMstate = DriveCar_drive;
+			}
+			break;
+		case DriveCar_drive:
+			if(RFSignalIn == SIGNALLOW){
+				DriverCarSMstate = DriveCar_wait;
+			}
+			break;
+		default:
+			DriverCarSMstate = DriveCar_wait;
+	}
+	switch(DriverCarSMstate){
+		case DriveCar_wait:
+			StopDrivewheels();
+			break;
+		case DriveCar_drive:
+			DriveWheels();
+			break;
+		default:
+			break;
+	}
+}
+
+
 int main(void)
 {
+	DDRA = 0x00; PORTA = 0xFF;
 	DDRB = 0xFF; PORTB = 0x00;
-	DDRD = 0xFE; PORTD = 0x01;
+	DDRD = 0xFF; PORTD = 0x00;
 
 	TimerOn();
 	TimerSet(1);
@@ -80,11 +148,12 @@ int main(void)
 	CountSignalSMTick();
 	ResetSignalCountSMTick();
 	while(1){
-		if(counter == 1){
+		if(counter == 30){
 			CountSignalSMTick();
+			DriveCarSMTick();
 			counter = 0;
 		}
-		if(counter2 == 1000){
+		if(counter2 == 800){
 			ResetSignalCountSMTick();
 			counter2 = 0;
 		}
