@@ -43,16 +43,21 @@
 
 //=====================================================================================================================================================================
 // Shared Variables ========
-enum KeypadButtons { Keypad_next = 'A', Keypad_back = 'B', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#', Keypad_HH = '*', Keypad_MM = '0' };
+enum KeypadButtons { Keypad_next = 'B', Keypad_back = 'A', Keypad_select = 'C', Keypad_delete = 'D', Keypad_menu = '#', Keypad_HH = '*', Keypad_MM = '0' };
 enum SystemDriverSMStates { SystemDriver_init,
 	// Time Display System Driver States
-	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall, SystemDriver_timedisplaytitle_nextmenuitem,
+	SystemDriver_timedisplaytitle, SystemDriver_timedisplay, SystemDriver_timedisplaytitle_fall, SystemDriver_timedisplay_fall, 
+	SystemDriver_timedisplaytitle_nextmenuitem, SystemDriver_timedisplaytitle_prevmenuitem, 
+	SystemDriver_timedisplay_HH, SystemDriver_timedisplay_MM,
+		SystemDriver_timedisplay_HH_fall, SystemDriver_timedisplay_MM_fall,
 	// Tone Select System Driver states
-	SystemDriver_toneselecttitle, SystemDriver_toneselectdisplay, SystemDriver_toneselecttitle_fall, SystemDriver_toneselecttitle_nextmenuitem,
+	SystemDriver_toneselecttitle, SystemDriver_toneselectdisplay, SystemDriver_toneselecttitle_fall, 
+	SystemDriver_toneselecttitle_nextmenuitem, SystemDriver_toneselecttitle_prevmenuitem, 
 		SystemDriver_toneselect_next, SystemDriver_toneselect_back, SystemDriver_toneselect_select,
 			SystemDriver_toneselect_next_fall, SystemDriver_toneselect_back_fall, SystemDriver_toneselect_select_fall,
 	// Alarm View System Driver states
-	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_fall, SystemDriver_alarmview_nextmenuitem,
+	SystemDriver_alarmviewtitle,SystemDriver_alarmview, SystemDriver_alarmviewtitle_fall, SystemDriver_alarmview_fall, 
+	SystemDriver_alarmview_nextmenuitem, SystemDriver_alarmviewtitle_prevmenuitem,
 		SystemDriver_alarmview_HH, SystemDriver_alarmview_MM, 
 			SystemDriver_alarmview_HH_fall, SystemDriver_alarmview_MM_fall,
 		SystemDriver_alarmview_next, SystemDriver_alarmview_select, SystemDriver_alarmview_back, 
@@ -74,13 +79,16 @@ unsigned char menuNavigationInput;
 	State Machine: SystemDriverSM
 	Inputs: I/O variables //TODO fill this out
 	Outputs: SYSTEMSTATE to drive certain actions. Particularly display.  */
-#define MAXMENUTITLETIME 50 //100period ms * 50 = 5000 s seconds
+#define MAXMENUTITLETIME 34 //100period ms * 50 = 5000 s seconds
+#define MAXBUTTONINPUTIME	3
 #define FIRSTMENUITEM SystemDriver_timedisplaytitle
 
 
 
 signed char SystemDriverSMTick (signed char state){
 	static unsigned char stateTimer = 0;
+	static unsigned char buttonInputTimer = 0;
+	static unsigned IncrementAmount = 0;
 	// Transitions
 	switch(state){
 		//=================================================================
@@ -89,9 +97,10 @@ signed char SystemDriverSMTick (signed char state){
 			stateTimer++;
 			if(stateTimer >= MAXMENUTITLETIME || menuNavigationInput == Keypad_select){ // c is select
 				state = SystemDriver_timedisplaytitle_fall;
-			}
-			if(menuNavigationInput == Keypad_next){
+			}else if(menuNavigationInput == Keypad_back){
 				state = SystemDriver_timedisplaytitle_nextmenuitem;
+			}else if(menuNavigationInput == Keypad_next){
+				state = SystemDriver_timedisplaytitle_prevmenuitem;
 			}
 			break;
 		case SystemDriver_timedisplaytitle_fall:
@@ -106,7 +115,45 @@ signed char SystemDriverSMTick (signed char state){
 		case SystemDriver_timedisplay:
 			if(menuNavigationInput == Keypad_menu){
 				state = SystemDriver_timedisplay_fall;
+			}else if(menuNavigationInput == Keypad_HH){
+				state = SystemDriver_timedisplay_HH;
+			}else if(menuNavigationInput == Keypad_MM){
+				state = SystemDriver_timedisplay_MM;
 			}
+			break;
+		case SystemDriver_timedisplay_HH:
+			if(menuNavigationInput != Keypad_HH){
+				state = SystemDriver_timedisplay_HH_fall;
+			}
+			IncrementAmount = (buttonInputTimer <= MAXBUTTONINPUTIME || buttonInputTimer >= MAXBUTTONINPUTIME*10 || time.Hour+2 <12) ? 1 : 2;
+			buttonInputTimer++;
+			if(time.Hour < 12){
+				time.Hour+=IncrementAmount;
+			} else {
+				time.Hour = 0;
+				time.IsAM = ~time.IsAM;
+			}
+			break;
+		case SystemDriver_timedisplay_MM:
+			if(menuNavigationInput != Keypad_MM){
+				buttonInputTimer = 0;
+				state = SystemDriver_timedisplay_MM_fall;
+			}
+			IncrementAmount = (buttonInputTimer == MAXBUTTONINPUTIME || time.Hour+5 < 59)? 1:5;
+			buttonInputTimer++;
+			if(time.Minute < 59){
+				time.Minute++;
+			} else {
+				time.Minute = 0;
+			}
+			break;
+		case SystemDriver_timedisplay_HH_fall:
+			buttonInputTimer=0;
+			state = SystemDriver_timedisplay;
+			break;
+		case SystemDriver_timedisplay_MM_fall:
+			buttonInputTimer = 0;
+			state = SystemDriver_timedisplay;
 			break;
 		case SystemDriver_timedisplay_fall:
 			if(menuNavigationInput != Keypad_menu){
@@ -117,14 +164,20 @@ signed char SystemDriverSMTick (signed char state){
 			if(menuNavigationInput!= Keypad_next){
 				state = SystemDriver_toneselecttitle;
 			}
+			break;
+		case SystemDriver_timedisplaytitle_prevmenuitem:
+			if(menuNavigationInput != Keypad_back){
+				state = SystemDriver_alarmviewtitle;
+			}
+			break;
 		//=================================================================
-		// 				unsigned char tmpSong = 0;
-		// 				unsigned char TEMPSONGON;
 		case SystemDriver_toneselecttitle:
 			if(menuNavigationInput == Keypad_select){ // c is select
 				state = SystemDriver_toneselecttitle_fall;
-			}else if (menuNavigationInput == Keypad_next){
+			}else if (menuNavigationInput == Keypad_back){
 				state = SystemDriver_toneselecttitle_nextmenuitem;
+			}else if(menuNavigationInput == Keypad_next){
+				state = SystemDriver_toneselecttitle_prevmenuitem;
 			}
 			break;
 		case SystemDriver_toneselecttitle_fall:
@@ -187,14 +240,22 @@ signed char SystemDriverSMTick (signed char state){
 				state = SystemDriver_toneselectdisplay;
 			}
 			break;
+		case SystemDriver_toneselecttitle_prevmenuitem:
+			if(menuNavigationInput != Keypad_back){
+				stateTimer = 0;
+				state = SystemDriver_timedisplaytitle;
+			}
+			break;
 		//=================================================================
 		case SystemDriver_alarmviewtitle :
 			if(menuNavigationInput == Keypad_select){ // c is select
 				// going to alarm view so load alarms from EEPROM
 				loadAlarmsFromEEPROM();
 				state = SystemDriver_alarmviewtitle_fall;
-			}else if (menuNavigationInput == Keypad_next){
+			}else if (menuNavigationInput == Keypad_back){
 				state = SystemDriver_alarmview_nextmenuitem;
+			}else if(menuNavigationInput == Keypad_next){
+				state = SystemDriver_alarmviewtitle_prevmenuitem;
 			}
 			break;
 		case SystemDriver_alarmviewtitle_fall:
@@ -221,35 +282,44 @@ signed char SystemDriverSMTick (signed char state){
 			break;
 		// Input HH
 		case SystemDriver_alarmview_HH:
+			if(menuNavigationInput != Keypad_HH){
+				state = SystemDriver_alarmview_HH_fall;
+			}
+			IncrementAmount = (buttonInputTimer <= MAXBUTTONINPUTIME || buttonInputTimer >= MAXBUTTONINPUTIME*10 || savedAlarms[savedAlarmIterator].Hour+2 <12) ? 1 : 2;
+			buttonInputTimer++;
 			if(savedAlarms[savedAlarmIterator].Hour < 12){
-				savedAlarms[savedAlarmIterator].Hour++;
+				savedAlarms[savedAlarmIterator].Hour+=IncrementAmount;
 			} else {
 				savedAlarms[savedAlarmIterator].Hour = 0;
 				savedAlarms[savedAlarmIterator].IsAM = ~savedAlarms[savedAlarmIterator].IsAM;
 			}
-			state = SystemDriver_alarmview_HH_fall;
 			break;
+			
 		case SystemDriver_alarmview_HH_fall:
-			if(menuNavigationInput != Keypad_HH){
+				IncrementAmount = 0;
 				state = SystemDriver_alarmview;
-			}
 			break;
 		// Input MM
 		case SystemDriver_alarmview_MM:
+			if(menuNavigationInput != Keypad_MM){
+				buttonInputTimer = 0;
+				state = SystemDriver_alarmview_MM_fall;
+			}
+			IncrementAmount = (buttonInputTimer == MAXBUTTONINPUTIME || savedAlarms[savedAlarmIterator].Hour+5 < 59)? 1:5;
+			buttonInputTimer++;
 			if(savedAlarms[savedAlarmIterator].Minute < 59){
 				savedAlarms[savedAlarmIterator].Minute++;
 			} else {
 				savedAlarms[savedAlarmIterator].Minute = 0;
 			}
-			state = SystemDriver_alarmview_MM_fall;
 			break;
 		case SystemDriver_alarmview_MM_fall:
-			if(menuNavigationInput != Keypad_MM){
+				buttonInputTimer = 0;
 				state = SystemDriver_alarmview;
-			}
 			break;
 		case SystemDriver_alarmview_fall:
 			if(menuNavigationInput != Keypad_menu){
+				buttonInputTimer = 0;
 				state = SystemDriver_alarmviewtitle;
 			}
 			break;
@@ -296,9 +366,15 @@ signed char SystemDriverSMTick (signed char state){
 				state = FIRSTMENUITEM;
 			}
 			break;
+		case SystemDriver_alarmviewtitle_prevmenuitem:
+			if(menuNavigationInput != Keypad_back){
+				stateTimer = 0;
+				state = SystemDriver_toneselecttitle;
+			}
+			break;
 		//=================================================================
 		default:
-			state = FIRSTMENUITEM;
+ 			state = FIRSTMENUITEM;
 			break;
 	}
 	SYSTEMSTATE = state;
@@ -365,18 +441,24 @@ signed char LCDDisplaySMTick( signed char state ){
 //=========================================================================================
 				case SystemDriver_timedisplaytitle:
 				case SystemDriver_timedisplaytitle_fall:
+				case SystemDriver_timedisplaytitle_nextmenuitem:
+				case SystemDriver_timedisplaytitle_prevmenuitem:
 					LCD_DisplayString(1, "     Clock ");
 					break;
 				case SystemDriver_timedisplay:
 				case SystemDriver_timedisplay_fall:
+				case SystemDriver_timedisplay_MM:
+				case SystemDriver_timedisplay_MM_fall:
+				case SystemDriver_timedisplay_HH:
+				case SystemDriver_timedisplay_HH_fall:
 					updateTimeString();
 					LCD_DisplayString(1, timeString);
-					break;
-				case SystemDriver_timedisplaytitle_nextmenuitem:
 					break;
 //=========================================================================================
 				case SystemDriver_toneselecttitle:
 				case SystemDriver_toneselecttitle_fall:
+				case SystemDriver_toneselecttitle_nextmenuitem:
+				case SystemDriver_toneselecttitle_prevmenuitem:
 					LCD_DisplayString(1, "   Select Tone");
 					break;
 				case SystemDriver_toneselect_select:
@@ -389,14 +471,11 @@ signed char LCDDisplaySMTick( signed char state ){
 					updateSongString();
 					LCD_DisplayString(1, songString);
 					break;
-				case SystemDriver_toneselecttitle_nextmenuitem:
-					break;
-/*
-
-*/
-//=======================================================================================
+//======================================================================================
 				case SystemDriver_alarmviewtitle:
 				case SystemDriver_alarmviewtitle_fall:
+				case SystemDriver_alarmviewtitle_prevmenuitem:
+				case SystemDriver_alarmview_nextmenuitem:
 					LCD_DisplayString(1, "     Alarms");
 					break;
 				case SystemDriver_alarmview_HH:
@@ -419,8 +498,6 @@ signed char LCDDisplaySMTick( signed char state ){
 				case SystemDriver_alarmview_back:
 				case SystemDriver_alarmview_back_fall:
 					break;
-				case SystemDriver_alarmview_nextmenuitem:
-					break;
 				default:
 					LCD_DisplayString(1, "Initializing");
 					break;
@@ -439,7 +516,9 @@ signed char LCDDisplaySMTick( signed char state ){
 */
 // End State Machine drivers
 // 
-
+//0x06 l 0x09 R 
+//0x03 b  0x0C f
+//0x0c 
 // Scheduler
 int main(void)
 {

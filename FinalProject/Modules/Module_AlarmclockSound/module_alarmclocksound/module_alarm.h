@@ -2,7 +2,7 @@
 #define MODULE_ALARM_H
 #include "pwm.h"
 
-//#define MOTORFUNCTION
+#define MOTORFUNCTION
 
 /*
 void set_PWM(double);
